@@ -14,12 +14,15 @@
   },
   "dependencies": {
     "@netlify/zip-it-and-ship-it": "^0.3.1",
+    "@types/adm-zip": "^0.4.32",
     "adm-zip": "^0.4.14",
     "aws-sdk": "^2.619.0",
+    "axios": "^0.19.2",
     "commander": "^4.1.1",
     "dotenv": "^8.2.0",
     "file-base64": "^1.0.0",
     "inquirer": "^7.0.4",
+    "node-libcurl": "^2.0.3",
     "ts-node": "^8.6.2",
     "web3": "^1.2.4",
     "zlib": "^1.0.5"
@@ -28,7 +31,12 @@
     "@types/chai": "^4.2.9",
     "@types/expect": "^24.3.0",
     "@types/mocha": "^7.0.1",
+    "@typescript-eslint/eslint-plugin": "^2.21.0",
+    "@typescript-eslint/parser": "^2.21.0",
     "chai": "^4.2.0",
+    "eslint": "^6.8.0",
+    "eslint-config-airbnb-base": "^14.0.0",
+    "eslint-plugin-import": "^2.20.1",
     "mocha": "^7.1.0",
     "web3-mock": "^1.0.1"
   },
