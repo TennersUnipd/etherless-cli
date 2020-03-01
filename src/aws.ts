@@ -12,9 +12,9 @@ export default function createFunction(fnName: string, filePath: string) {
     {
       zip: compressed,
       name: fnName,
-    })
+    });/**
     .then((response: any) => {
       console.log(response);
     })
-    .catch(console.log);
+    .catch(console.log); */
 }
