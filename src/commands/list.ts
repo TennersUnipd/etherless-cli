@@ -1,6 +1,6 @@
 import { Gateway } from '../gateway';
 
-export default function CMDList(gateway: Gateway, accountAddress: string) {
+export function CMDList(gateway: Gateway, accountAddress: string) {
   console.log('Listing...');
 
   gateway.contract.methods.listFunctions().call({ from: accountAddress })

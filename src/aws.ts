@@ -2,7 +2,7 @@ const fs = require('fs');
 const axios = require('axios');
 const AdmZip = require('adm-zip');
 
-export default function createFunction(fnName: string, filePath: string) {
+export function createFunction(fnName: string, filePath: string) {
   const fileContent = fs.readFileSync(filePath);
   const zip = new AdmZip();
   zip.addFile(`${fnName}.js`, fileContent);
