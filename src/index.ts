@@ -10,7 +10,7 @@ require('dotenv').config();
 const program = require('commander');
 const fs = require('fs');
 
-const environment: EnvType = EnvType.Test;
+const environment: EnvType = EnvType.Local;
 const gate = getGateway(environment);
 
 function getGateway(env: EnvType): Gateway {

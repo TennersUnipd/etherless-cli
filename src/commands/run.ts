@@ -14,7 +14,7 @@ export function CMDRun(gateway: Gateway, accountAddress: string, params: RunFNDa
       const serializedParams = JSON.stringify(params.parameters);
       let identifier = Utils.randomIdentifier();
       console.log('params sent: ', serializedParams);
-      gateway.contract.methods.execFunctionRequest(params.name, serializedParams)
+      gateway.contract.methods.execFunctionRequest(params.name, serializedParams, identifier)
         .send({ from: accountAddress, value: cost })
         .then((result: any) => {
           console.log('Execution requested successfully');
