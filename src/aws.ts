@@ -14,7 +14,9 @@ export function createFunction(fnName: string, filePath: string) {
       name: fnName,
     });/**
     .then((response: any) => {
-      console.log(response);
+      return response;
     })
-    .catch(console.log); */
+    .catch(console.log);**/
+
+
 }

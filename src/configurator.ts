@@ -10,7 +10,7 @@ export function getConfiguration(forEnv: EnvType): GatewayConfiguration {
     case EnvType.Local: return {
       providerURI: process.env.WEBSOCKET_PROVIDER ? process.env.WEBSOCKET_PROVIDER : 'ws://taverna.pettinato.eu:8545',
       abiFile: './contracts/EtherlessSmart.json',
-      contractAddress: process.env.CONTRACT_ADDRESS ? process.env.CONTRACT_ADDRESS : '0x0bFC1dCDcFc3F2d6aCed8fcf04A926ce1A5866aa',
+      contractAddress: process.env.CONTRACT_ADDRESS ? process.env.CONTRACT_ADDRESS : '0x99a4410680EDB0ea096A0CA35C942Ae7a65219e9',
     };
     case EnvType.Test: return {
       providerURI: process.env.WEBSOCKET_PROVIDER ? process.env.WEBSOCKET_PROVIDER : '',

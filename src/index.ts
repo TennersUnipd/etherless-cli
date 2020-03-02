@@ -12,7 +12,7 @@ const program = require('commander');
 const fs = require('fs');
 
 const environment: EnvType = EnvType.Local;
-const testAccountAddress = '0x6f4B5D78A408B66f46eB168aD66B1E56895d9fA6';
+const testAccountAddress = '0x7B5590B24Cd0F7D2079e32B3d67c307dC95CF09D';
 
 function getGateway(env: EnvType): Gateway {
   const config = getConfiguration(env);
@@ -47,18 +47,17 @@ program
     }
 
     const params: CreateFNReqData = {
-      name,
+      name: name,
       remoteResource: '',
-      description,
+      description: description,
       proto: prototype,
-      cost,
+      cost: cost,
     };
 
     createFunction(name, file).then((result: any) => {
-      console.log(result);
-      params.remoteResource = result.FunctionArn;
+      params.remoteResource = result.data.FunctionArn;
       CMDCreate(gate, testAccountAddress, params);
-      /** TODO: if contract fn cration fails, delete lambda function
+      /** TODO: if contract fn creation fails, delete lambda function
        * (randomize lambda fn name as hotfix) */
     }, console.error);
   });
