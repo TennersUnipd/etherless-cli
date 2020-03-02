@@ -70,3 +70,11 @@ program
   });
 
 program.parse(process.argv);
+
+
+process.on("exit", function(){
+  gate.disconnect()
+})
+process.on('SIGINT', function () {
+  process.exit()
+})
