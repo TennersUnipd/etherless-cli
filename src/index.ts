@@ -11,7 +11,7 @@ const program = require('commander');
 const fs = require('fs');
 
 const environment: EnvType = EnvType.Local;
-const testAccountAddress = '0x6f4B5D78A408B66f46eB168aD66B1E56895d9fA6';
+const testAccountAddress = '0x491E061Dd3097De2FD7428f553228D13fA38308F';
 
 function getGateway(env: EnvType): Gateway {
   const config = getConfiguration(env);

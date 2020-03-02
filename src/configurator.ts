@@ -11,7 +11,7 @@ export function getConfiguration(forEnv: EnvType): GatewayConfiguration {
       serverlessEndpoint: 'https://sbx2aeqyl9.execute-api.us-east-1.amazonaws.com/dev/',
       providerURI: 'ws://localhost:8545',
       abiFile: './contracts/EtherlessSmart.json',
-      contractAddress: '0x6feBAC7D76d48A2F8D4f02E834ddaAe726FA031A'
+      contractAddress: '0x94DFF8Fce5D7e703Dc50FC03a990f3F4438017Fe'
     };
     case EnvType.Test: return {
       serverlessEndpoint: 'https://sbx2aeqyl9.execute-api.us-east-1.amazonaws.com/dev/',

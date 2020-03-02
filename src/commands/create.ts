@@ -15,13 +15,12 @@ export interface CreateFNReqData {
 export function CMDCreate(gateway: Gateway, accountAddress: string, params: CreateFNReqData) {
   console.log('About to create a new function...');
 
-  createFunction(gateway.serverlessEndpoint , params.name, params.file).then((result:any) => {
-    console.log(result);
-    params.remoteResource = result.FunctionArn;
+  createFunction(gateway.serverlessEndpoint, params.name, params.file).then((result:any) => {
+    params.remoteResource = result.data.FunctionArn;
 
     gateway.contract.methods.createFunction(params.name, params.description, params.proto, params.remoteResource, params.cost).send({ from: accountAddress, gas: gateway.gasLimit })
     .then((result: any) => {
-      console.log(result);
+      //console.log(result);
       console.log('Your function has been created');
       gateway.disconnect();
     }, (error: any) => {
