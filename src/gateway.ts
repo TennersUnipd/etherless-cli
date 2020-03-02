@@ -6,6 +6,7 @@ export interface GatewayConfiguration {
     abiFile: string;
     contractAddress: string;
     serverlessEndpoint: string;
+    testAccount: string;
 }
 
 export class Gateway {
@@ -22,6 +23,8 @@ export class Gateway {
 
     serverlessEndpoint: string;
 
+    testAccount: string;
+
     constructor(config: GatewayConfiguration) {
       // connect to eth network
       this.web3 = new Web3(new Web3.providers.WebsocketProvider(config.providerURI));
@@ -30,6 +33,7 @@ export class Gateway {
       this.contractAddress = config.contractAddress;
       this.serverlessEndpoint = config.serverlessEndpoint;
       this.contract = new this.web3.eth.Contract(this.abi, this.contractAddress);
+      this.testAccount = config.testAccount;
     }
 
     public setProvider(provider: any) {

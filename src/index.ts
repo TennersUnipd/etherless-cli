@@ -10,15 +10,13 @@ require('dotenv').config();
 const program = require('commander');
 const fs = require('fs');
 
-const environment: EnvType = EnvType.Local;
-const testAccountAddress = '0x491E061Dd3097De2FD7428f553228D13fA38308F';
+const environment: EnvType = EnvType.Test;
+const gate = getGateway(environment);
 
 function getGateway(env: EnvType): Gateway {
   const config = getConfiguration(env);
   return new Gateway(config);
 }
-
-const gate = getGateway(environment);
 
 program
   .version('0.0.1')
@@ -29,7 +27,7 @@ program
   .alias('l')
   .description('List all available functions')
   .action(() => {
-    CMDList(gate, testAccountAddress);
+    CMDList(gate, gate.testAccount);
   });
 
 program
@@ -54,7 +52,7 @@ program
       file: file
     };
 
-    CMDCreate(gate, testAccountAddress, params);
+    CMDCreate(gate, gate.testAccount, params);
   });
 
 program
@@ -68,7 +66,7 @@ program
       parameters,
     };
     console.log(params);
-    CMDRun(gate, testAccountAddress, params);
+    CMDRun(gate, gate.testAccount, params);
   });
 
 program.parse(process.argv);
