@@ -1,4 +1,5 @@
 import { Gateway } from '../gateway';
+import { Utils } from '../utils';
 
 export function CMDRun(gateway: Gateway, accountAddress: string, params: RunFNData) {
   console.log('About to request function execution...');
@@ -11,13 +12,14 @@ export function CMDRun(gateway: Gateway, accountAddress: string, params: RunFNDa
 
       // TODO: move stringify in a Utils module
       const serializedParams = JSON.stringify(params.parameters);
+      let identifier = Utils.randomIdentifier();
       console.log('params sent: ', serializedParams);
       gateway.contract.methods.execFunctionRequest(params.name, serializedParams)
         .send({ from: accountAddress, value: cost })
         .then((result: any) => {
           console.log('Execution requested successfully');
           // now start listening for response
-          awaitResponse(gateway);
+          awaitResponse(gateway, identifier);
         }, (error: any) => {
           console.error('Something wrong happened');
           console.debug(error);
@@ -30,9 +32,9 @@ export function CMDRun(gateway: Gateway, accountAddress: string, params: RunFNDa
     });
 }
 
-function awaitResponse(gateway: Gateway) {
+function awaitResponse(gateway: Gateway, identifier: string) {
   // TODO: add timeout
-  gateway.contract.once('RemoteResponse', null, (error:any, event:any) => {
+  gateway.contract.once('RemoteResponse', {filter: {"_identifier": identifier}}, (error:any, event:any) => {
     if (event.id == '34') {
 
       // è il mio fe

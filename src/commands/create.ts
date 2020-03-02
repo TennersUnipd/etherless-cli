@@ -1,8 +1,25 @@
 import { Gateway } from '../gateway';
+const fs = require('fs');
+const axios = require('axios');
+const AdmZip = require('adm-zip');
+
+export interface CreateFNReqData {
+  name: string;
+  remoteResource: string;
+  description: string;
+  proto: string;
+  cost: number;
+  file: string;
+}
 
 export function CMDCreate(gateway: Gateway, accountAddress: string, params: CreateFNReqData) {
   console.log('About to create a new function...');
-  gateway.contract.methods.createFunction('0xd2D1CA60a4A33Fb0a2C3Fd6e2E22822c211c414A', params.name, params.description, params.proto, params.remoteResource, params.cost).send({ from: accountAddress, gas: gateway.gasLimit })
+
+  createFunction(gateway.serverlessEndpoint , params.name, params.file).then((result:any) => {
+    console.log(result);
+    params.remoteResource = result.FunctionArn;
+
+    gateway.contract.methods.createFunction(params.name, params.description, params.proto, params.remoteResource, params.cost).send({ from: accountAddress, gas: gateway.gasLimit })
     .then((result: any) => {
       console.log(result);
       console.log('Your function has been created');
@@ -12,12 +29,19 @@ export function CMDCreate(gateway: Gateway, accountAddress: string, params: Crea
       console.debug(error);
       gateway.disconnect();
     });
+
+  }).catch(console.error);
 }
 
-export interface CreateFNReqData {
-    name: string;
-    remoteResource: string;
-    description: string;
-    proto: string;
-    cost: number;
+function createFunction(endpoint: string, fnName: string, filePath: string) {
+  const fileContent = fs.readFileSync(filePath);
+  const zip = new AdmZip();
+  zip.addFile(`${fnName}.js`, fileContent);
+  const compressed = zip.toBuffer();
+
+  return axios.post(endpoint+'createFunction',
+    {
+      zip: compressed,
+      name: fnName,
+    });
 }

@@ -5,6 +5,7 @@ export interface GatewayConfiguration {
     providerURI: string;
     abiFile: string;
     contractAddress: string;
+    serverlessEndpoint: string;
 }
 
 export class Gateway {
@@ -19,12 +20,15 @@ export class Gateway {
 
     gasLimit: number = 3000000;
 
+    serverlessEndpoint: string;
+
     constructor(config: GatewayConfiguration) {
       // connect to eth network
       this.web3 = new Web3(new Web3.providers.WebsocketProvider(config.providerURI));
       // contract descriptor
       this.abi = this.getABI(config.abiFile);
       this.contractAddress = config.contractAddress;
+      this.serverlessEndpoint = config.serverlessEndpoint;
       this.contract = new this.web3.eth.Contract(this.abi, this.contractAddress);
     }
 

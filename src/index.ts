@@ -4,7 +4,6 @@ import { CMDCreate, CreateFNReqData } from './commands/create';
 import { EnvType, getConfiguration } from './configurator';
 import { Gateway } from './gateway';
 import { RunFNData, CMDRun } from './commands/run';
-import { createFunction } from './aws';
 
 require('dotenv').config();
 
@@ -47,20 +46,15 @@ program
     }
 
     const params: CreateFNReqData = {
-      name,
+      name: name,
       remoteResource: '',
-      description,
+      description: description,
       proto: prototype,
-      cost,
+      cost: cost,
+      file: file
     };
 
-    createFunction(name, file).then((result: any) => {
-      console.log(result);
-      params.remoteResource = result.FunctionArn;
-      CMDCreate(gate, testAccountAddress, params);
-      /** TODO: if contract fn cration fails, delete lambda function
-       * (randomize lambda fn name as hotfix) */
-    }, console.error);
+    CMDCreate(gate, testAccountAddress, params);
   });
 
 program
