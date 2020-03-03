@@ -12,7 +12,7 @@ export function CMDRun(gateway: Gateway, accountAddress: string, params: RunFNDa
 
       // TODO: move stringify in a Utils module
       const serializedParams = JSON.stringify(params.parameters);
-      let identifier = Utils.randomIdentifier();
+      const identifier = Utils.randomIdentifier();
       console.log('params sent: ', serializedParams);
       gateway.contract.methods.execFunctionRequest(params.name, serializedParams, identifier)
         .send({ from: accountAddress, value: cost })
@@ -34,7 +34,7 @@ export function CMDRun(gateway: Gateway, accountAddress: string, params: RunFNDa
 
 function awaitResponse(gateway: Gateway, identifier: string) {
   // TODO: add timeout
-  gateway.contract.once('RemoteResponse', {filter: {"_identifier": identifier}}, (error:any, event:any) => {
+  gateway.contract.once('RemoteResponse', { filter: { _identifier: identifier } }, (error:any, event:any) => {
     if (event.id == '34') {
 
       // è il mio fe

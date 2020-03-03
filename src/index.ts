@@ -44,12 +44,12 @@ program
     }
 
     const params: CreateFNReqData = {
-      name: name,
+      name,
       remoteResource: '',
-      description: description,
+      description,
       proto: prototype,
-      cost: cost,
-      file: file
+      cost,
+      file,
     };
 
     CMDCreate(gate, gate.testAccount, params);
@@ -72,9 +72,9 @@ program
 program.parse(process.argv);
 
 
-process.on("exit", function(){
-  gate.disconnect()
-})
-process.on('SIGINT', function () {
-  process.exit()
-})
+process.on('exit', () => {
+  gate.disconnect();
+});
+process.on('SIGINT', () => {
+  process.exit();
+});

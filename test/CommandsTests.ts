@@ -1,5 +1,5 @@
-/*global describe, it*/
-/*eslint no-undef: "error"*/
+/* global describe, it */
+/* eslint no-undef: "error" */
 import { CMDCreate, CreateFNReqData } from '../src/commands/create';
 import { CMDList } from '../src/commands/list';
 import { CMDrun, RunFNData } from '../src/commands/run';
