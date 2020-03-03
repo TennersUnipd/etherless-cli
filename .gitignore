@@ -1,0 +1,7 @@
+node_modules
+node_modules
+src/*.js
+src/commands/*.js
+.DS_Store
+aws-credential.json
+aws-credentials.json
