@@ -36,8 +36,8 @@ export async function CMDCreate(gateway: Gateway,
       .createFunction(params.name, params.description, params.proto, params.remoteResource,
         params.cost)
       .send({ from: accountAddress, gas: gateway.gasLimit })
-      .then((result: any) => {
-      // console.log(result);
+      .then((response: any) => {
+      // console.log(response);
         console.log('Your function has been created');
         gateway.disconnect();
       }, (error: any) => {
