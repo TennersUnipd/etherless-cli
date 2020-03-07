@@ -1,9 +1,9 @@
 import { Gateway } from '../gateway';
 import { Utils } from '../utils';
 
-export function CMDRun(gateway: Gateway, accountAddress: string, params: RunFNData) {
+export async function CMDRun(gateway: Gateway,
+  accountAddress: string, params: RunFNData) {
   console.log('About to request function execution...');
-
   // get cost of function
   gateway.contract.methods.costOfFunction(params.name)
     .call({ from: accountAddress })
@@ -35,11 +35,11 @@ export function CMDRun(gateway: Gateway, accountAddress: string, params: RunFNDa
 function awaitResponse(gateway: Gateway, identifier: string) {
   // TODO: add timeout
   gateway.contract.once('RemoteResponse', { filter: { _identifier: identifier } }, (error:any, event:any) => {
-    if (event.id == '34') {
+    if (event.id === '34') {
 
       // è il mio fe
     }
-    if (error == null) {
+    if (error === null) {
       // TODO: check parsing proces
       console.log('Response received', JSON.parse(event.returnValues[0])); // TODO: optimize indexing with event param names (no 0,1...)
     } else {

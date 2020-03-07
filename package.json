@@ -21,6 +21,7 @@
     "dotenv": "^8.2.0",
     "file-base64": "^1.0.0",
     "inquirer": "^7.0.4",
+    "node-fetch": "^2.6.0",
     "node-libcurl": "^2.0.3",
     "ts-node": "^8.6.2",
     "web3": "^1.2.4",

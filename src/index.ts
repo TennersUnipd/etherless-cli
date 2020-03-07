@@ -1,23 +1,39 @@
 #!/usr/bin/env node
 import { CMDList } from './commands/list';
 import { CMDCreate, CreateFNReqData } from './commands/create';
-import { EnvType, getConfiguration } from './configurator';
+import { EnvType, getConfiguration} from './configurator';
 import { Gateway } from './gateway';
 import { RunFNData, CMDRun } from './commands/run';
+
+const fetch = require('node-fetch');
+
 
 require('dotenv').config();
 
 const program = require('commander');
 const fs = require('fs');
 
-const environment: EnvType = EnvType.Local;
-const gate = getGateway(environment);
+const environment: EnvType = EnvType.Infura;
 
-function getGateway(env: EnvType): Gateway {
+const etherescanUrl = `https://api-ropsten.etherscan.io/api?module=contract&action=getabi&address=${process.env.CONTRACT}&apikey=${process.env.ETHSCAN}`;
+
+const getAbi = async ():Promise<JSON> => {
+  const resp = await fetch(etherescanUrl);
+  const respJSON = await resp.json();
+  const contractABIString = await respJSON.result;
+  const contractABIObj:JSON = JSON.parse(contractABIString);
+  return contractABIObj;
+};
+
+const getGate = async (env: EnvType):Promise<Gateway> => {
   const config = getConfiguration(env);
-  return new Gateway(config);
-}
+  if (env === EnvType.Infura) {
+    return Gateway.build(config, getAbi());
+  }
+  return Gateway.build(config);
+};
 
+const gate = getGate(environment);
 program
   .version('0.0.1')
   .description('Etherless CLI');
@@ -27,7 +43,9 @@ program
   .alias('l')
   .description('List all available functions')
   .action(() => {
-    CMDList(gate, gate.testAccount);
+    gate
+      .then((result:Gateway) => CMDList(result, result.testAccount))
+      .catch(console.error);
   });
 
 program
@@ -52,7 +70,9 @@ program
       file,
     };
 
-    CMDCreate(gate, gate.testAccount, params);
+    gate
+      .then((result:Gateway) => CMDCreate(result, result.testAccount, params))
+      .catch(console.error);
   });
 
 program
@@ -66,14 +86,18 @@ program
       parameters,
     };
     console.log(params);
-    CMDRun(gate, gate.testAccount, params);
+    gate
+      .then((result:Gateway) => CMDRun(result, result.testAccount, params))
+      .catch(console.error);
   });
 
 program.parse(process.argv);
 
 
 process.on('exit', () => {
-  gate.disconnect();
+  gate
+    .then((result:Gateway) => result.disconnect())
+    .catch(console.error);
 });
 process.on('SIGINT', () => {
   process.exit();

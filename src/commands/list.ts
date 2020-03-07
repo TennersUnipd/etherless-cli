@@ -15,3 +15,5 @@ export function CMDList(gateway: Gateway, accountAddress: string) {
       gateway.disconnect();
     });
 }
+
+export default CMDList;
