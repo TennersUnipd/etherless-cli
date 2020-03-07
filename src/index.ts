@@ -13,7 +13,7 @@ require('dotenv').config();
 const program = require('commander');
 const fs = require('fs');
 
-const environment: EnvType = EnvType.Infura;
+const environment: EnvType = EnvType.Local;
 
 const etherescanUrl = `https://api-ropsten.etherscan.io/api?module=contract&action=getabi&address=${process.env.CONTRACT}&apikey=${process.env.ETHSCAN}`;
 
