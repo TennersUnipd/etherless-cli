@@ -29,7 +29,7 @@ export class Gateway {
       // connect to eth network
       this.web3 = new Web3(new Web3.providers.WebsocketProvider(config.providerURI));
       // contract descriptor
-      this.abi = this.getABI(config.abiFile);
+      this.getABI(config.abiFile);
       this.contractAddress = config.contractAddress;
       this.serverlessEndpoint = config.serverlessEndpoint;
       this.contract = new this.web3.eth.Contract(this.abi, this.contractAddress);
@@ -42,8 +42,7 @@ export class Gateway {
 
     private getABI(abiPath: string): any {
       const parsed = JSON.parse(fs.readFileSync(abiPath));
-      return parsed.abi;
-      this.web3.d;
+      this.abi = parsed.abi;
     }
 
     public disconnect() {
