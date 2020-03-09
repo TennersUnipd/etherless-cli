@@ -11,12 +11,13 @@ const program = require('commander');
 const fs = require('fs');
 
 const environment: EnvType = EnvType.Local;
-const gate = getGateway(environment);
 
 function getGateway(env: EnvType): Gateway {
   const config = getConfiguration(env);
   return new Gateway(config);
 }
+
+const gate = getGateway(environment);
 
 program
   .version('0.0.1')
