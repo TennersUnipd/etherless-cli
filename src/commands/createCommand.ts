@@ -19,7 +19,7 @@ export class CreateCommand extends Command {
                 inputs.prototype,
                 remoteResource,
                 inputs.cost);
-            return this.network.executeContractMethod(contractFn);
+            this.network.executeContractMethod(contractFn).then(resolve).catch(reject);
           }).catch(reject);
       });
     }
