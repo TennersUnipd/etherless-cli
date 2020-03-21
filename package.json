@@ -1,0 +1,45 @@
+{
+  "name": "etherless-cli",
+  "version": "0.1.0",
+  "description": "Our Etherless CLI client",
+  "main": "./src/index.ts",
+  "scripts": {
+    "tsc": "tsc",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Tenners",
+  "license": "MIT",
+  "bin": {
+    "etherless": "src/index.ts"
+  },
+  "dependencies": {
+    "adm-zip": "^0.4.14",
+    "axios": "^0.19.2",
+    "commander": "^4.1.1",
+    "inquirer": "^7.0.4",
+    "node-libcurl": "^2.0.3",
+    "ts-node": "^8.6.2",
+    "web3": "^1.2.4"
+  },
+  "devDependencies": {
+    "@types/chai": "^4.2.9",
+    "@types/expect": "^24.3.0",
+    "@types/mocha": "^7.0.1",
+    "@typescript-eslint/eslint-plugin": "^2.21.0",
+    "@typescript-eslint/parser": "^2.21.0",
+    "chai": "^4.2.0",
+    "eslint": "^6.8.0",
+    "eslint-config-airbnb-base": "^14.0.0",
+    "eslint-plugin-import": "^2.20.1",
+    "mocha": "^7.1.0",
+    "web3-mock": "^1.0.1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/TennersUnipd/etherless-cli.git"
+  },
+  "bugs": {
+    "url": "https://github.com/TennersUnipd/etherless-cli/issues"
+  },
+  "homepage": "https://github.com/TennersUnipd/etherless-cli#readme"
+}
