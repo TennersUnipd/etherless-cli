@@ -19,6 +19,7 @@
     "inquirer": "^7.0.4",
     "node-libcurl": "^2.0.3",
     "ts-node": "^8.6.2",
+    "typescript": "^3.8.3",
     "web3": "^1.2.4"
   },
   "devDependencies": {
