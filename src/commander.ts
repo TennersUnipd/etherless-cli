@@ -18,6 +18,7 @@ class Commander {
         .command(cmd.getCommandDescriptor())
         .alias(cmd.getCommandAlias())
         .description(cmd.getDescription())
+        .option('--dev')
         .action(() => {
           const inputs = cmd.parseArgs(commander.args);
           cmd.exec(inputs)

@@ -1,5 +1,8 @@
 const fs = require('fs');
 const AdmZip = require('adm-zip');
+const LS = require('node-localstorage').LocalStorage;
+
+const localStorage = new LS('./uweirb3');
 
 class Utils {
   static randomString() : string {
@@ -13,6 +16,8 @@ class Utils {
     zip.addFile('handler.js', fileContent);
     return zip.toBuffer();
   }
+
+  static localStorage = localStorage;
 }
 
 export default Utils;

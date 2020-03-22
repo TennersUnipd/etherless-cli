@@ -1,12 +1,18 @@
-import User from './user';
+import { Account } from 'web3-core';
+import Utils from './utils';
 
 class SessionManager {
+    private static readonly ACCOUNT_KEY = 'account';
+
     private static instance: SessionManager;
 
-    public user?: User;
+    public user?: Account;
 
     private constructor() {
-      this.user = undefined;
+      const stored = Utils.localStorage.getItem(SessionManager.ACCOUNT_KEY);
+      if (stored !== null && stored !== undefined) {
+        this.user = stored;
+      }
     }
 
     public static getInstance(): SessionManager {
@@ -17,8 +23,18 @@ class SessionManager {
       return SessionManager.instance;
     }
 
+    login(account: Account) {
+      this.user = account;
+      Utils.localStorage.setItem(SessionManager.ACCOUNT_KEY, account);
+    }
+
+    logout() {
+      this.user = undefined;
+      Utils.localStorage.removeItem(SessionManager.ACCOUNT_KEY);
+    }
+
     userLogged(): boolean {
-      return this.user === undefined;
+      return this.user !== undefined;
     }
 }
 
