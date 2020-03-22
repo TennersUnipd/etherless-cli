@@ -7,6 +7,15 @@ import { RunCommand } from './src/commands/runCommand';
 
 const network = new Network();
 
-Commander.config();
-Commander.addCommand(new RunCommand(network));
-Commander.start();
+// Commander.config();
+// Commander.addCommand(new RunCommand(network));
+// Commander.start();
+
+// TODO: ricorda di chiamare netwrok.disconnect()
+
+process.on('exit', () => {
+  network.disconnect();
+});
+process.on('SIGINT', () => {
+  process.exit();
+});
