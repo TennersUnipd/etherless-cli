@@ -1,7 +1,7 @@
 import { Command, CommandInputs } from './command';
 import Utils from '../utils';
 
-export class RunCommand extends Command {
+class RunCommand extends Command {
     COMMAND_NAME = 'run <functionName> [parameters...]';
 
     COMMAND_ALIAS = 'r';
@@ -46,12 +46,14 @@ export class RunCommand extends Command {
       });
 
       setTimeout(() => {
-        subscription.unsubscribe();
+        // subscription.unsubscribe();
       }, RunCommand.RESP_AWAIT_TIMEOUT * 1000);
     }
 }
 
-export interface RunCommandInputs extends CommandInputs {
+interface RunCommandInputs extends CommandInputs {
     name: string;
     parameters: string[];
 }
+
+export default RunCommand;

@@ -23,9 +23,16 @@ class Network {
 
     private web3: Web3;
 
-    private sessionManager = SessionManager.getInstance();
+    public static instance: Network;
 
-    constructor() {
+    public static getInstance(): Network {
+      if (!Network.instance) {
+        Network.instance = new Network();
+      }
+      return Network.instance;
+    }
+
+    private constructor() {
       if (process.env.PROVIDER_API === undefined) {
         throw new Error('Inavalid network provider url');
       }
@@ -67,6 +74,10 @@ class Network {
       }
     }
 
+    ethPrivateKeyToAccount(key: string): Account {
+      return this.web3.eth.accounts.privateKeyToAccount(key);
+    }
+
     getContract(): Contract {
       return this.contract;
     }
@@ -83,9 +94,8 @@ class Network {
       // TODO: move to session manager
       const wallet = this.web3.eth.accounts.wallet.load('password');
       const account: Account = wallet[0];
-      console.log('DSAD ASDSAD AS DAS||', account);
 
-      if (this.sessionManager.userLogged() === false) {
+      if (SessionManager.getInstance().userLogged() === false) {
         throw new Error('No user logged');
       }
       const nonce = await this.web3.eth.getTransactionCount(account.address, 'pending');
@@ -94,12 +104,12 @@ class Network {
       estimatedGas = Math.round(estimatedGas * 1.5);
 
       return func.send({
-        from: this.sessionManager.user?.address, nonce, value: cost, gas: estimatedGas,
+        from: SessionManager.getInstance().user?.address, nonce, value: cost, gas: estimatedGas,
       });
     }
 
-    uploadFunction(fileBuffer: string): Promise<any> {
-      if (this.sessionManager.userLogged() === false) {
+    static uploadFunction(fileBuffer: string): Promise<any> {
+      if (SessionManager.getInstance().userLogged() === false) {
         throw new Error('No user logged');
       }
 

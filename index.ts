@@ -3,25 +3,26 @@
 import Commander from './src/commander';
 import ListCommand from './src/commands/listCommand';
 import Network from './src/network';
-import { RunCommand } from './src/commands/runCommand';
-import AccountCreateCommand from './src/commands/createAccountCommand';
-import AccountLogoutCommand from './src/commands/logoutAccountCommand';
+import AccountCreateCommand from './src/commands/signupCommand';
+import AccountLogoutCommand from './src/commands/logoutCommand';
 import TestCommand from './src/commands/testCommand';
-
-const network = new Network();
+import AccountLoginCommand from './src/commands/loginCommand';
+import RunCommand from './src/commands/runCommand';
 
 Commander.config();
-Commander.addCommand(new AccountCreateCommand(network));
-Commander.addCommand(new ListCommand(network));
-Commander.addCommand(new TestCommand(network));
-Commander.addCommand(new AccountLogoutCommand(network));
+Commander.addCommand(new AccountCreateCommand());
+Commander.addCommand(new ListCommand());
+Commander.addCommand(new TestCommand());
+Commander.addCommand(new AccountLogoutCommand());
+Commander.addCommand(new AccountLoginCommand());
+// Commander.addCommand(new RunCommand());
 // Commander.addCommand(new TestCommand(network));
 Commander.start();
 
 // TODO: ricorda di chiamare netwrok.disconnect()
 
 process.on('exit', () => {
-  network.disconnect();
+  Network.getInstance().disconnect();
 });
 process.on('SIGINT', () => {
   process.exit();
