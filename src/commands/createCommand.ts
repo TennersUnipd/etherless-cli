@@ -1,5 +1,6 @@
 import { Command, CommandInput, CommandInputs } from './command';
 import Utils from '../utils';
+import Network from '../network';
 
 export class CreateCommand extends Command {
     COMMAND_NAME = 'create <name> <description> <prototype> <cost> <file>';
@@ -11,7 +12,7 @@ export class CreateCommand extends Command {
     exec(inputs: CreateCommandInputs): Promise<any> {
       return new Promise<any>((resolve, reject) => {
         const compressedFile = Utils.compressFile(inputs.filePath);
-        this.network.uploadFunction(compressedFile)
+        Network.uploadFunction(compressedFile)
           .then((remoteResource: string) => {
             const contractFn = this.network.getContractMethods()
               .createFunction(inputs.name,
@@ -19,7 +20,7 @@ export class CreateCommand extends Command {
                 inputs.prototype,
                 remoteResource,
                 inputs.cost);
-            this.network.executeContractMethod(contractFn).then(resolve).catch(reject);
+            this.network.transactContractMethod(contractFn).then(resolve).catch(reject);
           }).catch(reject);
       });
     }

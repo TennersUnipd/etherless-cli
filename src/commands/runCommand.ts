@@ -13,7 +13,7 @@ class RunCommand extends Command {
     exec(inputs: RunCommandInputs): Promise<any> {
       return new Promise<any>((resolve, reject) => {
         const costFn = this.network.getContractMethods().costOfFunction(inputs.name);
-        this.network.executeContractMethod(costFn)
+        this.network.callContractMethod(costFn)
           .then((cost: any) => {
             // TODO: cost has to be a number
             const serializedParams = JSON.stringify(inputs.parameters);
@@ -22,7 +22,7 @@ class RunCommand extends Command {
             const execFn = this.network
               .getContractMethods()
               .execFunctionRequest(inputs.name, serializedParams, identifier);
-            this.network.executeContractMethod(execFn, cost)
+            this.network.transactContractMethod(execFn)
               .then(() => {
                 this.awaitResponse(identifier, resolve, reject);
               })

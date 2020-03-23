@@ -53,19 +53,51 @@ class Network {
       this.contract = new this.web3.eth.Contract(Network.getAbi(), process.env.CONTRACT_ADDRESS);
     }
 
-    private static async updateAbi(contractAddress: string, destinationPath: string) {
+    public static async updateAbi(contractAddress: string, destinationPath: string) {
       try {
         console.log('DOWNLOADING contract abi');
         const response: AxiosResponse<EtherscanResponse> = await axios.get(`https://api-ropsten.etherscan.io/api?module=contract&action=getabi&address=${contractAddress}&apikey=${process.env.ETHSCAN}`);
-        fs.writeFileSync(destinationPath, response.data.result);
+        await fs.writeFileSync(destinationPath, response.data.result, { flag: 'w' });
       } catch (error) {
         throw new Error('Unable to update contract ABI');
       }
     }
 
-    private static getAbi() : AbiItem {
-      const parsed = JSON.parse(fs.readFileSync(process.env.ABI_PATH));
-      return parsed;
+    private static getAbi() : AbiItem[] {
+      try {
+        const parsed = JSON.parse(fs.readFileSync(process.env.ABI_PATH));
+        return parsed;
+      } catch (error) {
+        // TODO: temporary
+        return [
+          {
+            inputs: [],
+            name: 'retreive',
+            outputs: [
+              {
+                internalType: 'uint256',
+                name: '',
+                type: 'uint256',
+              },
+            ],
+            stateMutability: 'view',
+            type: 'function',
+          },
+          {
+            inputs: [
+              {
+                internalType: 'uint256',
+                name: 'num',
+                type: 'uint256',
+              },
+            ],
+            name: 'store',
+            outputs: [],
+            stateMutability: 'nonpayable',
+            type: 'function',
+          },
+        ];
+      }
     }
 
     disconnect() {
