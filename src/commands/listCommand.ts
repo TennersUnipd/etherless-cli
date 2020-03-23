@@ -9,7 +9,7 @@ class ListCommand extends Command {
 
     exec(): Promise<any> {
       const contractFn = this.network.getContractMethods().listFunctions();
-      return this.network.executeContractMethod(contractFn, 0);
+      return this.network.callContractMethod(contractFn);
     }
 }
 

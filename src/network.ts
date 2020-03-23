@@ -51,11 +51,11 @@ class Network {
       this.web3 = new Web3(new Web3.providers.WebsocketProvider(process.env.PROVIDER_API));
       // this.web3.eth.accounts = new Accounts(process.env.PROVIDER_API);
       this.contract = new this.web3.eth.Contract(Network.getAbi(), process.env.CONTRACT_ADDRESS);
-      this.disconnect();
     }
 
     private static async updateAbi(contractAddress: string, destinationPath: string) {
       try {
+        console.log('DOWNLOADING contract abi');
         const response: AxiosResponse<EtherscanResponse> = await axios.get(`https://api-ropsten.etherscan.io/api?module=contract&action=getabi&address=${contractAddress}&apikey=${process.env.ETHSCAN}`);
         fs.writeFileSync(destinationPath, response.data.result);
       } catch (error) {
@@ -90,22 +90,77 @@ class Network {
       return this.web3.eth.accounts.create();
     }
 
-    async executeContractMethod(func: any, cost: number = 0): Promise<string[]> {
-      // TODO: move to session manager
-      const wallet = this.web3.eth.accounts.wallet.load('password');
-      const account: Account = wallet[0];
-
-      if (SessionManager.getInstance().userLogged() === false) {
+    private static ethNetworkCallerAddress(): string {
+      const account = SessionManager.getInstance().user;
+      if (account === undefined) {
         throw new Error('No user logged');
       }
-      const nonce = await this.web3.eth.getTransactionCount(account.address, 'pending');
-      let estimatedGas = await func
-        .estimateGas({ from: account.address, gas: '10000000', value: '100000000000000000' });
-      estimatedGas = Math.round(estimatedGas * 1.5);
+      return account.address;
+    }
 
-      return func.send({
-        from: SessionManager.getInstance().user?.address, nonce, value: cost, gas: estimatedGas,
-      });
+    // eslint-disable-next-line class-methods-use-this
+    callContractMethod(func: Function): Promise<any> {
+      const caller = Network.ethNetworkCallerAddress();
+      return func.call({ from: caller });
+    }
+
+    async executeContractMethod(func: any, cost: number = 0): Promise<any> {
+      // TODO: move to session manager
+      const account = SessionManager.getInstance().user;
+      if (account === undefined) {
+        throw new Error('No user logged');
+      }
+      func.call({ from: account.address })
+        .then((results: any) => {
+          console.log(results);
+
+          this.disconnect();
+        }, (error: any) => {
+          console.error('Something wrong happened');
+          console.error(error);
+        });
+      // const nonce = await this.web3.eth.getTransactionCount(account.address, 'pending');
+      // let estimatedGas = await func
+      //   .estimateGas({ from: account.address, gas: '10000000', value: '100000000000000000' });
+      // const estimatedGas = Math.round(100000000000000000 * 1.5);
+      // const tx = {
+      //   // this could be provider.addresses[0] if it exists
+      //   from: account.address,
+      //   // target address, this could be a smart contract address
+      //   to: this.contract.options.address,
+      //   // optional if you want to specify the gas limit
+      //   gas: 1000000,
+      //   // this encodes the ABI of the method and the arguements
+      //   data: func.encodeABI(),
+      // };
+      // const signPromise = this.web3.eth.accounts.signTransaction(tx, account.privateKey);
+      // signPromise.then((signedTx) => {
+      //   console.log('1');
+      //   // raw transaction string may be available in .raw or
+      //   // .rawTransaction depending on which signTransaction
+      //   // function was called
+      //   console.log('SIGNED TX', signedTx);
+      //   const raw = signedTx.rawTransaction;
+      //   if (raw === undefined) {
+      //     throw new Error('Awesome error');
+      //   }
+      //   const sentTx = this.web3.eth.sendSignedTransaction(raw);
+      //   sentTx.on('receipt', (receipt) => {
+      //     // do something when receipt comes back
+      //     this.web3.eth.call(receipt).then((buh: any) => {
+      //       console.log('COCO', buh);
+      //     });
+      //     console.log('RECEIPT', receipt);
+      //   });
+      //   sentTx.on('error', (err) => {
+      //     // do something on transaction error
+      //     console.log('error HERE', err);
+      //   });
+      // }).catch((err) => {
+      //   // do something when promise fails
+      //   console.log(err);
+      // });
+      // return signPromise;
     }
 
     static uploadFunction(fileBuffer: string): Promise<any> {
