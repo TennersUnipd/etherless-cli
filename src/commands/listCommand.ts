@@ -5,7 +5,7 @@ class ListCommand extends Command {
 
     COMMAND_ALIAS = 'l';
 
-    COMMAND_DESCRIPTION = 'List of all funztions available on Etherless';
+    COMMAND_DESCRIPTION = 'List of all functions available on Etherless';
 
     exec(): Promise<any> {
       const contractFn = this.network.getContractMethods().listFunctions();

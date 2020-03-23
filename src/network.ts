@@ -104,7 +104,7 @@ class Network {
       return func.call({ from: caller });
     }
 
-    async executeContractMethod(func: any, cost: number = 0): Promise<any> {
+    async transactContractMethod(func: any, cost: number = 0): Promise<any> {
       // TODO: move to session manager
       const account = SessionManager.getInstance().user;
       if (account === undefined) {
