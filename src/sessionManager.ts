@@ -11,7 +11,7 @@ class SessionManager {
     private constructor() {
       const stored = Utils.localStorage.getItem(SessionManager.ACCOUNT_KEY);
       if (stored !== null && stored !== undefined) {
-        this.user = stored;
+        this.user = JSON.parse(stored);
       }
     }
 
@@ -25,7 +25,7 @@ class SessionManager {
 
     login(account: Account) {
       this.user = account;
-      Utils.localStorage.setItem(SessionManager.ACCOUNT_KEY, account);
+      Utils.localStorage.setItem(SessionManager.ACCOUNT_KEY, JSON.stringify(account));
     }
 
     logout() {
