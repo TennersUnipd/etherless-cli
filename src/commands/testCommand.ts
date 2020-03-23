@@ -2,6 +2,7 @@ import DOTENV from 'dotenv-flow';
 import { Command, CommandInputs } from './command';
 import SessionManager from '../sessionManager';
 import Network from '../network';
+import Utils from '../utils';
 
 class TestCommand extends Command {
     COMMAND_NAME = 'test';
@@ -18,9 +19,10 @@ class TestCommand extends Command {
       }
       DOTENV.config(envConfig);
       Network.updateAbi(process.env.CONTRACT_ADDRESS ?? '', process.env.ABI_PATH ?? '');
-      return new Promise<boolean>((resolve) => {
-        resolve(SessionManager.getInstance().userLogged());
-      });
+      return this.network.transactContractMethod(this.network.getContractMethods().createFunction(Utils.randomString()));
+      // return new Promise<boolean>((resolve) => {
+      //   resolve(SessionManager.getInstance().userLogged());
+      // });
     }
 }
 

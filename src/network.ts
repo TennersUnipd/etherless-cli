@@ -122,77 +122,47 @@ class Network {
       return this.web3.eth.accounts.create();
     }
 
-    private static ethNetworkCallerAddress(): string {
+    private static ethNetworkCaller(): Account {
       const account = SessionManager.getInstance().user;
       if (account === undefined) {
         throw new Error('No user logged');
       }
-      return account.address;
+      return account;
     }
 
     // eslint-disable-next-line class-methods-use-this
     callContractMethod(func: Function): Promise<any> {
-      const caller = Network.ethNetworkCallerAddress();
-      return func.call({ from: caller });
+      const caller = Network.ethNetworkCaller();
+      return func.call({ from: caller.address });
     }
 
-    async transactContractMethod(func: any, cost: number = 0): Promise<any> {
-      // TODO: move to session manager
-      const account = SessionManager.getInstance().user;
-      if (account === undefined) {
-        throw new Error('No user logged');
-      }
-      func.call({ from: account.address })
-        .then((results: any) => {
-          console.log(results);
+    async transactContractMethod(func: any, value: number | undefined = undefined): Promise<any> {
+      const caller = Network.ethNetworkCaller();
+      const estimatedGas = await func.estimateGas({ from: caller.address, gas: 1000000 });
+      const tx = {
+        from: caller.address,
+        to: this.contract.options.address,
+        gas: estimatedGas * 1.5,
+        value,
+        data: func.encodeABI(),
+      };
 
-          this.disconnect();
-        }, (error: any) => {
-          console.error('Something wrong happened');
-          console.error(error);
-        });
-      // const nonce = await this.web3.eth.getTransactionCount(account.address, 'pending');
-      // let estimatedGas = await func
-      //   .estimateGas({ from: account.address, gas: '10000000', value: '100000000000000000' });
-      // const estimatedGas = Math.round(100000000000000000 * 1.5);
-      // const tx = {
-      //   // this could be provider.addresses[0] if it exists
-      //   from: account.address,
-      //   // target address, this could be a smart contract address
-      //   to: this.contract.options.address,
-      //   // optional if you want to specify the gas limit
-      //   gas: 1000000,
-      //   // this encodes the ABI of the method and the arguements
-      //   data: func.encodeABI(),
-      // };
-      // const signPromise = this.web3.eth.accounts.signTransaction(tx, account.privateKey);
-      // signPromise.then((signedTx) => {
-      //   console.log('1');
-      //   // raw transaction string may be available in .raw or
-      //   // .rawTransaction depending on which signTransaction
-      //   // function was called
-      //   console.log('SIGNED TX', signedTx);
-      //   const raw = signedTx.rawTransaction;
-      //   if (raw === undefined) {
-      //     throw new Error('Awesome error');
-      //   }
-      //   const sentTx = this.web3.eth.sendSignedTransaction(raw);
-      //   sentTx.on('receipt', (receipt) => {
-      //     // do something when receipt comes back
-      //     this.web3.eth.call(receipt).then((buh: any) => {
-      //       console.log('COCO', buh);
-      //     });
-      //     console.log('RECEIPT', receipt);
-      //   });
-      //   sentTx.on('error', (err) => {
-      //     // do something on transaction error
-      //     console.log('error HERE', err);
-      //   });
-      // }).catch((err) => {
-      //   // do something when promise fails
-      //   console.log(err);
-      // });
-      // return signPromise;
+      return new Promise<any>((resolve, reject) => {
+        const signPromise = this.web3.eth.accounts.signTransaction(tx, caller.privateKey);
+        signPromise.then((signedTx) => {
+          const raw = signedTx.rawTransaction;
+          if (raw === undefined) {
+            throw new Error('Awesome error');
+          }
+          const sentTx = this.web3.eth.sendSignedTransaction(raw);
+          sentTx.on('receipt', () => {
+            resolve('Request sent');
+          });
+          sentTx.on('error', (err) => {
+            reject(err);
+          });
+        }).catch(reject);
+      });
     }
 
     static uploadFunction(fileBuffer: string): Promise<any> {
