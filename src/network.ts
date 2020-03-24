@@ -47,7 +47,7 @@ class Network {
         Network.updateAbi(process.env.CONTRACT_ADDRESS, process.env.ABI_PATH);
         Utils.localStorage.setItem('lastAbiAddress', process.env.CONTRACT_ADDRESS);
       }
-
+      
       this.web3 = new Web3(new Web3.providers.WebsocketProvider(process.env.PROVIDER_API));
       // this.web3.eth.accounts = new Accounts(process.env.PROVIDER_API);
       this.contract = new this.web3.eth.Contract(Network.getAbi(), process.env.CONTRACT_ADDRESS);
