@@ -1,5 +1,8 @@
+import DOTENV from 'dotenv-flow';
 import { Command, CommandInputs } from './command';
 import SessionManager from '../sessionManager';
+import Network from '../network';
+import Utils from '../utils';
 
 class TestCommand extends Command {
     COMMAND_NAME = 'test';
@@ -10,9 +13,16 @@ class TestCommand extends Command {
 
     // eslint-disable-next-line class-methods-use-this
     exec(): Promise<any> {
-      return new Promise<boolean>((resolve) => {
-        resolve(SessionManager.getInstance().userLogged());
-      });
+      let envConfig = {};
+      if (process.argv.indexOf('--dev') > -1) {
+        envConfig = { node_env: 'development' };
+      }
+      DOTENV.config(envConfig);
+      Network.updateAbi(process.env.CONTRACT_ADDRESS ?? '', process.env.ABI_PATH ?? '');
+      return this.network.transactContractMethod(this.network.getContractMethods().createFunction(Utils.randomString()));
+      // return new Promise<boolean>((resolve) => {
+      //   resolve(SessionManager.getInstance().userLogged());
+      // });
     }
 }
 

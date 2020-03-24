@@ -32,9 +32,8 @@ export abstract class Command {
       return this.COMMAND_DESCRIPTION;
     }
 
-    constructor(network: Network) {
-      this.network = network;
-      Commander.addCommand(this);
+    constructor() {
+      this.network = Network.getInstance();
     }
 }
 

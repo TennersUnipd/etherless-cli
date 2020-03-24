@@ -1,7 +1,7 @@
 import { Command, CommandInputs } from './command';
 import Utils from '../utils';
 
-export class RunCommand extends Command {
+class RunCommand extends Command {
     COMMAND_NAME = 'run <functionName> [parameters...]';
 
     COMMAND_ALIAS = 'r';
@@ -13,7 +13,7 @@ export class RunCommand extends Command {
     exec(inputs: RunCommandInputs): Promise<any> {
       return new Promise<any>((resolve, reject) => {
         const costFn = this.network.getContractMethods().costOfFunction(inputs.name);
-        this.network.executeContractMethod(costFn)
+        this.network.callContractMethod(costFn)
           .then((cost: any) => {
             // TODO: cost has to be a number
             const serializedParams = JSON.stringify(inputs.parameters);
@@ -22,7 +22,7 @@ export class RunCommand extends Command {
             const execFn = this.network
               .getContractMethods()
               .execFunctionRequest(inputs.name, serializedParams, identifier);
-            this.network.executeContractMethod(execFn, cost)
+            this.network.transactContractMethod(execFn)
               .then(() => {
                 this.awaitResponse(identifier, resolve, reject);
               })
@@ -46,12 +46,14 @@ export class RunCommand extends Command {
       });
 
       setTimeout(() => {
-        subscription.unsubscribe();
+        // subscription.unsubscribe();
       }, RunCommand.RESP_AWAIT_TIMEOUT * 1000);
     }
 }
 
-export interface RunCommandInputs extends CommandInputs {
+interface RunCommandInputs extends CommandInputs {
     name: string;
     parameters: string[];
 }
+
+export default RunCommand;

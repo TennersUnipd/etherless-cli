@@ -1,5 +1,6 @@
 import { Account } from 'web3-core';
 import Utils from './utils';
+import Network from './network';
 
 class SessionManager {
     private static readonly ACCOUNT_KEY = 'account';
@@ -11,7 +12,9 @@ class SessionManager {
     private constructor() {
       const stored = Utils.localStorage.getItem(SessionManager.ACCOUNT_KEY);
       if (stored !== null && stored !== undefined) {
-        this.user = stored;
+        const parsedAccountData = JSON.parse(stored);
+        const account = Network.getInstance().ethPrivateKeyToAccount(parsedAccountData.privateKey);
+        this.user = account;
       }
     }
 
@@ -25,7 +28,7 @@ class SessionManager {
 
     login(account: Account) {
       this.user = account;
-      Utils.localStorage.setItem(SessionManager.ACCOUNT_KEY, account);
+      Utils.localStorage.setItem(SessionManager.ACCOUNT_KEY, JSON.stringify(account));
     }
 
     logout() {

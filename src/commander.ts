@@ -1,4 +1,5 @@
 import { Command } from './commands/command';
+import Network from './network';
 
 const commander = require('commander');
 
@@ -24,6 +25,11 @@ class Commander {
           cmd.exec(inputs)
             .then((result) => {
               console.log(result);
+            }).catch((error) => {
+              console.error(error);
+            })
+            .finally(() => {
+              Network.getInstance().disconnect();
             });
         });
     }
