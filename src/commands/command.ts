@@ -1,4 +1,5 @@
 import Network from '../network';
+import Commander from '../commander';
 
 export abstract class Command {
     protected COMMAND_NAME: string = 'COMMAND';
@@ -33,6 +34,7 @@ export abstract class Command {
 
     constructor(network: Network) {
       this.network = network;
+      Commander.addCommand(this);
     }
 }
 
