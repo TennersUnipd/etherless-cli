@@ -17,6 +17,10 @@ class Utils {
     return zip.toBuffer();
   }
 
+  static print(content?:any) {
+    console.log(content);
+  }
+
   static localStorage = localStorage;
 }
 
