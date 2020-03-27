@@ -21,9 +21,11 @@ class EtherlessContract extends ContractInterface {
     this.setUpMap();
   }
 
-  async estimateGasCost(userAddress: string, requested: string): Promise<number> {
-    const estimatedCost = await this.contract
-      .methods[requested].estimateGas({ from: userAddress, gas: this.GASBASE });
+  async estimateGasCost(userAddress: string, requested: string, args:any): Promise<number> {
+    const finalString = requested.concat(this.getTypesString(requested));
+    console.log(finalString);
+    const estimatedCost = await this.contract.methods[`${finalString}`](args)
+      .estimateGas({ from: userAddress, gas: this.GASBASE });
     return estimatedCost;
   }
 
@@ -61,6 +63,7 @@ class EtherlessContract extends ContractInterface {
   }
 
   private setUpMap():void {
+    console.log(this.contract.methods);
     this.contract.options.jsonInterface.forEach((element:AbiItem) => {
       if (element.type === 'function' && element.name !== '') {
         const argumentsCollector: Inputs[] = [];
@@ -78,7 +81,7 @@ class EtherlessContract extends ContractInterface {
     const toBeReturned = {
       from: userAddress,
       to: this.contract.options.address,
-      gas: (await this.estimateGasCost(requested, userAddress)) * 1.5,
+      gas: (await this.estimateGasCost(requested, userAddress, args)) * 1.5,
       data: this.contract.methods[requested](args).encodeABI(),
     };
     return toBeReturned;
@@ -95,6 +98,19 @@ class EtherlessContract extends ContractInterface {
       }
     }
     return true;
+  }
+
+  private getTypesString(requested:string):string {
+    const types = this.getArgumentsOfFunction(requested);
+    console.log(types);
+    let toBeReturned:string = '(';
+    types.forEach((type) => {
+      toBeReturned = toBeReturned.concat(`${type.internalType},`);
+    });
+    toBeReturned = toBeReturned.substring(0, toBeReturned.length - 1);
+    toBeReturned = toBeReturned.concat(')');
+    console.log(toBeReturned);
+    return toBeReturned;
   }
 }
 
