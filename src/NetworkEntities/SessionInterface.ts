@@ -24,11 +24,11 @@ export default abstract class SessionInterface {
   /**
      * @brief This method should provide the logon functionality for exsterna credential
      * @param address is required for the user identification
-     * @param privateKey is required for sign the transaction
+     * @param privateKey is required for verify the user identity
      * @param password needed for saving the credential and unlocking the account
      *
      */
-  public abstract logon(privateKey:string, password:string):boolean;
+  public abstract logon(privateKey:string, password:string):Promise<boolean>;
 
   /**
      * @brief This method offers the logout funcitionality deleting the

@@ -20,7 +20,7 @@ export default class EtherlessSession extends SessionInterface {
   private readonly STORAGE_KEY = 'localAddress';
 
   /**
-   * this costructor should't be called outside the
+   * this costructor shouldn't be called outside the
    * network package
    */
   constructor(provider:string) {
@@ -44,15 +44,18 @@ export default class EtherlessSession extends SessionInterface {
     return this.saveAddress(address);
   }
 
-  public logon(privateKey:string, password:string):boolean {
-    let result = true;
-    this.personal.importRawKey(privateKey, password, (reason) => {
+  public async logon(privateKey:string, password:string):Promise<boolean> {
+    const result = await this.personal.importRawKey(privateKey, password, (reason) => {
       if (reason !== null) {
-        result = false;
         throw new Error(`Couldn't import the private key provided ${reason}`);
       }
-    }).then(this.saveAddress);
-    return result;
+    });
+    // return result;
+    let address:string = '';
+    if (typeof result !== 'undefined') {
+      address = result;
+    }
+    return this.saveAddress(address);
   }
 
   public logout():void {

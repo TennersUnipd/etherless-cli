@@ -5,18 +5,21 @@
  * @memberof Network
  */
 export abstract class ContractInterface {
-  protected abi:any;
+  protected abi:Object;
 
   protected contractAddress:string
+
+  protected provider:string
 
   /**
    *
    * @param ABI
    * @param contractAddress
    */
-  public constructor(ABI:any, contractAddress:string) {
+  public constructor(ABI:any, contractAddress:string, provider:string) {
     this.abi = ABI;
     this.contractAddress = contractAddress;
+    this.provider = provider;
   }
 
   /**

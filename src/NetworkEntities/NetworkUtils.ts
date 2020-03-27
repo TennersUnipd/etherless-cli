@@ -1,7 +1,7 @@
 import DOTENV from 'dotenv-flow';
 import { AbiItem } from 'web3-utils';
 import axios, { AxiosResponse } from 'axios';
-import Utils from 'src/utils';
+import Utils from '../utils';
 import EtherlessNetwork from './etherlessNetwork';
 import EtherlessContract from './etherlessContract';
 import EtherlessSession from './etherlessSession';
@@ -32,7 +32,7 @@ export default class NetworkUtils {
       this.checkAbiUpdate(process.env.CONTRACT_ADDRESS);
       const eNetwork:EtherlessNetwork = new EtherlessNetwork(process.env.PROVIDER_API);
       const eContract:EtherlessContract = new EtherlessContract(
-        NetworkUtils.getAbi(process.env.ABI_PATH), process.env.CONTRACT_ADDRESS,
+        NetworkUtils.getAbi(process.env.ABI_PATH), process.env.CONTRACT_ADDRESS, process.env.PROVIDER_API,
       );
       const eSession:EtherlessSession = new EtherlessSession(process.env.PROVIDER_API);
       this.facade = new NetworkComponentsFacade(eNetwork, eSession, eContract);
@@ -74,7 +74,7 @@ export default class NetworkUtils {
    * @param abiPath
    * @brief this method loads the ABI file from local storage
    */
-  private static getAbi(abiPath:string) : AbiItem[] {
+  public static getAbi(abiPath:string) : AbiItem[] {
     try {
       const parsed = JSON.parse(fs.readFileSync(abiPath));
       return parsed;

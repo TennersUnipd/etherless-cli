@@ -1,5 +1,6 @@
 import { Contract } from 'web3-eth-contract';
 import { AbiItem, AbiInput } from 'web3-utils';
+import Web3 from 'web3';
 import { ContractInterface, Inputs } from './contractInterface';
 
 class EtherlessContract extends ContractInterface {
@@ -12,10 +13,11 @@ class EtherlessContract extends ContractInterface {
    */
   private commandList: Map<string, [AbiItem, Inputs[]]>;
 
-  constructor(ABI:any, conctractAddress:string) {
-    super(ABI, conctractAddress);
+  constructor(ABI:AbiItem[], conctractAddress:string, provider:string) {
+    super(ABI, conctractAddress, provider);
+    const webinstance = new Web3(provider);
     this.commandList = new Map<string, [AbiItem, Inputs[]]>();
-    this.contract = new Contract(ABI, conctractAddress);
+    this.contract = new webinstance.eth.Contract(ABI, conctractAddress);
     this.setUpMap();
   }
 

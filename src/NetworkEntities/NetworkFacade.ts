@@ -1,5 +1,5 @@
-import Utils from 'src/utils';
 import { AxiosResponse } from 'axios';
+import Utils from '../utils';
 import SessionInterface from './SessionInterface';
 import NetworkInterface from './networkInerface';
 import { ContractInterface } from './contractInterface';
@@ -33,7 +33,7 @@ export default class NetworkComponentsFacade {
      * @param password required for registation
      * @brief this method proviedes the signup serivice
      */
-    public signup(password: string):boolean {
+    public signup(password: string):Promise<boolean> {
       return this.session.signup(password);
     }
 
@@ -42,7 +42,7 @@ export default class NetworkComponentsFacade {
      * @param address User addres required for logon
      * @param password password required for logon
      */
-    public logon(address:string, password:string):boolean {
+    public logon(address:string, password:string):Promise<boolean> {
       return this.session.logon(address, password);
     }
 
