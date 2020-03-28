@@ -10,7 +10,7 @@ export default class EtherlessNetwork extends NetworkInterface {
      */
     public constructor(provider:string) {
       super(provider);
-      this.web3 = new Web3(new Web3.providers.WebsocketProvider(provider));
+      this.web3 = new Web3(provider);
     }
 
     public disconnect(): void {
@@ -19,7 +19,8 @@ export default class EtherlessNetwork extends NetworkInterface {
       }
     }
 
-    public sendSignedTransaction(signedtrasacion: string): Promise<any> { // check return type
+    public sendSignedTransaction(signedtrasacion: string):
+    Promise<any> { // check return type
       return this.web3.eth.sendSignedTransaction(signedtrasacion);
     }
 

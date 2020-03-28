@@ -23,7 +23,7 @@ export default class EtherlessSession extends SessionInterface {
    * this costructor shouldn't be called outside the
    * network package
    */
-  constructor(provider:string) {
+  constructor(provider:string | any) {
     super(provider);
     this.personal = new Web3(provider).eth.personal;
     if (this.isUserSignedIn) {

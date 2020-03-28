@@ -51,7 +51,7 @@ export abstract class ContractInterface {
    * @param userAdress
    * @param requested the name of the function requested
    */
-  public abstract estimateGasCost(userAddress:string, requested:string, args:any):Promise<number>;
+  public abstract estimateGasCost(userAddress:string, requested:string, args:any[]):Promise<number>;
 
   /**
    * callFunction

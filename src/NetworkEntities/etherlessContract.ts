@@ -1,6 +1,7 @@
 import { Contract } from 'web3-eth-contract';
 import { AbiItem, AbiInput } from 'web3-utils';
 import Web3 from 'web3';
+import { strict } from 'assert';
 import { ContractInterface, Inputs } from './contractInterface';
 
 class EtherlessContract extends ContractInterface {
@@ -13,7 +14,7 @@ class EtherlessContract extends ContractInterface {
    */
   private commandList: Map<string, [AbiItem, Inputs[]]>;
 
-  constructor(ABI:AbiItem[], conctractAddress:string, provider:string) {
+  constructor(ABI:AbiItem[], conctractAddress:string, provider:string | any) {
     super(ABI, conctractAddress, provider);
     const webinstance = new Web3(provider);
     this.commandList = new Map<string, [AbiItem, Inputs[]]>();
@@ -21,10 +22,11 @@ class EtherlessContract extends ContractInterface {
     this.setUpMap();
   }
 
-  async estimateGasCost(userAddress: string, requested: string, args:any): Promise<number> {
+  async estimateGasCost(userAddress: string, requested: string, args:any[]): Promise<number> {
     const finalString = requested.concat(this.getTypesString(requested));
-    console.log(finalString);
-    const estimatedCost = await this.contract.methods[`${finalString}`](args)
+    this.argumentCheck(requested, args);
+    const estimatedCost = await this.contract
+      .methods[finalString](eval(EtherlessContract.prepareArgs(args))) // TODO: BAD SOLUTION NEEDS DISCUSSION!!!
       .estimateGas({ from: userAddress, gas: this.GASBASE });
     return estimatedCost;
   }
@@ -63,7 +65,6 @@ class EtherlessContract extends ContractInterface {
   }
 
   private setUpMap():void {
-    console.log(this.contract.methods);
     this.contract.options.jsonInterface.forEach((element:AbiItem) => {
       if (element.type === 'function' && element.name !== '') {
         const argumentsCollector: Inputs[] = [];
@@ -76,25 +77,26 @@ class EtherlessContract extends ContractInterface {
     });
   }
 
-  private async prepareTransaction(userAddress:string, requested:string, args:any[])
+  private async prepareTransaction(userAddress:string, requested:string, args: any[])
     :Promise<object> {
     const toBeReturned = {
       from: userAddress,
       to: this.contract.options.address,
-      gas: (await this.estimateGasCost(requested, userAddress, args)) * 1.5,
-      data: this.contract.methods[requested](args).encodeABI(),
+      gas: (await this.estimateGasCost(userAddress, requested, args)) * 1.5,
+      data: this.contract.methods[requested](eval(EtherlessContract.prepareArgs(args))).encodeABI(),
     };
     return toBeReturned;
   }
 
   private argumentCheck(requested: string, args: any[]):boolean {
-    const functionlarg:Inputs[] = this.getArgumentsOfFunction(requested);
-    if (functionlarg.length !== args.length) {
-      throw new Error(`Aspected ${functionlarg.length} arguments found${args.length}`);
+    const inputs = this.getArgumentsOfFunction(requested);
+    if (args.length !== inputs.length) {
+      throw new Error(`Aspected ${inputs.length} arguments found ${args.length}`);
     }
-    for (let i = 0; i < functionlarg.length; i += 1) {
-      if (typeof args[i] !== functionlarg[i].type) {
-        throw new Error(`expected ${functionlarg[i].type} on argument ${i}`);
+    for (let i = 0; i < inputs.length; i += 1) {
+      // eslint-disable-next-line valid-typeof
+      if (typeof args[i] !== inputs[i].type) {
+        throw new Error(`expected ${inputs[i].type} on argument ${i}`);
       }
     }
     return true;
@@ -102,15 +104,19 @@ class EtherlessContract extends ContractInterface {
 
   private getTypesString(requested:string):string {
     const types = this.getArgumentsOfFunction(requested);
-    console.log(types);
     let toBeReturned:string = '(';
     types.forEach((type) => {
       toBeReturned = toBeReturned.concat(`${type.internalType},`);
     });
     toBeReturned = toBeReturned.substring(0, toBeReturned.length - 1);
     toBeReturned = toBeReturned.concat(')');
-    console.log(toBeReturned);
     return toBeReturned;
+  }
+
+  private static prepareArgs(args:any[]):string {
+    let stringArgs = JSON.stringify(args);
+    stringArgs = stringArgs.substr(1, stringArgs.length - 2);
+    return stringArgs;
   }
 }
 

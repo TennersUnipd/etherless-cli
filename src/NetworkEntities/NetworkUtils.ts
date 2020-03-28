@@ -32,7 +32,9 @@ export default class NetworkUtils {
       this.checkAbiUpdate(process.env.CONTRACT_ADDRESS);
       const eNetwork:EtherlessNetwork = new EtherlessNetwork(process.env.PROVIDER_API);
       const eContract:EtherlessContract = new EtherlessContract(
-        NetworkUtils.getAbi(process.env.ABI_PATH), process.env.CONTRACT_ADDRESS, process.env.PROVIDER_API,
+        NetworkUtils.getAbi(process.env.ABI_PATH),
+        process.env.CONTRACT_ADDRESS,
+        process.env.PROVIDER_API,
       );
       const eSession:EtherlessSession = new EtherlessSession(process.env.PROVIDER_API);
       this.facade = new NetworkComponentsFacade(eNetwork, eSession, eContract);
