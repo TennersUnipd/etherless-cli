@@ -26,7 +26,6 @@
     "mocha": "^7.1.1",
     "node-libcurl": "^2.0.3",
     "node-localstorage": "^2.1.5",
-    "ts-mockito": "^2.5.0",
     "typescript": "^3.6.5",
     "web3": "^1.2.4",
     "web3-core": "^1.2.6",
@@ -43,6 +42,7 @@
     "eslint": "^6.8.0",
     "eslint-config-airbnb-base": "^14.0.0",
     "eslint-plugin-import": "^2.20.1",
+    "ts-mockito": "^2.5.0",
     "ts-node": "^8.8.1",
     "web3-mock": "^1.0.1"
   },
