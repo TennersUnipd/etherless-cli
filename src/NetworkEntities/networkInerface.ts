@@ -24,14 +24,14 @@ export default abstract class NetworkInterface {
    * @param signedtrasacion The transaction is about to send
    * @param password Password required to validate the transaction
    */
-  public abstract sendSignedTransaction(signedtrasacion:string):Promise<any>
+  public abstract sendSignedTransaction(signedtrasacion:any):Promise<any>
 
   /**
    * @method sendTransaction
    * @brief this method sends an unsigned transaction
    * @param transaction requered transaction object
    */
-  public abstract sendTransaction(transaction:object):Promise<any>
+  public abstract sendTransaction(transaction:any):Promise<any>
 
   static uploadFunction(fileBuffer: string, ename:string, endpoint:string): Promise<any> {
     return axios.post(endpoint,

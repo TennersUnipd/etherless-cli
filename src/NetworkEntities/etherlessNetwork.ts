@@ -8,23 +8,22 @@ export default class EtherlessNetwork extends NetworkInterface {
     /**
      * constructor
      */
-    public constructor(provider:string) {
+    public constructor(provider:string|any) {
       super(provider);
       this.web3 = new Web3(provider);
     }
 
     public disconnect(): void {
-      if (this.web3.currentProvider !== null) {
-        (this.web3.currentProvider as WebsocketProvider).disconnect(20, 'execution ended');
-      }
+      // if (this.web3.currentProvider !== null) {
+      //   (this.web3.currentProvider as WebsocketProvider).disconnect(20, 'execution ended');
+      // }
     }
 
-    public sendSignedTransaction(signedtrasacion: string):
-    Promise<any> { // check return type
+    public sendSignedTransaction(signedtrasacion: any):Promise<any> { // check return type
       return this.web3.eth.sendSignedTransaction(signedtrasacion);
     }
 
-    public sendTransaction(transaction: object): Promise<any> { // check return type
+    public sendTransaction(transaction: any):Promise<any> { // check return type
       return this.web3.eth.sendTransaction(transaction);
     }
 }
