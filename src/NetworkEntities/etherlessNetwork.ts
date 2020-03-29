@@ -1,5 +1,7 @@
 import Web3 from 'web3';
+
 import { WebsocketProvider } from 'web3-providers-ws';
+
 import NetworkInterface from './networkInerface';
 
 export default class EtherlessNetwork extends NetworkInterface {
