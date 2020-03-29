@@ -5,7 +5,7 @@
   "main": "./src/index.ts",
   "scripts": {
     "tsc": "tsc",
-    "test": "mocha -r ts-node/register tests/unit/*.ts"
+    "test": "mocha -r ts-node/register tests/*/*.ts" 
   },
   "author": "Tenners",
   "license": "MIT",

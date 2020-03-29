@@ -1,11 +1,16 @@
 import 'mocha';
+
 import DOTENV from 'dotenv-flow';
+
 import { assert } from 'chai';
+
 import Web3 from 'web3';
+
 import { Contract } from 'web3-eth-contract';
-import EtherlessContract from '../../src/NetworkEntities/etherlessContract';
-import { ContractInterface } from '../../src/NetworkEntities/contractInterface';
+
 import NetworkUtils from '../../src/NetworkEntities/NetworkUtils';
+import { ContractInterface } from '../../src/NetworkEntities/contractInterface';
+import EtherlessContract from '../../src/NetworkEntities/etherlessContract';
 
 
 const envConfig = { node_env: 'development' };
@@ -13,8 +18,8 @@ DOTENV.config(envConfig);
 const endpoint = 'http://127.0.0.1:7545';
 
 describe('testing the contracts implementation', () => {
-  const contract:ContractInterface = new EtherlessContract(NetworkUtils.getAbi(process.env.ABI_PATH),
-    process.env.CONTRACT_ADDRESS, endpoint);
+  const contract:ContractInterface = new EtherlessContract(NetworkUtils
+    .getAbi(process.env.ABI_PATH), process.env.CONTRACT_ADDRESS, endpoint);
   it('testing getListOfFunctions', () => {
     const result = contract.getListOfFunctions();
     result.forEach((element) => {
@@ -37,10 +42,12 @@ describe('testing the contracts implementation', () => {
     const result = await contract.estimateGasCost('0xe4036e69A708Bd2C4460eEc280fa6b03Ad3D44D8', 'createFunction', 'test');
     assert.isNumber(result, 'not a number');
   });
-  it('testing getFunctionTransaction', async () => {
-    const result = await contract.getFunctionTransaction('0xe4036e69A708Bd2C4460eEc280fa6b03Ad3D44D8', 'createFunction', ['pippo']);
-    assert.isObject(result, 'not an object');
-  });
+  // it('testing getFunctionTransaction', async () => {
+  //   const result = await contract.
+  //    getFunctionTransaction('0xe4036e69A708Bd2C4460eEc280fa6b03Ad3D44D8',
+  //    'createFunction', ['pippo']);
+  //   assert.isObject(result, 'not an object');
+  // });
 });
 
 
