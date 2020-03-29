@@ -14,16 +14,23 @@ export default class EtherlessNetwork extends NetworkInterface {
     }
 
     public disconnect(): void {
-      // if (this.web3.currentProvider !== null) {
+      // if (this.web3.currentProvider.toString) {
       //   (this.web3.currentProvider as WebsocketProvider).disconnect(20, 'execution ended');
       // }
+      console.log(this.web3.currentProvider.toString());
     }
 
     public sendSignedTransaction(signedtrasacion: any):Promise<any> { // check return type
-      return this.web3.eth.sendSignedTransaction(signedtrasacion);
+      return this.web3.eth.sendSignedTransaction(signedtrasacion.toString())
+        .on('error', console.error)
+        .then((data) => data)
+        .catch((err) => Promise.reject(err));
     }
 
-    public sendTransaction(transaction: any):Promise<any> { // check return type
-      return this.web3.eth.sendTransaction(transaction);
+    public async sendTransaction(transaction: any):Promise<any> { // check return type
+      return this.web3.eth.sendTransaction(transaction)
+        .on('error', console.error)
+        .then((data) => data)
+        .catch((err) => Promise.reject(err));
     }
 }

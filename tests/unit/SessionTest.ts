@@ -1,19 +1,12 @@
 import 'mocha';
 import { assert } from 'chai';
-import { mock } from 'ts-mockito';
-import Web3 from 'web3';
 import Ganache from 'ganache-core';
 import EtherlessSession from '../../src/NetworkEntities/etherlessSession';
 import SessionInterface from '../../src/NetworkEntities/SessionInterface';
 
-const transaction = {
-  from: '',
-  to: '',
-  gas: 500 * 1.5,
-  data: '',
-};
+const provider = Ganache.provider({ mnemonic: 'face doll lava rail horror bus junior fan coyote anger spoon talent' });
 
-const provider = Ganache.provider();
+
 describe('Testing EtherlessSession class', async () => {
   const session:SessionInterface = new EtherlessSession(provider);
   it('testing signup method', async () => {

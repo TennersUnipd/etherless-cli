@@ -78,7 +78,7 @@ export default class EtherlessSession extends SessionInterface {
           throw new Error(`Couldn't sign the tranasaction beacause ${reason}`);
         }
       });
-    return signedtransaction;
+    return signedtransaction.rawTransaction;
   }
 
   public isUserSignedIn(): boolean {
