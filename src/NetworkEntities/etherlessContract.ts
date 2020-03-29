@@ -48,7 +48,7 @@ class EtherlessContract extends ContractInterface {
 
   async getLog(address:string): Promise<string[]> {
     let toBeReturned:string[];
-    const pastEvents = await this.contract.getPastEvents(address);// to be fixed
+    const pastEvents = await this.contract.getPastEvents('allEvents');// to be fixed
     pastEvents.forEach((element) => {
       toBeReturned.push(`${element.logIndex}: ${element.event} ${element.address}`);
     });
