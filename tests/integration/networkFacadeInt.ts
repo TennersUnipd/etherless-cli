@@ -16,7 +16,7 @@ const network: NetworkInterface = new EtherlessNetwork(endpoint);
 const session: SessionInterface = new EtherlessSession(endpoint);
 const contract: ContractInterface = new EtherlessContract(NetworkUtils
   .getAbi(process.env.ABI_PATH), process.env.CONTRACT_ADDRESS, endpoint);
-describe('testing networkFacade interface', () => {
+describe('NetworkFacade interface\'s integration test', () => {
   const networkF: NetworkComponentsFacade = new NetworkComponentsFacade(network, session, contract);
   it('testing signup', async () => {
     const result = await networkF.signup('test1');
@@ -42,7 +42,7 @@ describe('testing networkFacade interface', () => {
   // 1) testing networkFacade interface
   // testing callFunction:
   // Error: The send transactions "from" field must be defined!
-    const result = await networkF.callFunction('listFunctions', [], ' ');
+    const result = await networkF.callFunction('createFunction', ['prova1']);
     assert.isObject(result, 'maybe there is a error, try again');
   });
 });
