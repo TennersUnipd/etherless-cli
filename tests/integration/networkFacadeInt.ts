@@ -2,8 +2,6 @@ import 'mocha';
 
 import { assert } from 'chai';
 
-import Web3 from 'web3';
-
 import NetworkComponentsFacade from '../../src/NetworkEntities/NetworkFacade';
 import NetworkUtils from '../../src/NetworkEntities/NetworkUtils';
 import SessionInterface from '../../src/NetworkEntities/SessionInterface';
@@ -14,18 +12,16 @@ import EtherlessSession from '../../src/NetworkEntities/etherlessSession';
 import NetworkInterface from '../../src/NetworkEntities/networkInerface';
 
 const endpoint = 'http://127.0.0.1:7545';
-// const envConfig = { node_env: 'development1' };
-// DOTENV.config(envConfig);
 const network: NetworkInterface = new EtherlessNetwork(endpoint);
 const session: SessionInterface = new EtherlessSession(endpoint);
 const contract: ContractInterface = new EtherlessContract(NetworkUtils
   .getAbi(process.env.ABI_PATH), process.env.CONTRACT_ADDRESS, endpoint);
-describe('testint networkFacade interface', () => {
+describe('testing networkFacade interface', () => {
   const networkF: NetworkComponentsFacade = new NetworkComponentsFacade(network, session, contract);
   it('testing signup', async () => {
     const result = await networkF.signup('test1');
     assert.isTrue(result, 'signup does not working');
-    console.log(session.getUserAddress());
+    // console.log(session.getUserAddress());
   });
   // it('testing login', async () => {
   // messaggio di errore Uncaught Error: Couldn't import the private key
@@ -40,9 +36,13 @@ describe('testint networkFacade interface', () => {
     });
     assert.isArray(result, 'getListOfFunctions is not working');
   });
-  it('testing callFunctions', async () => { // TypeError: Cannot read property '0' of undefined
-  // at EtherlessContract.isTheFunctionPayable
-    const result = await networkF.callFunction('listFunctions()', ['prova'], 'test1');
+  it('testing callFunction', async () => {
+  // UnhandledPromiseRejectionWarning: TypeError: Cannot read property '1' of undefined
+  // at EtherlessContract.getArgumentsOfFunction
+  // 1) testing networkFacade interface
+  // testing callFunction:
+  // Error: The send transactions "from" field must be defined!
+    const result = await networkF.callFunction('listFunctions', [], ' ');
     assert.isObject(result, 'maybe there is a error, try again');
   });
 });
