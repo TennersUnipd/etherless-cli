@@ -27,15 +27,22 @@ describe('testint networkFacade interface', () => {
     assert.isTrue(result, 'signup does not working');
     console.log(session.getUserAddress());
   });
-  //   it('testing login', async () => {
-  //     const result = networkF.logon('0x72A5B4C1e8E60D0E59f0A0931136593979500691', 'pp');
-  //     assert.isTrue(result, 'login is not working');
-  //   });
+  // it('testing login', async () => {
+  // messaggio di errore Uncaught Error: Couldn't import the private key
+  // Error: Returned error: private key length is invalid
+  //   const result = await networkF.logon('0x3551589371808E58B39075dFa61aF109bAA9fD0d', 'test1');
+  //   assert.isTrue(result, 'login is not working');
+  // });
   it('testing getListOfFunctions', () => {
     const result = networkF.getListOfFunctions();
     result.forEach((elements) => {
       console.log(elements);
     });
     assert.isArray(result, 'getListOfFunctions is not working');
+  });
+  it('testing callFunctions', async () => { // TypeError: Cannot read property '0' of undefined
+  // at EtherlessContract.isTheFunctionPayable
+    const result = await networkF.callFunction('listFunctions()', ['prova'], 'test1');
+    assert.isObject(result, 'maybe there is a error, try again');
   });
 });
