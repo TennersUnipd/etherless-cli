@@ -1,4 +1,6 @@
 import { AxiosResponse } from 'axios';
+import { rejects } from 'assert';
+import { utils } from 'mocha';
 import Utils from '../utils';
 import SessionInterface from './SessionInterface';
 import NetworkInterface from './networkInerface';
@@ -74,11 +76,15 @@ export default class NetworkComponentsFacade {
       const payable = this.contract.isTheFunctionPayable(functionName);
       const address = this.session.getUserAddress();
       const transaction = this.contract.getFunctionTransaction(address, functionName, parameters);
-      if (payable) {
-        const signedTransaction:string = await this.session.signTransaction(transaction, password);
-        return this.network.sendSignedTransaction(signedTransaction);
+      try {
+        if (payable) {
+          const signedTransaction:string = await this.session.signTransaction(transaction, password);
+          return this.network.sendSignedTransaction(signedTransaction);
+        }
+        return this.network.sendTransaction(transaction);
+      } catch (err) {
+        throw new Error(`Could not call the function: ${err}`);
       }
-      return this.network.sendTransaction(transaction);
     }
 
     /**
@@ -88,21 +94,29 @@ export default class NetworkComponentsFacade {
      * @brief this method upload on the AWS endpoint the required funcion
      * and register it on the eth network.
      */
-    public uploadFunction(functionDefinition:functionDefinition, password?:string) {
+    public async uploadFunction(functionDefinition:functionDefinition, password?:string): Promise<any> {
       const endpoint = `${process.env.AWS_ENDPOINT}createFunction`;
       if (this.session.isUserSignedIn()) {
         throw new Error('User is not logged in');
       }
-      const file:string = Utils.compressFile(functionDefinition.filePath);
       const awsName = Utils.randomString();
-      NetworkInterface.uploadFunction(file, awsName, endpoint).then((result:AxiosResponse) => {
-        const arnRole = result.data.FunctionArn;
-        this.callFunction(uploadFunctionCommand, [], password);
-      });
+      try {
+        // here we should take some eth from the user accout for
+        // testing the application and decide the cost of execution
+        const uploadResult = await NetworkInterface
+          .uploadFunction(functionDefinition.bufferFile, awsName, endpoint);
+        const functionArn = uploadResult.data.FunctionArn;
+        return this.callFunction(uploadFunctionCommand, [functionDefinition.name, functionArn], password);
+      } catch (err) {
+        throw new Error(`Could not upload the required function ${err}`);
+      }
     }
 }
 
-interface functionDefinition{
+export interface functionDefinition{
     name:string,
-    filePath:string
+    bufferFile:string,
+    description:string,
+    cost: string
+    prototype: string
 }
