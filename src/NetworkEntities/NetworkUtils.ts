@@ -1,11 +1,17 @@
 import DOTENV from 'dotenv-flow';
+
 import { AbiItem } from 'web3-utils';
+
 import axios, { AxiosResponse } from 'axios';
+
+import Web3 from 'web3';
+
 import Utils from '../utils';
-import EtherlessNetwork from './etherlessNetwork';
-import EtherlessContract from './etherlessContract';
-import EtherlessSession from './etherlessSession';
+
 import NetworkComponentsFacade from './NetworkFacade';
+import EtherlessContract from './etherlessContract';
+import EtherlessNetwork from './etherlessNetwork';
+import EtherlessSession from './etherlessSession';
 
 const fs = require('fs');
 
@@ -30,13 +36,14 @@ export default class NetworkUtils {
   static getEtherlessNetworkFacadeInstance(): NetworkComponentsFacade {
     if (this.facade === undefined) {
       this.checkAbiUpdate(process.env.CONTRACT_ADDRESS);
-      const eNetwork:EtherlessNetwork = new EtherlessNetwork(process.env.PROVIDER_API);
+      const provider = new Web3(process.env.PROVIDER_API);
+      const eNetwork:EtherlessNetwork = new EtherlessNetwork(provider);
       const eContract:EtherlessContract = new EtherlessContract(
         NetworkUtils.getAbi(process.env.ABI_PATH),
         process.env.CONTRACT_ADDRESS,
-        process.env.PROVIDER_API,
+        provider,
       );
-      const eSession:EtherlessSession = new EtherlessSession(process.env.PROVIDER_API);
+      const eSession:EtherlessSession = new EtherlessSession(provider);
       this.facade = new NetworkComponentsFacade(eNetwork, eSession, eContract);
     }
     return this.facade;

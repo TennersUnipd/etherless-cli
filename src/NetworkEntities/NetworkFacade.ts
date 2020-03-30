@@ -1,10 +1,14 @@
 import { AxiosResponse } from 'axios';
+
 import { rejects } from 'assert';
+
 import { utils } from 'mocha';
+
 import Utils from '../utils';
+
 import SessionInterface from './SessionInterface';
-import NetworkInterface from './networkInerface';
 import { ContractInterface } from './contractInterface';
+import NetworkInterface from './networkInerface';
 
 const uploadFunctionCommand = process.env.UPLOAD_Function;
 /**
@@ -35,17 +39,18 @@ export default class NetworkComponentsFacade {
      * @param password required for registation
      * @brief this method proviedes the signup serivice
      */
-    public signup(password: string):Promise<boolean> {
+    public signup(password: string): boolean {
+      this.logout();
       return this.session.signup(password);
     }
 
     /**
      * @method logon
-     * @param address User addres required for logon
+     * @param address User address required for logon
      * @param password password required for logon
      */
-    public logon(address:string, password:string):Promise<boolean> {
-      return this.session.logon(address, password);
+    public logon(privateKey:string, password:string): boolean {
+      return this.session.logon(privateKey, password);
     }
 
     /**
@@ -110,6 +115,17 @@ export default class NetworkComponentsFacade {
       } catch (err) {
         throw new Error(`Could not upload the required function ${err}`);
       }
+    }
+
+    public async getAllLoadedFunction() : Promise<any> {
+
+    }
+
+    /**
+     *
+     */
+    disconnect() {
+      this.network.disconnect();
     }
 }
 

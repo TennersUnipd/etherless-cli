@@ -12,14 +12,13 @@ export default class EtherlessNetwork extends NetworkInterface {
      */
     public constructor(provider:string|any) {
       super(provider);
-      this.web3 = new Web3(provider);
+      this.web3 = provider;
     }
 
     public disconnect(): void {
-      // if (this.web3.currentProvider.toString) {
-      //   (this.web3.currentProvider as WebsocketProvider).disconnect(20, 'execution ended');
-      // }
-      console.log(this.web3.currentProvider.toString());
+      if (this.web3.currentProvider instanceof Web3.providers.WebsocketProvider) {
+        (this.web3.currentProvider as WebsocketProvider).disconnect(20, 'execution ended');
+      }
     }
 
     public sendSignedTransaction(signedtrasacion: any):Promise<any> { // check return type

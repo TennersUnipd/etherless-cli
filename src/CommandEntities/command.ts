@@ -37,6 +37,4 @@ export abstract class Command {
     }
 }
 
-export interface CommandInputs {
-
-}
+export interface CommandInputs {}

@@ -1,4 +1,4 @@
-import { Command, CommandInputs } from './command';
+import { Command } from './command';
 
 class ListCommand extends Command {
     COMMAND_NAME = 'list';
@@ -8,14 +8,12 @@ class ListCommand extends Command {
     COMMAND_DESCRIPTION = 'List of all functions available on Etherless';
 
     exec(): Promise<any> {
-      const contractFn = this.network.getContractMethods().listFunctions();
-      return this.network.callContractMethod(contractFn)
-        .then((results: string[]) => {
-          if (results.length > 0) {
-            return results.join('\n');
-          }
-          return 'No functions';
-        });
+      this.network.listFunctions().then((results: string[]) => {
+        if (results.length > 0) {
+          return results.join('\n');
+        }
+        return 'No functions';
+      });
     }
 }
 

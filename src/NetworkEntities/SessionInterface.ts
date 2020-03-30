@@ -5,6 +5,8 @@
  *
  */
 export default abstract class SessionInterface {
+   static readonly STORAGE_WALLET_KEY = 'etherless_wallet';
+
     protected provider:string
 
     /**
@@ -19,7 +21,7 @@ export default abstract class SessionInterface {
      * @returns boolean
      * @param password is need for encrypt the privateKey
      */
-  public abstract async signup(password:string): Promise<boolean>;
+  public abstract signup(password:string): boolean;
 
   /**
      * @brief This method should provide the logon functionality for exsterna credential
@@ -28,7 +30,7 @@ export default abstract class SessionInterface {
      * @param password needed for saving the credential and unlocking the account
      *
      */
-  public abstract logon(privateKey:string, password:string):Promise<boolean>;
+  public abstract logon(privateKey:string, password:string):boolean;
 
   /**
      * @brief This method offers the logout funcitionality deleting the

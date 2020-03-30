@@ -1,5 +1,6 @@
-import { Command } from './commands/command';
-import Network from './network';
+// eslint-disable-next-line no-unused-vars
+import NetworkUtils from '../NetworkEntities/NetworkUtils';
+import { Command } from './command';
 
 const commander = require('commander');
 
@@ -29,7 +30,7 @@ class Commander {
               console.error(error);
             })
             .finally(() => {
-              Network.getInstance().disconnect();
+              NetworkUtils.getEtherlessNetworkFacadeInstance().network.disconnect();
             });
         });
     }
