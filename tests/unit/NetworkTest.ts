@@ -1,3 +1,5 @@
+/* eslint-disable no-unused-vars */
+/* eslint-disable no-undef */
 import 'mocha';
 import { assert } from 'chai';
 import mockito, { instance } from 'ts-mockito';
@@ -52,7 +54,6 @@ describe('testing the network implementation', () => {
       network.sendSignedTransaction(signedTransaction);
       assert.isTrue(true, 'always true');
     } catch (err) {
-      console.log(err);
       assert.isTrue(false, 'always false');
     }
   });
@@ -69,8 +70,7 @@ describe('testing the network implementation', () => {
         .catch((err) => Promise.reject(err));
       assert.isTrue(true, 'always true');
     } catch (err) {
-      console.log(err);
-      assert.isTrue(false, 'always false');
+      assert.isTrue(false, 'Get Function Transaction is not working');
     }
   });
   network.disconnect();

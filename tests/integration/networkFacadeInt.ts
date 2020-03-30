@@ -1,3 +1,5 @@
+/* eslint-disable no-unused-vars */
+/* eslint-disable no-undef */
 import 'mocha';
 
 import { assert } from 'chai';
@@ -17,7 +19,8 @@ import * as variables from '../unit/SharedVariables';
 const endpoint = Ganache.provider();
 const network: NetworkInterface = new EtherlessNetwork(endpoint);
 const session: SessionInterface = new EtherlessSession(endpoint);
-const contract: ContractInterface = new EtherlessContract(variables.dummyAbi, variables.contractAddress, endpoint);
+const contract: ContractInterface = new EtherlessContract(variables.dummyAbi,
+  variables.contractAddress, endpoint);
 
 describe('NetworkFacade interface\'s integration test', () => {
   const networkF: NetworkComponentsFacade = new NetworkComponentsFacade(network, session, contract);
@@ -34,11 +37,9 @@ describe('NetworkFacade interface\'s integration test', () => {
   // });
   it('testing getListOfFunctions', () => {
     const result = networkF.getListOfFunctions();
-    result.forEach((elements) => {
-      console.log(elements);
-    });
     assert.isArray(result, 'getListOfFunctions is not working');
-    assert.isTrue(result.includes('function1'));
+    assert.isTrue(result.includes('function1'), 'the contract is not loading the dummyABI contract');
+    assert.isTrue(result.includes('function2'), 'the contract is not loading the dummyABI contract');
   });
   it('testing callFunction', async () => {
   // UnhandledPromiseRejectionWarning: TypeError: Cannot read property '1' of undefined

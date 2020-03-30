@@ -1,3 +1,5 @@
+/* eslint-disable no-unused-vars */
+/* eslint-disable no-undef */
 import 'mocha';
 import { assert, expect } from 'chai';
 import Web3 from 'web3';

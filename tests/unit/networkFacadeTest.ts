@@ -1,3 +1,5 @@
+/* eslint-disable no-unused-vars */
+/* eslint-disable no-undef */
 import 'mocha';
 import { assert } from 'chai';
 import { AxiosResponse } from 'axios';
@@ -20,39 +22,46 @@ mockito.when(mockedContract.isTheFunctionPayable).thenReturn((nFunction) => {
 
 mockito.when(mockedSession.getUserAddress).thenReturn(() => 'Indirizzo verissimo');
 
-mockito.when(mockedContract.getFunctionTransaction).thenReturn((address, fname, args) => new Promise((resolve, reject) => {
-  resolve({ transazione: true, isValid: 'sure' });
-  reject(new Error('generic error'));
-}));
+mockito.when(mockedContract.getFunctionTransaction)
+  .thenReturn((address, fname, args) => new Promise((resolve, reject) => {
+    resolve({ transazione: true, isValid: 'sure' });
+    reject(new Error('generic error'));
+  }));
 
-mockito.when(mockedNetwork.sendTransaction).thenReturn((transaction:any) => new Promise((resolve, reject) => {
-  resolve(true);
-  reject(new Error('generic error sendTransaction'));
-}));
+mockito.when(mockedNetwork.sendTransaction)
+  .thenReturn((transaction:any) => new Promise((resolve, reject) => {
+    resolve(true);
+    reject(new Error('generic error sendTransaction'));
+  }));
 
 describe('testing networkFacade', () => {
-  const networkFacade: NetworkComponentsFacade = new NetworkComponentsFacade(mockito.instance(mockedNetwork),
-    mockito.instance(mockedSession), mockito.instance(mockedContract));
+  const networkFacade: NetworkComponentsFacade = new NetworkComponentsFacade(
+    mockito.instance(mockedNetwork),
+    mockito.instance(mockedSession),
+    mockito.instance(mockedContract),
+  );
   it('testing signup function', async () => {
     // stub method before execution
-    mockito.when(mockedSession.signup).thenReturn((password:string) => new Promise<boolean>((resolve) => {
-      if (password !== 'ciao') {
-        resolve(false);
-      } else {
-        resolve(true);
-      }
-    }));
+    mockito.when(mockedSession.signup)
+      .thenReturn((password:string) => new Promise<boolean>((resolve) => {
+        if (password !== 'ciao') {
+          resolve(false);
+        } else {
+          resolve(true);
+        }
+      }));
     const result = await networkFacade.signup('ciao');
     assert.isTrue(result, 'ciccia');
   });
   it('testing logon function', async () => {
-    mockito.when(mockedSession.logon).thenReturn((address:string, password:string) => new Promise<boolean>((resolve) => {
-      if (address !== 'ciao' && password !== 'hey') {
-        resolve(false);
-      } else {
-        resolve(true);
-      }
-    }));
+    mockito.when(mockedSession.logon)
+      .thenReturn((address:string, password:string) => new Promise<boolean>((resolve) => {
+        if (address !== 'ciao' && password !== 'hey') {
+          resolve(false);
+        } else {
+          resolve(true);
+        }
+      }));
     const result = await networkFacade.logon('ciao', 'hey');
     assert.isTrue(result, 'ciccia');
   });

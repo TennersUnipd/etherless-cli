@@ -1,3 +1,5 @@
+/* eslint-disable no-unused-vars */
+/* eslint-disable no-undef */
 import { AbiItem } from 'web3-utils';
 
 export const transactionEmpty = {
