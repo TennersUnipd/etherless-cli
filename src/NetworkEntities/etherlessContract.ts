@@ -1,7 +1,6 @@
 import { Contract } from 'web3-eth-contract';
 import { AbiItem, AbiInput } from 'web3-utils';
 import Web3 from 'web3';
-import { strict } from 'assert';
 import { ContractInterface, Inputs } from './contractInterface';
 
 class EtherlessContract extends ContractInterface {
@@ -25,9 +24,17 @@ class EtherlessContract extends ContractInterface {
   async estimateGasCost(userAddress: string, requested: string, args:any[]): Promise<number> {
     const finalString = requested.concat(this.getTypesString(requested));
     this.argumentCheck(requested, args);
-    const estimatedCost = await this.contract
-      .methods[finalString](eval(EtherlessContract.prepareArgs(args))) // TODO: BAD SOLUTION NEEDS DISCUSSION!!!
-      .estimateGas({ from: userAddress, gas: this.GASBASE });
+    let estimatedCost;
+    if (args.length > 0) {
+      estimatedCost = await this.contract
+        .methods[finalString](eval(EtherlessContract
+          .prepareArgs(args))) // TODO: BAD SOLUTION NEEDS DISCUSSION!!!
+        .estimateGas({ from: userAddress, gas: this.GASBASE });
+    } else {
+      estimatedCost = await this.contract
+        .methods[finalString]()
+        .estimateGas({ from: userAddress, gas: this.GASBASE });
+    }
     return estimatedCost;
   }
 
@@ -79,13 +86,20 @@ class EtherlessContract extends ContractInterface {
 
   private async prepareTransaction(userAddress:string, requested:string, args: any[])
     :Promise<object> {
-    const toBeReturned = {
+    if (args.length > 0) {
+      return {
+        from: userAddress,
+        to: this.contract.options.address,
+        gas: (await this.estimateGasCost(userAddress, requested, args)) * 1.5,
+        data: this.contract.methods[requested](eval(EtherlessContract.prepareArgs(args))).encodeABI(),
+      };
+    }
+    return {
       from: userAddress,
       to: this.contract.options.address,
       gas: (await this.estimateGasCost(userAddress, requested, args)) * 1.5,
-      data: this.contract.methods[requested](eval(EtherlessContract.prepareArgs(args))).encodeABI(),
+      data: this.contract.methods[requested]().encodeABI(),
     };
-    return toBeReturned;
   }
 
   private argumentCheck(requested: string, args: any[]):boolean {
@@ -105,10 +119,13 @@ class EtherlessContract extends ContractInterface {
   private getTypesString(requested:string):string {
     const types = this.getArgumentsOfFunction(requested);
     let toBeReturned:string = '(';
-    types.forEach((type) => {
-      toBeReturned = toBeReturned.concat(`${type.internalType},`);
+    types.forEach((type, index) => {
+      if (index === types.length - 1) {
+        toBeReturned = toBeReturned.concat(`${type.internalType}`);
+      } else {
+        toBeReturned = toBeReturned.concat(`${type.internalType},`);
+      }
     });
-    toBeReturned = toBeReturned.substring(0, toBeReturned.length - 1);
     toBeReturned = toBeReturned.concat(')');
     return toBeReturned;
   }

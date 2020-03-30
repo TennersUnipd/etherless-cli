@@ -2,6 +2,7 @@ import 'mocha';
 
 import { assert } from 'chai';
 
+import Ganache from 'ganache-core';
 import NetworkComponentsFacade from '../../src/NetworkEntities/NetworkFacade';
 import NetworkUtils from '../../src/NetworkEntities/NetworkUtils';
 import SessionInterface from '../../src/NetworkEntities/SessionInterface';
@@ -10,12 +11,14 @@ import EtherlessContract from '../../src/NetworkEntities/etherlessContract';
 import EtherlessNetwork from '../../src/NetworkEntities/etherlessNetwork';
 import EtherlessSession from '../../src/NetworkEntities/etherlessSession';
 import NetworkInterface from '../../src/NetworkEntities/networkInerface';
+import * as variables from '../unit/SharedVariables';
 
-const endpoint = 'http://127.0.0.1:7545';
+
+const endpoint = Ganache.provider();
 const network: NetworkInterface = new EtherlessNetwork(endpoint);
 const session: SessionInterface = new EtherlessSession(endpoint);
-const contract: ContractInterface = new EtherlessContract(NetworkUtils
-  .getAbi(process.env.ABI_PATH), process.env.CONTRACT_ADDRESS, endpoint);
+const contract: ContractInterface = new EtherlessContract(variables.dummyAbi, variables.contractAddress, endpoint);
+
 describe('NetworkFacade interface\'s integration test', () => {
   const networkF: NetworkComponentsFacade = new NetworkComponentsFacade(network, session, contract);
   it('testing signup', async () => {
@@ -35,6 +38,7 @@ describe('NetworkFacade interface\'s integration test', () => {
       console.log(elements);
     });
     assert.isArray(result, 'getListOfFunctions is not working');
+    assert.isTrue(result.includes('function1'));
   });
   it('testing callFunction', async () => {
   // UnhandledPromiseRejectionWarning: TypeError: Cannot read property '1' of undefined
@@ -42,7 +46,7 @@ describe('NetworkFacade interface\'s integration test', () => {
   // 1) testing networkFacade interface
   // testing callFunction:
   // Error: The send transactions "from" field must be defined!
-    const result = await networkF.callFunction('createFunction', ['prova1']);
+    const result = await networkF.callFunction('createFunction', ['function2']);
     assert.isObject(result, 'maybe there is a error, try again');
   });
 });

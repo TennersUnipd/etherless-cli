@@ -33,8 +33,16 @@ describe('testing the contracts implementation', () => {
     const result = await contract.estimateGasCost('0xe4036e69A708Bd2C4460eEc280fa6b03Ad3D44D8', 'function1', ['string']);
     assert.isNumber(result, 'not a number');
   });
+  it('testing estimateGasCost', async () => {
+    const result = await contract.estimateGasCost('0xe4036e69A708Bd2C4460eEc280fa6b03Ad3D44D8', 'function2', []);
+    assert.isNumber(result, 'not a number');
+  });
   it('testing getFunctionTransaction', async () => {
     const result = await contract.getFunctionTransaction('0xe4036e69A708Bd2C4460eEc280fa6b03Ad3D44D8', 'function1', ['test']);
+    assert.isObject(result, 'not an object');
+  });
+  it('testing getFunctionTransaction', async () => {
+    const result = await contract.getFunctionTransaction('0xe4036e69A708Bd2C4460eEc280fa6b03Ad3D44D8', 'function2', []);
     assert.isObject(result, 'not an object');
   });
   it('testing history of transaction', async () => {
