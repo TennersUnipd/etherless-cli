@@ -69,6 +69,11 @@ export abstract class ContractInterface {
    * @param address address to use as filter for research of past transaction
    */
   public abstract getLog(address:string):Promise<string[]>;
+
+  /**
+   *
+   */
+  public abstract getSignal(signaName:string, id:string);
 }
 
 /**

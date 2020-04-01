@@ -5,8 +5,6 @@
  *
  */
 export default abstract class SessionInterface {
-   static readonly STORAGE_WALLET_KEY = 'etherless_wallet';
-
     protected provider:string
 
     /**
@@ -55,6 +53,12 @@ export default abstract class SessionInterface {
      * getUserAddress
      */
   public abstract getUserAddress():string;
+
+  /**
+   * @method getBalance()
+   * @returns the balance
+   */
+  public abstract getBalance():Promise<number>;
 
   /**
      * sendTransaction need to be moved to to the NetworkInterface

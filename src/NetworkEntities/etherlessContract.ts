@@ -24,7 +24,8 @@ class EtherlessContract extends ContractInterface {
     this.setUpMap();
   }
 
-  async estimateGasCost(userAddress: string, requested: string, args:any[]): Promise<number> {
+  public async estimateGasCost(userAddress: string, requested: string, args:any[]):
+   Promise<number> {
     const finalString = requested.concat(this.getTypesString(requested));
     this.argumentCheck(requested, args);
     let estimatedCost;
@@ -41,31 +42,44 @@ class EtherlessContract extends ContractInterface {
     return estimatedCost;
   }
 
-  getListOfFunctions(): string[] {
+  public getSignal(signal: string, id: string) {
+    this.contract.once(signal, { filter: { _identifier: id } }, (err:any, event:any) => {
+      if (err !== null) {
+        throw new Error(`could not get the signal requested error: ${err}`);
+      }
+      if (event.id === id) {
+        return event;
+      }
+    });
+  }
+
+  public getListOfFunctions(): string[] {
     return Array.from(this.commandList.keys());
   }
 
-  isTheFunctionPayable(requested: string): boolean {
+  public isTheFunctionPayable(requested: string): boolean {
     if (this.commandList.get(requested)[0].stateMutability !== 'payable') {
       return false;
     }
     return true;
   }
 
-  getArgumentsOfFunction(requested:string):Inputs[] {
+  public getArgumentsOfFunction(requested:string):Inputs[] {
     return this.commandList.get(requested)[1];
   }
 
-  async getLog(address:string): Promise<string[]> {
+  public async getLog(userAddress:string): Promise<string[]> {
     let toBeReturned:string[];
-    const pastEvents = await this.contract.getPastEvents('allEvents');// to be fixed
+    // address may be wrong
+    const pastEvents = await this.contract.getPastEvents('allEvents',
+      { filter: { address: userAddress }, fromBlock: 0, toBlock: 'latest' });
     pastEvents.forEach((element) => {
       toBeReturned.push(`${element.logIndex}: ${element.event} ${element.address}`);
     });
     return toBeReturned;
   }
 
-  getFunctionTransaction(userAddress:string, requested: string, args: any[])
+  public getFunctionTransaction(userAddress:string, requested: string, args: any[])
     : Promise<object> {
     if (!this.commandList.has(requested)) {
       throw new Error('Function not found');

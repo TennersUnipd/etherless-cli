@@ -10,17 +10,21 @@ import SessionInterface from './SessionInterface';
 import { ContractInterface } from './contractInterface';
 import NetworkInterface from './networkInerface';
 
-const uploadFunctionCommand = process.env.UPLOAD_Function;
+
 /**
  * @class NetworkComponentsFacade
  * @constructor the constructor of this class should't be called.
  */
-export default class NetworkComponentsFacade {
-    network: NetworkInterface;
+export default class NetworkFacade {
+    private static uploadFunctionCommand = process.env.UPLOAD_Function;
 
-    session: SessionInterface;
+    private static listCommand = process.env.LIST_Function;
 
-    contract: ContractInterface;
+    private network: NetworkInterface;
+
+    private session: SessionInterface;
+
+    private contract: ContractInterface;
 
     /**
      * @method constructor this method should not be called outside the network scope
@@ -76,7 +80,7 @@ export default class NetworkComponentsFacade {
      * @brief this method execute the function on the ethereum network.
      * DOES NOT EXECUTE USER LOADED FUNCTION
      */
-    public async callFunction(functionName:string, parameters:any[], password?:string)
+    private async callFunction(functionName:string, parameters:any[], password?:string)
         :Promise<any> {
       const payable = this.contract.isTheFunctionPayable(functionName);
       const address = this.session.getUserAddress();
@@ -111,14 +115,26 @@ export default class NetworkComponentsFacade {
         const uploadResult = await NetworkInterface
           .uploadFunction(functionDefinition.bufferFile, awsName, endpoint);
         const functionArn = uploadResult.data.FunctionArn;
-        return this.callFunction(uploadFunctionCommand, [functionDefinition.name, functionArn], password);
+        return this.callFunction(NetworkFacade.uploadFunctionCommand, [functionDefinition.name, functionArn], password);
       } catch (err) {
         throw new Error(`Could not upload the required function ${err}`);
       }
     }
 
     public async getAllLoadedFunction() : Promise<any> {
+      return this.callFunction(NetworkFacade.listCommand, []);
+    }
 
+    public remoteExecution(fName:string, serializedParams:string, identifier:string, password:string): any {
+      this.callFunction('runCommand', [fName, serializedParams, identifier], password)
+        .then((result) => {
+          // attendo la risposta;
+        })
+        .catch((err) => { throw new Error(err); });
+    }
+
+    public async getLog() : Promise<string[]> {
+      return this.contract.getLog(this.session.getUserAddress());
     }
 
     /**

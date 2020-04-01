@@ -16,10 +16,11 @@ import { Wallet } from 'web3-eth-accounts';
 import Utils from '../utils';
 
 import SessionInterface from './SessionInterface';
-import NetworkUtils from './NetworkUtils';
 
 
 export default class EtherlessSession extends SessionInterface {
+  static readonly STORAGE_WALLET_KEY = 'etherless_wallet';
+
   private personal:Personal;
 
   private web3:Web3;
@@ -54,26 +55,27 @@ export default class EtherlessSession extends SessionInterface {
   private storeAccount(account: Account, password: string) {
     this.web3.eth.accounts.wallet.add(account);
     const encrypted = this.web3.eth.accounts.wallet.encrypt(password);
-    Utils.localStorage.setItem(SessionInterface.STORAGE_WALLET_KEY, JSON.stringify(encrypted));
+    Utils.localStorage.setItem(EtherlessSession.STORAGE_WALLET_KEY, JSON.stringify(encrypted));
   }
 
   public logout():void {
     this.accountAddress = undefined;
-    Utils.localStorage.removeItem(SessionInterface.STORAGE_WALLET_KEY);
+    Utils.localStorage.removeItem(EtherlessSession.STORAGE_WALLET_KEY);
   }
 
-  private getAccount(password: string): Account {
-    const encryptedWallet = EtherlessSession.getWallet();
-    try {
-      const wallet = this.web3.eth.accounts.wallet.decrypt(encryptedWallet, password);
-      return wallet[0];
-    } catch {
-      throw new Error('Unable to read internal storage');
-    }
-  }
+
+  // private getAccount(password: string): Account {
+  //   const encryptedWallet = EtherlessSession.getWallet();
+  //   try {
+  //     const wallet = this.web3.eth.accounts.wallet.decrypt(encryptedWallet, password);
+  //     return wallet[0];
+  //   } catch {
+  //     throw new Error('Unable to read internal storage');
+  //   }
+  // }
 
   private static getWallet(): EncryptedKeystoreV3Json[] {
-    const encryptedWallet = Utils.localStorage.getItem(SessionInterface.STORAGE_WALLET_KEY);
+    const encryptedWallet = Utils.localStorage.getItem(EtherlessSession.STORAGE_WALLET_KEY);
     try {
       return JSON.parse(encryptedWallet) as EncryptedKeystoreV3Json[];
     } catch {
@@ -104,9 +106,11 @@ export default class EtherlessSession extends SessionInterface {
 
   // eslint-disable-next-line class-methods-use-this
   public isUserSignedIn(): boolean {
-    // const verify:string = this.getUserAddress();
-    // if (verify === undefined || verify === '') { return false; }
-    // Web3.utils.isAddress(Web3.utils.toChecksumAddress(verify));
-    return Utils.localStorage.getItem(SessionInterface.STORAGE_WALLET_KEY) !== null;
+    return Utils.localStorage.getItem(EtherlessSession.STORAGE_WALLET_KEY) !== null;
+  }
+
+  public async getBalance(): Promise<number> {
+    const result = await this.web3.eth.getBalance(this.accountAddress);
+    return parseInt(result, 10);
   }
 }
