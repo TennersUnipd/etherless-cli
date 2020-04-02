@@ -5,23 +5,6 @@
  * @memberof Network
  */
 export abstract class ContractInterface {
-  protected abi:Object;
-
-  protected contractAddress:string
-
-  protected provider:string
-
-  /**
-   *
-   * @param ABI
-   * @param contractAddress
-   */
-  public constructor(ABI:any, contractAddress:string, provider:string) {
-    this.abi = ABI;
-    this.contractAddress = contractAddress;
-    this.provider = provider;
-  }
-
   /**
    * getListOfFunctions
    * @brief this method returns all the available methods of the contract
@@ -63,6 +46,14 @@ export abstract class ContractInterface {
   public abstract getFunctionTransaction(userAddress:string, requested: string, arg: any[])
     :Promise<object>;
 
+
+  /**
+   *
+   * @param requested
+   * @param any
+   */
+  public abstract getCallable(requested:string, arg:any[]):any
+
   /**
    * getLog
    * @brief this method retrive from the network all the history of a specific address
@@ -71,9 +62,10 @@ export abstract class ContractInterface {
   public abstract getLog(address:string):Promise<string[]>;
 
   /**
-   *
+   * @param signal the name of the signal thats needs to be capetured
+   * @param id the idetifier of the signal to avoid collision with another request
    */
-  public abstract getSignal(signaName:string, id:string);
+  public abstract getSignal(signaName:string, id:string):any;
 }
 
 /**

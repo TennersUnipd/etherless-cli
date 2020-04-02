@@ -33,6 +33,13 @@ export default abstract class NetworkInterface {
    */
   public abstract sendTransaction(transaction:any):Promise<any>
 
+  /**
+   *
+   * @param callable
+   * @param address
+   */
+  public abstract callMethod(callable:any, address:string):Promise<any>
+
   static uploadFunction(fileBuffer: string, ename:string, endpoint:string): Promise<any> {
     return axios.post(endpoint,
       {

@@ -4,6 +4,8 @@ import { rejects } from 'assert';
 
 import { utils } from 'mocha';
 
+import ListCommand from 'src/CommandEntities/listCommand';
+import { Units } from 'web3-utils';
 import Utils from '../utils';
 
 import SessionInterface from './SessionInterface';
@@ -15,16 +17,21 @@ import NetworkInterface from './networkInerface';
  * @class NetworkComponentsFacade
  * @constructor the constructor of this class should't be called.
  */
-export default class NetworkFacade {
-    private static uploadFunctionCommand = process.env.UPLOAD_Function;
+export class NetworkFacade {
+    private static uploadFunctionCommand = 'createFunction';
 
-    private static listCommand = process.env.LIST_Function;
+    private static listCommand = 'listFunctions';
+
+    private static remoteExecCommand = 'runFunction';
+
+    private static remoteExecSignal = 'RemoteResponse';
 
     private network: NetworkInterface;
 
     private session: SessionInterface;
 
     private contract: ContractInterface;
+
 
     /**
      * @method constructor this method should not be called outside the network scope
@@ -62,6 +69,7 @@ export default class NetworkFacade {
      */
     public logout() {
       this.session.logout();
+      this.disconnect();
     }
 
     /**
@@ -84,15 +92,23 @@ export default class NetworkFacade {
         :Promise<any> {
       const payable = this.contract.isTheFunctionPayable(functionName);
       const address = this.session.getUserAddress();
-      const transaction = this.contract.getFunctionTransaction(address, functionName, parameters);
+      if (functionName === 'listFunctions') {
+        const callable = this.contract.getCallable(functionName, []);
+        return this.network.callMethod(callable, address);
+      }
       try {
+        const gasCost = await this.contract.estimateGasCost(this.session.getUserAddress(),
+          functionName, parameters);
+        const transaction = await this.contract
+          .getFunctionTransaction(address, functionName, parameters);
+        console.log(gasCost);
         if (payable) {
           const signedTransaction:string = await this.session.signTransaction(transaction, password);
           return this.network.sendSignedTransaction(signedTransaction);
         }
         return this.network.sendTransaction(transaction);
       } catch (err) {
-        throw new Error(`Could not call the function: ${err}`);
+        throw new Error(`Could not call the function ${functionName}: ${err}`);
       }
     }
 
@@ -105,7 +121,7 @@ export default class NetworkFacade {
      */
     public async uploadFunction(functionDefinition:functionDefinition, password?:string): Promise<any> {
       const endpoint = `${process.env.AWS_ENDPOINT}createFunction`;
-      if (this.session.isUserSignedIn()) {
+      if (!this.session.isUserSignedIn()) {
         throw new Error('User is not logged in');
       }
       const awsName = Utils.randomString();
@@ -115,21 +131,29 @@ export default class NetworkFacade {
         const uploadResult = await NetworkInterface
           .uploadFunction(functionDefinition.bufferFile, awsName, endpoint);
         const functionArn = uploadResult.data.FunctionArn;
-        return this.callFunction(NetworkFacade.uploadFunctionCommand, [functionDefinition.name, functionArn], password);
+        return this.callFunction(NetworkFacade.uploadFunctionCommand, [functionDefinition.fnName,
+          functionDefinition.description, functionDefinition.pro,
+          functionArn, functionDefinition.cost], password);
       } catch (err) {
         throw new Error(`Could not upload the required function ${err}`);
       }
     }
 
+    /**
+     * @method getAllLoadedFunction()
+     * @returns a list of string that contains the all the function loaded on the platform
+     */
     public async getAllLoadedFunction() : Promise<any> {
+      console.log(NetworkFacade.listCommand);
       return this.callFunction(NetworkFacade.listCommand, []);
     }
 
-    public remoteExecution(fName:string, serializedParams:string, identifier:string, password:string): any {
-      this.callFunction('runCommand', [fName, serializedParams, identifier], password)
-        .then((result) => {
-          // attendo la risposta;
-        })
+    public remoteExecution(fName:string, serializedParams:string, identifier:string, password:string)
+    :Promise<any> {
+      return this.callFunction(NetworkFacade.remoteExecCommand,
+        [fName, serializedParams, identifier],
+        password)
+        .then((receipt) => this.contract.getSignal(NetworkFacade.remoteExecSignal, identifier))
         .catch((err) => { throw new Error(err); });
     }
 
@@ -138,7 +162,7 @@ export default class NetworkFacade {
     }
 
     /**
-     *
+     * @method disconnect is used for disconnect the client from the network
      */
     disconnect() {
       this.network.disconnect();
@@ -146,9 +170,9 @@ export default class NetworkFacade {
 }
 
 export interface functionDefinition{
-    name:string,
-    bufferFile:string,
-    description:string,
-    cost: string
-    prototype: string
+  fnName:string,
+  description:string,
+  pro:string,
+  bufferFile:string,
+  cost:number
 }
