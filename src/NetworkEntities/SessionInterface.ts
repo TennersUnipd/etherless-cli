@@ -5,15 +5,6 @@
  *
  */
 export default abstract class SessionInterface {
-    protected provider:string
-
-    /**
-   *
-   */
-    constructor(provider:string) {
-      this.provider = provider;
-    }
-
   /**
      * @brief This method provides the signup functionality
      * @returns boolean
@@ -59,9 +50,4 @@ export default abstract class SessionInterface {
    * @returns the balance
    */
   public abstract getBalance():Promise<number>;
-
-  /**
-     * sendTransaction need to be moved to to the NetworkInterface
-
-    sendTransaction(signedTransaction):Promise<any> */
 }
