@@ -22,16 +22,16 @@ export default class EtherlessNetwork extends NetworkInterface {
     }
 
     public sendSignedTransaction(signedtrasacion: any):Promise<any> { // check return type
-      return this.web3.eth.sendSignedTransaction(signedtrasacion.toString())
-        .on('error', console.error)
-        .then((data) => data)
-        .catch((err) => Promise.reject(err));
+      console.log('sendSignedTransaction');
+      return this.web3.eth.sendSignedTransaction(signedtrasacion.toString());
     }
 
     public async sendTransaction(transaction: any):Promise<any> { // check return type
-      return this.web3.eth.sendTransaction(transaction)
-        .on('error', console.error)
-        .then((data) => data)
-        .catch((err) => Promise.reject(err));
+      return this.web3.eth.sendTransaction(transaction);
+    }
+
+    // eslint-disable-next-line class-methods-use-this
+    public async callMethod(callable:any, address:string):Promise<any> {
+      return callable.call({ from: address });
     }
 }

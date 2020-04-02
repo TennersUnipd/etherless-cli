@@ -8,7 +8,7 @@ import Web3 from 'web3';
 
 import Utils from '../utils';
 
-import NetworkComponentsFacade from './NetworkFacade';
+import { NetworkFacade } from './NetworkFacade';
 import EtherlessContract from './etherlessContract';
 import EtherlessNetwork from './etherlessNetwork';
 import EtherlessSession from './etherlessSession';
@@ -27,13 +27,13 @@ export interface EtherscanResponse {
   result: string;
 }
 export default class NetworkUtils {
-  static facade: NetworkComponentsFacade;
+  static facade: NetworkFacade;
 
   /**
    * @method getEtherlessNetworkFacadeInstance
    * @brief this method inizialize the NetworkComponetsFacade and returns an instance
    */
-  static getEtherlessNetworkFacadeInstance(): NetworkComponentsFacade {
+  static getEtherlessNetworkFacadeInstance(): NetworkFacade {
     if (this.facade === undefined) {
       this.checkAbiUpdate(process.env.CONTRACT_ADDRESS);
       const provider = new Web3(process.env.PROVIDER_API);
@@ -44,7 +44,7 @@ export default class NetworkUtils {
         provider,
       );
       const eSession:EtherlessSession = new EtherlessSession(provider);
-      this.facade = new NetworkComponentsFacade(eNetwork, eSession, eContract);
+      this.facade = new NetworkFacade(eNetwork, eSession, eContract);
     }
     return this.facade;
   }
