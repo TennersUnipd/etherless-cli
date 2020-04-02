@@ -17,7 +17,7 @@ import NetworkInterface from './networkInerface';
  * @class NetworkComponentsFacade
  * @constructor the constructor of this class should't be called.
  */
-export class NetworkFacade {
+export default class NetworkFacade {
     private static uploadFunctionCommand = 'createFunction';
 
     private static listCommand = 'listFunctions';

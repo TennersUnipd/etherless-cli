@@ -10,7 +10,7 @@ import EtherlessContract from '../../src/NetworkEntities/etherlessContract';
 import { ContractInterface } from '../../src/NetworkEntities/contractInterface';
 import * as variables from './SharedVariables';
 
-const provider = Ganache.provider({ mnemonic: 'face doll lava rail horror bus junior fan coyote anger spoon talent' });
+const provider = 'wss://ropsten.infura.io/ws/v3/f4347c3f96d448499a8e7940793d93a6';
 describe('testing the contracts implementation', () => {
   const contract:ContractInterface = new EtherlessContract(variables.dummyAbi,
     variables.contractAddress, provider);
