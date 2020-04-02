@@ -4,8 +4,6 @@
  * @constructor the constructor of this class should be not called outside the network package
  */
 
-import { Personal } from 'web3-eth-personal';
-
 import Web3 from 'web3';
 
 import { RLPEncodedTransaction, Account, EncryptedKeystoreV3Json } from 'web3-core';
@@ -13,6 +11,8 @@ import { RLPEncodedTransaction, Account, EncryptedKeystoreV3Json } from 'web3-co
 import { isAddress } from 'web3-utils';
 
 import { Wallet } from 'web3-eth-accounts';
+import { Transaction } from 'ethereumjs-tx';
+import { Buffer } from 'buffer';
 import Utils from '../utils';
 
 import SessionInterface from './SessionInterface';
@@ -21,7 +21,8 @@ import SessionInterface from './SessionInterface';
 export default class EtherlessSession extends SessionInterface {
   static readonly STORAGE_WALLET_KEY = 'etherless_wallet';
 
-  private personal:Personal;
+  static readonly chain = 'ropsten';
+
 
   private web3:Web3;
 
@@ -31,10 +32,9 @@ export default class EtherlessSession extends SessionInterface {
    * this costructor shouldn't be called outside the
    * network package
    */
-  constructor(provider:string | any) {
-    super(provider);
+  constructor(provider:any) {
+    super();
     this.web3 = provider;
-    this.personal = provider.eth.personal;
     if (this.isUserSignedIn()) {
       this.accountAddress = this.getUserAddress();
     }
@@ -64,15 +64,15 @@ export default class EtherlessSession extends SessionInterface {
   }
 
 
-  // private getAccount(password: string): Account {
-  //   const encryptedWallet = EtherlessSession.getWallet();
-  //   try {
-  //     const wallet = this.web3.eth.accounts.wallet.decrypt(encryptedWallet, password);
-  //     return wallet[0];
-  //   } catch {
-  //     throw new Error('Unable to read internal storage');
-  //   }
-  // }
+  private getAccount(password: string): Account {
+    const encryptedWallet = EtherlessSession.getWallet();
+    try {
+      const wallet = this.web3.eth.accounts.wallet.decrypt(encryptedWallet, password);
+      return wallet[0];
+    } catch {
+      throw new Error('Unable to read internal storage');
+    }
+  }
 
   private static getWallet(): EncryptedKeystoreV3Json[] {
     const encryptedWallet = Utils.localStorage.getItem(EtherlessSession.STORAGE_WALLET_KEY);
@@ -92,16 +92,11 @@ export default class EtherlessSession extends SessionInterface {
   }
 
   public async signTransaction(transaction: object, password: string): Promise<any> {
-    if (password === undefined || password === '') {
-      throw new Error('Missing password');
-    }
-    const signedtransaction:any = await this
-      .personal.signTransaction(transaction, password, (reason) => {
-        if (reason !== null) {
-          throw new Error(`Couldn't sign the transaction beacause ${reason}`);
-        }
-      });
-    return signedtransaction.rawTransaction;
+    const local = JSON.parse(JSON.stringify(transaction));
+    const privateKey = Buffer.from(this.getAccount(password).privateKey.slice(2), 'hex');
+    const tx = new Transaction(local, { chain: EtherlessSession.chain });
+    tx.sign(privateKey);
+    return `0x${tx.serialize()}`;
   }
 
   // eslint-disable-next-line class-methods-use-this
@@ -110,7 +105,11 @@ export default class EtherlessSession extends SessionInterface {
   }
 
   public async getBalance(): Promise<number> {
-    const result = await this.web3.eth.getBalance(this.accountAddress);
-    return parseInt(result, 10);
+    try {
+      const result = await this.web3.eth.getBalance(this.accountAddress);
+      return parseInt(result, 10);
+    } catch (err) {
+      throw new Error(`Could not retrive the balance of the current account: ${err}`);
+    }
   }
 }
