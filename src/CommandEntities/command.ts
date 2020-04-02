@@ -1,4 +1,4 @@
-import NetworkComponentsFacade from '../NetworkEntities/NetworkFacade';
+import NetworkFacade from '../NetworkEntities/NetworkFacade';
 import NetworkUtils from '../NetworkEntities/NetworkUtils';
 
 export abstract class Command {
@@ -8,7 +8,7 @@ export abstract class Command {
 
     protected COMMAND_DESCRIPTION: string = 'DESCRIPTION';
 
-    protected network: NetworkComponentsFacade;
+    protected network: NetworkFacade;
 
     abstract exec(inputs: CommandInputs) : Promise<any>;
 
@@ -32,7 +32,7 @@ export abstract class Command {
       return this.COMMAND_DESCRIPTION;
     }
 
-    constructor(network:NetworkComponentsFacade) {
+    constructor(network:NetworkFacade) {
       this.network = network;
     }
 }
