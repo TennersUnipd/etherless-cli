@@ -1,4 +1,4 @@
-import NetworkFacade from '../NetworkEntities/NetworkFacade';
+import { NetworkFacade } from '../NetworkEntities/NetworkFacade';
 import NetworkUtils from '../NetworkEntities/NetworkUtils';
 
 export abstract class Command {
@@ -37,4 +37,6 @@ export abstract class Command {
     }
 }
 
-export interface CommandInputs {}
+export interface CommandInputs {
+
+}

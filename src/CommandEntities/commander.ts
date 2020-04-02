@@ -30,7 +30,7 @@ class Commander {
               console.error(error);
             })
             .finally(() => {
-              NetworkUtils.getEtherlessNetworkFacadeInstance().network.disconnect();
+              NetworkUtils.getEtherlessNetworkFacadeInstance().disconnect();
             });
         });
     }

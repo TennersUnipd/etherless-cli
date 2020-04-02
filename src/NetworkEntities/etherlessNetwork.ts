@@ -2,6 +2,7 @@ import Web3 from 'web3';
 
 import { WebsocketProvider } from 'web3-providers-ws';
 
+import { SignedTransaction } from 'web3-core';
 import NetworkInterface from './networkInerface';
 
 export default class EtherlessNetwork extends NetworkInterface {
@@ -21,13 +22,16 @@ export default class EtherlessNetwork extends NetworkInterface {
       }
     }
 
-    public sendSignedTransaction(signedtrasacion: any):Promise<any> { // check return type
-      console.log('sendSignedTransaction');
-      return this.web3.eth.sendSignedTransaction(signedtrasacion.toString());
-    }
-
-    public async sendTransaction(transaction: any):Promise<any> { // check return type
-      return this.web3.eth.sendTransaction(transaction);
+    public async sendTransaction(signedTransaction: SignedTransaction):Promise<any> { // check return type
+      return new Promise<any>((resolve, reject) => {
+        const sentTx = this.web3.eth.sendSignedTransaction(signedTransaction.rawTransaction);
+        sentTx.on('receipt', () => {
+          resolve('Request sent');
+        });
+        sentTx.on('error', (err) => {
+          reject(err);
+        });
+      });
     }
 
     // eslint-disable-next-line class-methods-use-this

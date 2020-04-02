@@ -44,10 +44,11 @@ class EtherlessContract extends ContractInterface {
    * @param requested
    * @param args
    */
-  public async estimateGasCost(userAddress: string, requested: string, args:any[]):
+  public async estimateGasCost(userAddress: string, requested: string, args:any[], value: number = undefined):
    Promise<number> {
-    this.argumentCheck(requested, args);
-    const gasCost = await this.commandLoader.get(requested)(args).estimateGas({ from: userAddress });
+    // TODO: non si puo fare su argument check su una funzione che fa tutt'altro
+    // this.argumentCheck(requested, args);
+    const gasCost = await this.commandLoader.get(requested)(args).estimateGas({ from: userAddress, value });
     return gasCost;
   }
 
@@ -56,14 +57,16 @@ class EtherlessContract extends ContractInterface {
    * @param signal
    * @param id
    */
-  public getSignal(signal: string, id: string): any {
-    this.contract.once(signal, { filter: { _identifier: id } }, (err:any, event:any) => {
-      if (event.id === id) {
+  public getSignal(signal: string, id: string): Promise<any> {
+    return new Promise<string>((resolve, reject) => {
+      this.contract.once(signal, { filter: { _identifier: id } }, (err:any, event:any) => {
         if (err !== null) {
-          throw new Error(`could not get the signal requested error: ${err}`);
+          reject(new Error(`Could not get the signal requested error: ${err}`));
         }
-        return JSON.parse(event.returnValues[0]);
-      }
+        console.log('RESULT', event.returnValues[0]);
+        // eslint-disable-next-line no-underscore-dangle
+        resolve(JSON.parse(event.returnValues._response));
+      });
     });
   }
 
@@ -83,7 +86,14 @@ class EtherlessContract extends ContractInterface {
    * @param requested
    */
   public isTheFunctionPayable(requested: string): boolean {
-    if (this.commandList.get(requested)[0].stateMutability !== 'payable') {
+    let command: any;
+    try {
+      // eslint-disable-next-line prefer-destructuring
+      command = this.commandList.get(requested)[0];
+    } catch {
+      throw new Error(`Function ${requested} not available`);
+    }
+    if (command.stateMutability !== 'payable') {
       return false;
     }
     return true;
@@ -116,13 +126,13 @@ class EtherlessContract extends ContractInterface {
    * @param requested
    * @param args
    */
-  public getFunctionTransaction(userAddress:string, requested: string, args: any[])
+  public getFunctionTransaction(userAddress:string, requested: string, args: any[], gasEstimate: number, value: number = undefined)
     : Promise<object> {
     if (!this.commandList.has(requested)) {
       throw new Error('Function not found');
     }
     this.argumentCheck(requested, args);
-    return this.prepareTransaction(userAddress, requested, args);
+    return this.prepareTransaction(userAddress, requested, args, gasEstimate, value);
   }
 
   /**
@@ -142,20 +152,27 @@ class EtherlessContract extends ContractInterface {
 
     this.commandLoader.set('createFunction', (args:any[]):any => this.contract.methods.createFunction(args[0], args[1], args[2], args[3], args[4]));
     this.commandLoader.set('listFunctions', (args:any[]):any => this.contract.methods.listFunctions());
+    this.commandLoader.set('costOfFunction', (args:any[]):any => this.contract.methods.costOfFunction(args[0]));
     this.commandLoader.set('runFunction', (args:any[]):any => this.contract.methods.runFunction(args[0], args[1], args[2]));
   }
 
   /**
    *
    */
-  private async prepareTransaction(userAddress:string, requested:string, args: any[])
-    :Promise<object> {
+  private async prepareTransaction(
+    userAddress:string,
+    requested:string,
+    args: any[],
+    gasEstimate: number,
+    value: number = undefined,
+  ) :Promise<object> {
     return {
-      once: await this.web3.eth.getTransactionCount(userAddress),
+      // once: await this.web3.eth.getTransactionCount(userAddress),
       from: userAddress,
       to: this.contract.options.address,
-      gas: Web3.utils.toHex(new BN((await this.estimateGasCost(userAddress, requested, args)) * 1.5)),
+      gas: gasEstimate * 2,
       data: this.commandLoader.get(requested)(args).encodeABI(),
+      value,
     };
   }
 

@@ -6,6 +6,7 @@ import { utils } from 'mocha';
 
 import ListCommand from 'src/CommandEntities/listCommand';
 import { Units } from 'web3-utils';
+import { SignedTransaction } from 'web3-core';
 import Utils from '../utils';
 
 import SessionInterface from './SessionInterface';
@@ -18,13 +19,16 @@ import NetworkInterface from './networkInerface';
  * @constructor the constructor of this class should't be called.
  */
 export class NetworkFacade {
-    private static uploadFunctionCommand = 'createFunction';
+  // group commands under common structure (like an enum mapping to strings)
+    private static createFunctionCommand = 'createFunction';
 
     private static listCommand = 'listFunctions';
 
     private static remoteExecCommand = 'runFunction';
 
     private static remoteExecSignal = 'RemoteResponse';
+
+    private static costOfFunction = 'costOfFunction';
 
     private network: NetworkInterface;
 
@@ -88,28 +92,26 @@ export class NetworkFacade {
      * @brief this method execute the function on the ethereum network.
      * DOES NOT EXECUTE USER LOADED FUNCTION
      */
-    private async callFunction(functionName:string, parameters:any[], password?:string)
+    private async callFunction(functionName:string, parameters:any[], password?:string, isCallable: boolean = true, value: number = undefined)
         :Promise<any> {
-      const payable = this.contract.isTheFunctionPayable(functionName);
       const address = this.session.getUserAddress();
-      if (functionName === 'listFunctions') {
-        const callable = this.contract.getCallable(functionName, []);
-        return this.network.callMethod(callable, address);
-      }
-      try {
-        const gasCost = await this.contract.estimateGasCost(this.session.getUserAddress(),
-          functionName, parameters);
+      const payable = this.contract.isTheFunctionPayable(functionName);
+      if (payable || !isCallable) {
+        // get cost of function
+        const gasCost = await this.contract.estimateGasCost(
+          this.session.getUserAddress(),
+          functionName,
+          parameters,
+          value,
+        );
         const transaction = await this.contract
-          .getFunctionTransaction(address, functionName, parameters);
-        console.log(gasCost);
-        if (payable) {
-          const signedTransaction:string = await this.session.signTransaction(transaction, password);
-          return this.network.sendSignedTransaction(signedTransaction);
-        }
-        return this.network.sendTransaction(transaction);
-      } catch (err) {
-        throw new Error(`Could not call the function ${functionName}: ${err}`);
+          .getFunctionTransaction(address, functionName, parameters, gasCost, value);
+        const signedTransaction:SignedTransaction = await this.session.signTransaction(transaction, password);
+        return this.network.sendTransaction(signedTransaction);
       }
+      // not payable
+      const callable = this.contract.getCallable(functionName, parameters);
+      return this.network.callMethod(callable, address);
     }
 
     /**
@@ -119,7 +121,7 @@ export class NetworkFacade {
      * @brief this method upload on the AWS endpoint the required funcion
      * and register it on the eth network.
      */
-    public async uploadFunction(functionDefinition:functionDefinition, password?:string): Promise<any> {
+    public async createFunction(functionDefinition:FunctionDefinition, password?:string): Promise<any> {
       const endpoint = `${process.env.AWS_ENDPOINT}createFunction`;
       if (!this.session.isUserSignedIn()) {
         throw new Error('User is not logged in');
@@ -131,9 +133,9 @@ export class NetworkFacade {
         const uploadResult = await NetworkInterface
           .uploadFunction(functionDefinition.bufferFile, awsName, endpoint);
         const functionArn = uploadResult.data.FunctionArn;
-        return this.callFunction(NetworkFacade.uploadFunctionCommand, [functionDefinition.fnName,
+        return this.callFunction(NetworkFacade.createFunctionCommand, [functionDefinition.fnName,
           functionDefinition.description, functionDefinition.pro,
-          functionArn, functionDefinition.cost], password);
+          functionArn, functionDefinition.cost], password, false);
       } catch (err) {
         throw new Error(`Could not upload the required function ${err}`);
       }
@@ -144,17 +146,31 @@ export class NetworkFacade {
      * @returns a list of string that contains the all the function loaded on the platform
      */
     public async getAllLoadedFunction() : Promise<any> {
-      console.log(NetworkFacade.listCommand);
       return this.callFunction(NetworkFacade.listCommand, []);
     }
 
-    public remoteExecution(fName:string, serializedParams:string, identifier:string, password:string)
+    // eslint-disable-next-line class-methods-use-this
+    public async getCostOfFunction(functionName: string) : Promise<number> {
+      return this.callFunction(NetworkFacade.costOfFunction, [functionName]);
+    }
+
+    public async runFunction(fName:string, serializedParams:string, password:string)
     :Promise<any> {
-      return this.callFunction(NetworkFacade.remoteExecCommand,
-        [fName, serializedParams, identifier],
-        password)
-        .then((receipt) => this.contract.getSignal(NetworkFacade.remoteExecSignal, identifier))
-        .catch((err) => { throw new Error(err); });
+      const identifier = Utils.randomString();
+      const cost = await this.getCostOfFunction(fName);
+      const resultProm = new Promise<string>((resolve, reject) => {
+        this.callFunction(NetworkFacade.remoteExecCommand,
+          [fName, serializedParams, identifier],
+          password, false, cost)
+          .then(() => {
+            console.log('Request sent');
+            this.contract.getSignal(NetworkFacade.remoteExecSignal, identifier)
+              .then(resolve)
+              .catch(reject);
+          })
+          .catch(resolve);
+      });
+      return resultProm;
     }
 
     public async getLog() : Promise<string[]> {
@@ -169,7 +185,7 @@ export class NetworkFacade {
     }
 }
 
-export interface functionDefinition{
+export interface FunctionDefinition{
   fnName:string,
   description:string,
   pro:string,

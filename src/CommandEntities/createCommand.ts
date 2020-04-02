@@ -1,10 +1,10 @@
-
+import { FunctionDefinition } from 'src/NetworkEntities/NetworkFacade';
 import { Command, CommandInputs } from './command';
 import Utils from '../utils';
-import { functionDefinition } from '../NetworkEntities/NetworkFacade';
+
 
 export class CreateCommand extends Command {
-    COMMAND_NAME = 'create <name> <description> <prototype> <cost> <file>';
+    COMMAND_NAME = 'create <name> <description> <prototype> <cost> <file> <password>';
 
     COMMAND_ALIAS = 'c';
 
@@ -12,17 +12,20 @@ export class CreateCommand extends Command {
 
     exec(inputs: CreateCommandInputs): Promise<any> {
       const compressedFile = Utils.compressFile(inputs.filePath);
-      let functionToUpload:functionDefinition;
-      functionToUpload.name = inputs.name;
-      functionToUpload.description = inputs.description;
-      functionToUpload.bufferFile = compressedFile;
-      return this.network.uploadFunction(functionToUpload);
+      const functionToUpload: FunctionDefinition = {
+        fnName: inputs.name,
+        description: inputs.description,
+        bufferFile: compressedFile,
+        pro: inputs.prototype,
+        cost: inputs.cost,
+      };
+      return this.network.createFunction(functionToUpload, inputs.password);
     }
 
     // eslint-disable-next-line class-methods-use-this
     parseArgs(args: string[]): CommandInputs {
       return {
-        name: args[0], description: args[1], prototype: args[2], cost: args[3], filePath: args[4],
+        name: args[0], description: args[1], prototype: args[2], cost: args[3], filePath: args[4], password: args[5],
       };
     }
 }
@@ -33,4 +36,5 @@ export interface CreateCommandInputs extends CommandInputs {
     prototype: string;
     cost: number;
     filePath: string;
+    password: string;
 }

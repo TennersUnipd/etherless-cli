@@ -34,7 +34,7 @@ export abstract class ContractInterface {
    * @param userAdress
    * @param requested the name of the function requested
    */
-  public abstract estimateGasCost(userAddress:string, requested:string, args:any[]):Promise<number>;
+  public abstract estimateGasCost(userAddress:string, requested:string, args:any[], value: number):Promise<number>;
 
   /**
    * callFunction
@@ -43,7 +43,7 @@ export abstract class ContractInterface {
    * @param arg an array of required parameters for the exection of the requested function
    * @returns Promise<object> that is a transaction for the requested function.
    */
-  public abstract getFunctionTransaction(userAddress:string, requested: string, arg: any[])
+  public abstract getFunctionTransaction(userAddress:string, requested: string, arg: any[], gasEstimate: number, value: number)
     :Promise<object>;
 
 
@@ -62,10 +62,10 @@ export abstract class ContractInterface {
   public abstract getLog(address:string):Promise<string[]>;
 
   /**
-   * @param signal the name of the signal thats needs to be capetured
+   * @param signal the name of the signal thats needs to be captured
    * @param id the idetifier of the signal to avoid collision with another request
    */
-  public abstract getSignal(signaName:string, id:string):any;
+  public abstract getSignal(signalName:string, id:string):Promise<any>;
 }
 
 /**

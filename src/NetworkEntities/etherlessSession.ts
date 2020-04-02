@@ -6,7 +6,9 @@
 
 import Web3 from 'web3';
 
-import { RLPEncodedTransaction, Account, EncryptedKeystoreV3Json } from 'web3-core';
+import {
+  RLPEncodedTransaction, Account, EncryptedKeystoreV3Json, SignedTransaction,
+} from 'web3-core';
 
 import { isAddress } from 'web3-utils';
 
@@ -91,12 +93,16 @@ export default class EtherlessSession extends SessionInterface {
     throw new Error('Wallet is empty');
   }
 
-  public async signTransaction(transaction: object, password: string): Promise<any> {
-    const local = JSON.parse(JSON.stringify(transaction));
-    const privateKey = Buffer.from(this.getAccount(password).privateKey.slice(2), 'hex');
-    const tx = new Transaction(local, { chain: EtherlessSession.chain });
-    tx.sign(privateKey);
-    return `0x${tx.serialize()}`;
+  public async signTransaction(transaction: object, password: string): Promise<SignedTransaction> {
+    const loggedUser = this.getAccount(password);
+    return new Promise<any>((resolve, reject) => {
+      const signPromise = this.web3.eth.accounts.signTransaction(transaction, loggedUser.privateKey);
+      signPromise.then((signedTx) => {
+        resolve(signedTx);
+      }).catch((error) => {
+        reject(error);
+      });
+    });
   }
 
   // eslint-disable-next-line class-methods-use-this

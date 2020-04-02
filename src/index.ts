@@ -8,18 +8,20 @@ import AccountLoginCommand from './CommandEntities/loginCommand';
 import RunCommand from './CommandEntities/runCommand';
 import ListCommand from './CommandEntities/listCommand';
 import NetworkUtils from './NetworkEntities/NetworkUtils';
+import { CreateCommand } from './CommandEntities/createCommand';
 
 const network = NetworkUtils.getEtherlessNetworkFacadeInstance();
 
 // TODO: add decorator
 const commands = [
-  // ListCommand,
+  ListCommand,
   AccountCreateCommand,
   // TestCommand,
   AccountLogoutCommand,
   AccountLoginCommand,
-  // RunCommand,
-  TestCommand,
+  RunCommand,
+  CreateCommand,
+  // TestCommand,
 ];
 
 Commander.config();

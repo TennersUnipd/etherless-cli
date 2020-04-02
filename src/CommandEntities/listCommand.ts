@@ -8,12 +8,7 @@ class ListCommand extends Command {
     COMMAND_DESCRIPTION = 'List of all functions available on Etherless';
 
     exec(): Promise<any> {
-      this.network.listFunctions().then((results: string[]) => {
-        if (results.length > 0) {
-          return results.join('\n');
-        }
-        return 'No functions';
-      });
+      return this.network.getAllLoadedFunction().then((commands) => commands.join('\n'));
     }
 }
 
