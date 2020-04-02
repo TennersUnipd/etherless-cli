@@ -34,7 +34,9 @@ class EtherlessContract extends ContractInterface {
     this.web3 = provider;
     this.commandList = new Map<string, [AbiItem, Inputs[]]>();
     this.commandLoader = new Map<string, fCall>();
-    this.contract = new this.web3.eth.Contract(ABI, conctractAddress);
+    if (this.web3.eth != null) {
+      this.contract = new this.web3.eth.Contract(ABI, conctractAddress);
+    } else console.log('not ok');
     this.setUpMap();
   }
 
