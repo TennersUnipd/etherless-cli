@@ -1,5 +1,3 @@
-// eslint-disable-next-line no-unused-vars
-import NetworkUtils from '../NetworkEntities/networkUtils';
 import { Command } from './command';
 
 const commander = require('commander');
