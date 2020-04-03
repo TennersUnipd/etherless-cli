@@ -10,33 +10,71 @@ export const transactionEmpty = {
 };
 
 
-export const dummyAbi: AbiItem[] = [{
-  inputs: [], payable: false, stateMutability: 'nonpayable', type: 'constructor',
+export const dummyAbi: AbiItem[] = [{"inputs":[],"payable":false,"stateMutability":"nonpayable","type":"constructor"
 }, {
-  anonymous: false,
-  inputs: [{
-    indexed: false, internalType: 'string', name: '_name', type: 'string',
+  "anonymous":false,
+  "inputs":[{
+    "indexed":false,"internalType":"string","name":"_name","type":"string"
   }, {
-    indexed: false, internalType: 'string', name: '_parameters', type: 'string',
-  }, {
-    indexed: false, internalType: 'string', name: '_identifier', type: 'string',
+    "indexed":false,"internalType":"string","name":"_parameters","type":"string"
+  },{
+    "indexed":false,"internalType":"string","name":"_identifier","type":"string"
   }],
-  name: 'RemoteExec',
-  type: 'event',
-}, {
-  anonymous: false,
-  inputs: [{
-    indexed: false, internalType: 'string', name: '_response', type: 'string',
-  }, {
-    indexed: false, internalType: 'string', name: '_identifier', type: 'string',
+  "name":"RemoteExec",
+  "type":"event"
+},{
+  "anonymous":false,
+  "inputs": [{
+    "indexed":false,"internalType":"string","name":"_response","type":"string"
+  },{
+    "indexed":false,"internalType":"string","name":"_identifier","type":"string"
   }],
-  name: 'RemoteResponse',
-  type: 'event',
+  "name":"RemoteResponse",
+  "type":"event"
 }, {
-  constant: false, inputs: [{ internalType: 'string', name: 'fnName', type: 'string' }], name: 'function1', outputs: [], payable: true, stateMutability: 'payable', type: 'function',
+  "constant":true, "inputs":[{"internalType":"string","name":"fnName","type":"string"}], 
+  "name":"costOfFunction","outputs":[{"internalType":"uint256","name":"cost","type":"uint256"}],
+  "payable":false,"stateMutability":"view","type":"function"
+},{
+  "constant":false,"inputs":[
+    {"internalType":"string","name":"fnName","type":"string"},
+    {"internalType":"string","name":"description","type":"string"},
+    {"internalType":"string","name":"prototype","type":"string"},
+    {"internalType":"string","name":"remoteResource","type":"string"},
+    {"internalType":"uint256","name":"cost","type":"uint256"}
+  ], 
+  "name":"createFunction","outputs":[],"payable":false,"stateMutability":"nonpayable","type":"function"
 }, {
-  constant: true, inputs: [], name: 'function2', outputs: [{ internalType: 'string[]', name: 'functionNames', type: 'string[]' }], payable: false, stateMutability: 'view', type: 'function',
-}];
+  "constant":true,"inputs":[{"internalType":"string","name":"fnToSearch","type":"string"}],
+  "name":"findFunctions","outputs":[
+    {"components":[
+      {"internalType":"string","name":"name","type":"string"},
+      {"internalType":"string","name":"description","type":"string"},
+      {"internalType":"string","name":"prototype","type":"string"},
+      {"internalType":"uint256","name":"cost","type":"uint256"},
+      {"internalType":"address payable","name":"owner","type":"address"},
+      {"internalType":"string","name":"remoteResource","type":"string"}
+    ],
+    "internalType":"struct Utils.Function","name":"","type":"tuple"}
+  ],
+  "payable":false,"stateMutability":"view","type":"function"
+},{
+  "constant":true,"inputs":[],"name":"getBalance","outputs":[{"internalType":"uint256","name":"","type":"uint256"}],"payable":false,"stateMutability":"view","type":"function"
+},{
+  "constant":true,"inputs":[],"name":"listFunctions","outputs":[{"internalType":"string[]","name":"functionNames","type":"string[]"}],"payable":false,"stateMutability":"view","type":"function"
+},{
+  "constant":false,"inputs":[
+    {"internalType":"string","name":"fnName","type":"string"},
+    {"internalType":"string","name":"paramers","type":"string"},
+    {"internalType":"string","name":"identifier","type":"string"}
+  ],"name":"runFunction","outputs":[],"payable":true,"stateMutability":"payable","type":"function"
+},{
+  "constant":false,"inputs":[
+    {"internalType":"string","name":"result","type":"string"},
+    {"internalType":"string","name":"identifier","type":"string"}
+  ],"name":"sendResponse","outputs":[],"payable":false,"stateMutability":"nonpayable","type":"function"
+}]
+
 
 export const contractAddress = '0xA3865FBE59d6d20647688040f604eEa680D0df32';
 
