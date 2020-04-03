@@ -43,7 +43,7 @@ describe('Testing EtherlessSession class', async () => {
     assert.isTrue(result, 'The signup method doesn\'t work');
   });*/
   it('testing logon method', () => {
-    const result = session.logon('0x8d92693653E4adD636a2ddB415E188e4be21b567', 'alphabet06');
+    const result = session.logon(' ', ' ');
     assert.isTrue(result, "The logon method doesn't work");
   });
   /*it('testing getBalance method', async () => {
