@@ -49,8 +49,8 @@ describe('testing the network implementation', () => {
   const network:NetworkInterface = new EtherlessNetwork(provider);
   it('testing sendTransaction', async () => {
     try {
-      const contractTranscation = await contract.getFunctionTransaction('0x31cEd6A92aC0439BB61207D6f52C82B0fe0DC566', 'function1', ciao);
-      const signedTransaction = await session.signTransaction(contractTranscation, 'password');
+      const contractTransaction = await contract.getFunctionTransaction('0x31cEd6A92aC0439BB61207D6f52C82B0fe0DC566', 'function1', ciao);
+      const signedTransaction = await session.signTransaction(contractTransaction, 'password');
       network.sendSignedTransaction(signedTransaction);
       assert.isTrue(true, 'always true');
     } catch (err) {
