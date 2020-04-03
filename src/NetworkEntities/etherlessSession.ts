@@ -17,7 +17,7 @@ import { Transaction } from 'ethereumjs-tx';
 import { Buffer } from 'buffer';
 import Utils from '../utils';
 
-import SessionInterface from './SessionInterface';
+import SessionInterface from './sessionInterface';
 
 
 export default class EtherlessSession extends SessionInterface {
@@ -31,7 +31,7 @@ export default class EtherlessSession extends SessionInterface {
   private accountAddress:string;
 
   /**
-   * this costructor shouldn't be called outside the
+   * this constructor shouldn't be called outside the
    * network package
    */
   constructor(provider:any) {
@@ -115,7 +115,7 @@ export default class EtherlessSession extends SessionInterface {
       const result = await this.web3.eth.getBalance(this.accountAddress);
       return parseInt(result, 10);
     } catch (err) {
-      throw new Error(`Could not retrive the balance of the current account: ${err}`);
+      throw new Error(`Could not retrieve the balance of the current account: ${err}`);
     }
   }
 }

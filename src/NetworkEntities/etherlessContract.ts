@@ -26,15 +26,15 @@ class EtherlessContract extends ContractInterface {
   /**
    *
    * @param ABI
-   * @param conctractAddress
+   * @param contractAddress
    * @param provider
    */
-  constructor(ABI:AbiItem[], conctractAddress:string, provider:any) {
+  constructor(ABI:AbiItem[], contractAddress:string, provider:any) {
     super();
     this.web3 = provider;
     this.commandList = new Map<string, [AbiItem, Inputs[]]>();
     this.commandLoader = new Map<string, fCall>();
-    this.contract = new this.web3.eth.Contract(ABI, conctractAddress);
+    this.contract = new this.web3.eth.Contract(ABI, contractAddress);
     this.setUpMap();
   }
 
@@ -195,33 +195,6 @@ class EtherlessContract extends ContractInterface {
       }
     }
     return true;
-  }
-
-  /**
-   *
-   */
-  private getTypesString(requested:string):string {
-    const types = this.getArgumentsOfFunction(requested);
-    let toBeReturned:string = '(';
-    types.forEach((type, index) => {
-      if (index === types.length - 1) {
-        toBeReturned = toBeReturned.concat(`${type.internalType}`);
-      } else {
-        toBeReturned = toBeReturned.concat(`${type.internalType},`);
-      }
-    });
-    toBeReturned = toBeReturned.concat(')');
-    return toBeReturned;
-  }
-
-  /**
-   *
-   * @param args
-   */
-  private static prepareArgs(args:any[]):string {
-    let stringArgs = JSON.stringify(args);
-    stringArgs = stringArgs.substr(1, stringArgs.length - 2);
-    return stringArgs;
   }
 }
 

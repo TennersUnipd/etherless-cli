@@ -1,6 +1,6 @@
 /**
- * ConctractInterface
- * @brief This Interface defines all the method that a ContractInterface should implemets
+ * ContractInterface
+ * @brief This Interface defines all the method that a ContractInterface should implements
  * @class ContractInterface
  * @memberof Network
  */
@@ -30,8 +30,8 @@ export abstract class ContractInterface {
 
   /**
    * @method estimateGasCost
-   * @brief return the estmated gas cost of running a function
-   * @param userAdress
+   * @brief return the estimated gas cost of running a function
+   * @param userAddress
    * @param requested the name of the function requested
    */
   public abstract estimateGasCost(userAddress:string, requested:string, args:any[], value: number):Promise<number>;
@@ -40,7 +40,7 @@ export abstract class ContractInterface {
    * callFunction
    * @brief This method returns the transaction about the requested object
    * @param requested the string that identify the function required
-   * @param arg an array of required parameters for the exection of the requested function
+   * @param arg an array of required parameters for the execution of the requested function
    * @returns Promise<object> that is a transaction for the requested function.
    */
   public abstract getFunctionTransaction(userAddress:string, requested: string, arg: any[], gasEstimate: number, value: number)
@@ -56,21 +56,21 @@ export abstract class ContractInterface {
 
   /**
    * getLog
-   * @brief this method retrive from the network all the history of a specific address
+   * @brief this method retrieve from the network all the history of a specific address
    * @param address address to use as filter for research of past transaction
    */
   public abstract getLog(address:string):Promise<string[]>;
 
   /**
    * @param signal the name of the signal thats needs to be captured
-   * @param id the idetifier of the signal to avoid collision with another request
+   * @param id the identifier of the signal to avoid collision with another request
    */
   public abstract getSignal(signalName:string, id:string):Promise<any>;
 }
 
 /**
  * @interface Inputs
- * @brief this Iterface defines the structure the arguments request for execution
+ * @brief this Interface defines the structure the arguments request for execution
  */
 export interface Inputs {
   internalType: string,

@@ -1,6 +1,6 @@
 import axios from 'axios';
 /**
- * @abstract NetworkInterface defines the method that all NetworkInterface clases should implements
+ * @abstract NetworkInterface defines the method that all NetworkInterface classes should implements
  */
 export default abstract class NetworkInterface {
   protected provider:string;
@@ -22,7 +22,7 @@ export default abstract class NetworkInterface {
   /**
    * @method sendTransaction
    * @brief this method sends an unsigned transaction
-   * @param transaction requered transaction object
+   * @param transaction required transaction object
    */
   public abstract sendTransaction(transaction:any):Promise<any>
 

@@ -3,11 +3,10 @@
 import Commander from './CommandEntities/commander';
 import AccountCreateCommand from './CommandEntities/signupCommand';
 import AccountLogoutCommand from './CommandEntities/logoutCommand';
-import TestCommand from './CommandEntities/testCommand';
 import AccountLoginCommand from './CommandEntities/loginCommand';
 import RunCommand from './CommandEntities/runCommand';
 import ListCommand from './CommandEntities/listCommand';
-import NetworkUtils from './NetworkEntities/NetworkUtils';
+import NetworkUtils from './NetworkEntities/networkUtils';
 import { CreateCommand } from './CommandEntities/createCommand';
 
 const network = NetworkUtils.getEtherlessNetworkFacadeInstance();

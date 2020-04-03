@@ -3,7 +3,7 @@ import Web3 from 'web3';
 import { WebsocketProvider } from 'web3-providers-ws';
 
 import { SignedTransaction } from 'web3-core';
-import NetworkInterface from './networkInerface';
+import NetworkInterface from './networkInterface';
 
 export default class EtherlessNetwork extends NetworkInterface {
     private web3:Web3;

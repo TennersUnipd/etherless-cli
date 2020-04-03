@@ -1,4 +1,4 @@
-import { FunctionDefinition } from 'src/NetworkEntities/NetworkFacade';
+import { FunctionDefinition } from 'src/NetworkEntities/networkFacade';
 import { Command, CommandInputs } from './command';
 import Utils from '../utils';
 

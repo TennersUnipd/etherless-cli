@@ -13,7 +13,7 @@ export default abstract class SessionInterface {
   public abstract signup(password:string): boolean;
 
   /**
-     * @brief This method should provide the logon functionality for exsterna credential
+     * @brief This method should provide the logon functionality for external credential
      * @param address is required for the user identification
      * @param privateKey is required for verify the user identity
      * @param password needed for saving the credential and unlocking the account
@@ -22,7 +22,7 @@ export default abstract class SessionInterface {
   public abstract logon(privateKey:string, password:string):boolean;
 
   /**
-     * @brief This method offers the logout funcitionality deleting the
+     * @brief This method offers the logout functionality deleting the
      * local information about the user
      */
   public abstract logout(): void;

@@ -8,7 +8,7 @@ import Web3 from 'web3';
 
 import Utils from '../utils';
 
-import { NetworkFacade } from './NetworkFacade';
+import { NetworkFacade } from './networkFacade';
 import EtherlessContract from './etherlessContract';
 import EtherlessNetwork from './etherlessNetwork';
 import EtherlessSession from './etherlessSession';
@@ -31,7 +31,7 @@ export default class NetworkUtils {
 
   /**
    * @method getEtherlessNetworkFacadeInstance
-   * @brief this method inizialize the NetworkComponetsFacade and returns an instance
+   * @brief this method initialize the NetworkFacade and returns an instance
    */
   static getEtherlessNetworkFacadeInstance(): NetworkFacade {
     if (this.facade === undefined) {
@@ -66,7 +66,7 @@ export default class NetworkUtils {
    * @method updateAbi
    * @param contractAddress
    * @param destinationPath
-   * @brief this method dowloads the new ABI file from etherscan.io
+   * @brief this method downloads the new ABI file from etherscan.io
    */
   private static async updateAbi(contractAddress: string, destinationPath: string) {
     try {
@@ -92,7 +92,7 @@ export default class NetworkUtils {
       return [
         {
           inputs: [],
-          name: 'retreive',
+          name: 'retrieve',
           outputs: [
             {
               internalType: 'uint256',

@@ -9,14 +9,14 @@ import { Units } from 'web3-utils';
 import { SignedTransaction } from 'web3-core';
 import Utils from '../utils';
 
-import SessionInterface from './SessionInterface';
+import SessionInterface from './sessionInterface';
 import { ContractInterface } from './contractInterface';
-import NetworkInterface from './networkInerface';
+import NetworkInterface from './networkInterface';
 
 
 /**
  * @class NetworkComponentsFacade
- * @constructor the constructor of this class should't be called.
+ * @constructor the constructor of this class shouldn't be called.
  */
 export class NetworkFacade {
   // group commands under common structure (like an enum mapping to strings)
@@ -51,8 +51,8 @@ export class NetworkFacade {
 
     /**
      * @method signup
-     * @param password required for registation
-     * @brief this method proviedes the signup serivice
+     * @param password required for registration
+     * @brief this method provides the signup service
      */
     public signup(password: string): boolean {
       this.logout();
@@ -78,7 +78,7 @@ export class NetworkFacade {
 
     /**
      * @method getListOfFunctions()
-     * @returns an array of strings that rapresents the history of the user;
+     * @returns an array of strings that represents the history of the user;
      */
     public getListOfFunctions(): string[] {
       return this.contract.getListOfFunctions();
@@ -118,7 +118,7 @@ export class NetworkFacade {
      * @method uploadFunction
      * @param functionDefinition
      * @param password
-     * @brief this method upload on the AWS endpoint the required funcion
+     * @brief this method upload on the AWS endpoint the required function
      * and register it on the eth network.
      */
     public async createFunction(functionDefinition:FunctionDefinition, password?:string): Promise<any> {
@@ -128,7 +128,7 @@ export class NetworkFacade {
       }
       const awsName = Utils.randomString();
       try {
-        // here we should take some eth from the user accout for
+        // here we should take some eth from the user account for
         // testing the application and decide the cost of execution
         const uploadResult = await NetworkInterface
           .uploadFunction(functionDefinition.bufferFile, awsName, endpoint);
@@ -149,7 +149,6 @@ export class NetworkFacade {
       return this.callFunction(NetworkFacade.listCommand, []);
     }
 
-    // eslint-disable-next-line class-methods-use-this
     public async getCostOfFunction(functionName: string) : Promise<number> {
       return this.callFunction(NetworkFacade.costOfFunction, [functionName]);
     }
