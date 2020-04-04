@@ -6,7 +6,7 @@
   "scripts": {
     "run": "ts-node src/index.ts",
     "tsc": "tsc",
-    "test": "mocha -r ts-node/register tests/*/*.ts"
+    "test": "mocha -r ts-node/register tests/*/*/*.ts"
   },
   "author": "Tenners",
   "license": "MIT",
@@ -25,6 +25,7 @@
     "inquirer": "^7.0.4",
     "node-libcurl": "^2.0.3",
     "node-localstorage": "^2.1.5",
+    "nyc": "^15.0.1",
     "typescript": "^3.6.5",
     "web3": "^1.2.4",
     "web3-core": "^1.2.6",

@@ -2,7 +2,7 @@
 /* eslint-disable no-undef */
 import 'mocha';
 
-import { assert } from 'chai';
+import { assert, expect } from 'chai';
 
 import mockito, { instance } from 'ts-mockito';
 
@@ -28,7 +28,7 @@ const DummyTransaction = {
   to: '',
   from: '0xa0cfd291c29ed4c1666d173e97744b99ce42ddfb',
   value: web3.utils.toHex(1000000000),
-  gas: web3.utils.toHex(10),
+  gas: web3.utils.toHex(53000000),
 };
 // END MOCKS
 
@@ -58,9 +58,12 @@ describe('Testing EtherlessSession class', async () => {
   });
 
   it('testing signTransaction method', async () => {
-    provider.injectResult(1);
+    provider.injectResult(100);
+    provider.injectResult(100);
+    provider.injectResult(100);
     session.signTransaction(DummyTransaction, 'password').then((result) => {
-      console.log(result);
+      assert.isObject(result,'Is not valid object');
+      expect(result).to.have.property('rawTransaction')
     }).catch(console.log);
   });
 
