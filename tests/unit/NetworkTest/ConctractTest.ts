@@ -17,12 +17,12 @@ import EtherlessContract from '../../../src/NetworkEntities/etherlessContract';
 
 import * as variables from './SharedVariables';
 
-// var FakeProvider = require('web3-fake-provider');
-// const provider = new FakeProvider();
-const provider = new Web3('wss://ropsten.infura.io/ws/v3/f4347c3f96d448499a8e7940793d93a6');
+var FakeProvider = require('web3-fake-provider');
+const provider = new FakeProvider();
+const web3 = new Web3(provider);
 describe('testing the contracts implementation', () => {
   const contract:ContractInterface = new EtherlessContract(variables.dummyAbi,
-    variables.contractAddress, provider);
+    variables.contractAddress, web3);
   it('testing getListOfFunctions', () => {
     const result = contract.getListOfFunctions();
     assert.isArray(result, 'getListOfFunctions is not working');
@@ -40,15 +40,15 @@ describe('testing the contracts implementation', () => {
     const result = contract.isTheFunctionPayable('costOfFunction');
     assert.isFalse(result, 'isTheFunctionPayable is not working');
   });
-  // it('testing estimateGasCost', async () => {
-  //  Error: Returned error: gas required exceeds allowance (8000029) or always failing transaction
-  //   const result = await contract.estimateGasCost('0xe4036e69A708Bd2C4460eEc280fa6b03Ad3D44D8', 'createFunction', ['fnName','string','string', 'ab', 10], 10);
-  //   assert.isNumber(result, 'not a number');
-  // });
-  // it('testing estimateGasCost', async () => {
-  //   const result = await contract.estimateGasCost('0xe4036e69A708Bd2C4460eEc280fa6b03Ad3D44D8', 'function2', []);
-  //   assert.isNumber(result, 'not a number');
-  // });
+  it('testing estimateGasCost', async () => {
+    provider.injectResult(web3.utils.toHex(50));
+    contract.estimateGasCost(
+      '0xe4036e69A708Bd2C4460eEc280fa6b03Ad3D44D8',
+      'createFunction', ['fnName','string','string', 'ab', 10],
+      10)
+      .then((result)=>{assert.equal(result,50,'GasCost is returning the wrong number')})
+      .catch(assert.fail);
+  });
   it('testing getFunctionTransaction', async () => {
     const result = await contract.getFunctionTransaction('0xe4036e69A708Bd2C4460eEc280fa6b03Ad3D44D8', 'runFunction', ['test1', 'test2', 'test3'], 100, 10);
     assert.isObject(result, 'not an object');
