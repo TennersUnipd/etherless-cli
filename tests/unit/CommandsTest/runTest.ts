@@ -1,16 +1,19 @@
 import 'mocha';
+
 import { assert } from 'chai';
+
 import mockito from 'ts-mockito';
+
+import { Command } from '../../../src/CommandEntities/command';
 import RunCommand from '../../../src/CommandEntities/runCommand';
 import { NetworkFacade } from '../../../src/NetworkEntities/networkFacade';
-import { Command } from '../../../src/CommandEntities/command';
 
 
 const mockFacade: NetworkFacade = mockito.mock(NetworkFacade);
 
 describe('testing Class RunTest', () => {
   const command:Command = new RunCommand(mockito.instance(mockFacade));
-  it('testing execution of List', () => {
+  it('testing execution of Run', () => {
     mockito.when(mockFacade.runFunction('RemoteFunction', mockito.anyString(), 'password')).thenReturn(new Promise((resolve, reject) => {
       console.log('called');
       resolve('execution result');
