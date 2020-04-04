@@ -19,7 +19,7 @@ jobs:
 
     - name: setup
     - uses: actions/setup-node@v1
-        with:
+      with:
           node-version: '12.x'
     - run: npm install -g typescript@3.6
     - run: npm install -g ts-node
