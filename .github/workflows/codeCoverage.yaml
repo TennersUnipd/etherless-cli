@@ -18,14 +18,15 @@ jobs:
     - uses: actions/checkout@v2
 
     - name: setup
-      run: npm install -g typescript@3.6
-      run: npm install -g ts-node
-      run: npm install -g mocha
-      run: npm install -g chai
-      run: npm install
-
-    - name: CodeCoverage
-      run: nyc npm run test > CC.txt
+    - uses: actions/setup-node@v1
+        with:
+          node-version: '12.x'
+    - run: npm install -g typescript@3.6
+    - run: npm install -g ts-node
+    - run: npm install -g mocha
+    - run: npm install -g chai
+    - run: npm install
+    - run: nyc npm run test > CC.txt
     
     - name: Upload CodeCoverage output as a build artifact
       uses: actions/upload-artifact@v1
