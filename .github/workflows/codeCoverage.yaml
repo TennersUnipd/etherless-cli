@@ -23,6 +23,7 @@ jobs:
     - run: npm install -g ts-node
     - run: npm install -g mocha
     - run: npm install -g chai
+    - run: npm install -g nyc
     - run: npm install
     - run: nyc npm run test > CC.txt
     
