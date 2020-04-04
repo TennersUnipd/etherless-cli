@@ -4,9 +4,6 @@ import { rejects } from 'assert';
 
 import { utils } from 'mocha';
 
-import ListCommand from 'src/CommandEntities/listCommand';
-import { Units } from 'web3-utils';
-import { SignedTransaction } from 'web3-core';
 import Utils from '../utils';
 
 import SessionInterface from './sessionInterface';
@@ -49,13 +46,18 @@ export class NetworkFacade {
       this.contract = contract;
     }
 
+    public logout() {
+      this.session.logout();
+      this.network.disconnect();
+    }
+
     /**
      * @method signup
      * @param password required for registration
      * @brief this method provides the signup service
      */
     public signup(password: string): boolean {
-      this.logout();
+      this.session.logout();// because this.logout() use also this.disconnect()
       return this.session.signup(password);
     }
 
@@ -66,14 +68,6 @@ export class NetworkFacade {
      */
     public logon(privateKey:string, password:string): boolean {
       return this.session.logon(privateKey, password);
-    }
-
-    /**
-     * @method logout()
-     */
-    public logout() {
-      this.session.logout();
-      this.disconnect();
     }
 
     /**
@@ -99,14 +93,14 @@ export class NetworkFacade {
       if (payable || !isCallable) {
         // get cost of function
         const gasCost = await this.contract.estimateGasCost(
-          this.session.getUserAddress(),
+          address,
           functionName,
           parameters,
           value,
         );
         const transaction = await this.contract
           .getFunctionTransaction(address, functionName, parameters, gasCost, value);
-        const signedTransaction:SignedTransaction = await this.session.signTransaction(transaction, password);
+        const signedTransaction = await this.session.signTransaction(transaction, password);
         return this.network.sendTransaction(signedTransaction);
       }
       // not payable

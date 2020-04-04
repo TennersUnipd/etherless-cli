@@ -3,8 +3,8 @@
 import 'mocha';
 import { assert } from 'chai';
 import Web3 from 'web3';
-import EtherlessNetwork from '../../src/NetworkEntities/etherlessNetwork';
-import NetworkInterface from '../../src/NetworkEntities/networkInterface';
+import EtherlessNetwork from '../../../src/NetworkEntities/etherlessNetwork';
+import NetworkInterface from '../../../src/NetworkEntities/networkInterface';
 import 'ethereumjs-tx';
 import {
   transactionEmpty, dummyAbi, contractAddress, dummyAddress,
@@ -28,7 +28,7 @@ describe('testing the network implementation', () => {
     network.sendTransaction(transactionEmpty).then((result) => {
       console.log(result);
     }).catch((err) => {
-      assert.equal(true, false, err);
+      assert.fail('this is an error');
     });
     provider.injectValidation((payload) => {
       assert.equal(payload.method, 'eth_getTransactionReceipt');

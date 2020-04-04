@@ -184,7 +184,7 @@ class EtherlessContract extends ContractInterface {
   private argumentCheck(requested: string, args: any[]):boolean {
     const inputs = this.getArgumentsOfFunction(requested);
     if (args.length !== inputs.length) {
-      throw new Error(`Aspected ${inputs.length} arguments found ${args.length}`);
+      throw new Error(`expected ${inputs.length} arguments found ${args.length}`);
     }
     for (let i = 0; i < inputs.length; i += 1) {
       // eslint-disable-next-line valid-typeof

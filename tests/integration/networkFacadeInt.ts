@@ -5,49 +5,55 @@ import 'mocha';
 import { assert } from 'chai';
 
 import Ganache from 'ganache-core';
-import NetworkComponentsFacade from '../../src/NetworkEntities/NetworkFacade';
-import NetworkUtils from '../../src/NetworkEntities/NetworkUtils';
-import SessionInterface from '../../src/NetworkEntities/SessionInterface';
+
+import Web3 from 'web3';
+import NetworkUtils from '../../src/NetworkEntities/networkUtils';
+import SessionInterface from '../../src/NetworkEntities/sessionInterface';
 import { ContractInterface } from '../../src/NetworkEntities/contractInterface';
 import EtherlessContract from '../../src/NetworkEntities/etherlessContract';
 import EtherlessNetwork from '../../src/NetworkEntities/etherlessNetwork';
 import EtherlessSession from '../../src/NetworkEntities/etherlessSession';
-import NetworkInterface from '../../src/NetworkEntities/networkInerface';
-import * as variables from '../unit/SharedVariables';
+import NetworkInterface from '../../src/NetworkEntities/networkInterface';
+import { NetworkFacade } from '../../src/NetworkEntities/networkFacade';
+import * as variables from '../unit/NetworkTest/SharedVariables';
 
+
+const FakeProvider = require('web3-fake-provider');
+
+const provider = new FakeProvider();
+
+const web3:Web3 = new Web3(provider);
 
 const endpoint = Ganache.provider();
-const network: NetworkInterface = new EtherlessNetwork(endpoint);
-const session: SessionInterface = new EtherlessSession(endpoint);
+const network: NetworkInterface = new EtherlessNetwork(web3);
+const session: SessionInterface = new EtherlessSession(web3);
 const contract: ContractInterface = new EtherlessContract(variables.dummyAbi,
-  variables.contractAddress, endpoint);
+  variables.contractAddress, web3);
 
 describe('NetworkFacade interface\'s integration test', () => {
-  const networkF: NetworkComponentsFacade = new NetworkComponentsFacade(network, session, contract);
-  it('testing signup', async () => {
-    const result = await networkF.signup('test1');
+  const networkF: NetworkFacade = new NetworkFacade(network, session, contract);
+  it('testing signup', () => {
+    const result = networkF.signup('test1');
     assert.isTrue(result, 'signup does not working');
-    // console.log(session.getUserAddress());
   });
-  // it('testing login', async () => {
-  // messaggio di errore Uncaught Error: Couldn't import the private key
-  // Error: Returned error: private key length is invalid
-  //   const result = await networkF.logon('0x3551589371808E58B39075dFa61aF109bAA9fD0d', 'test1');
-  //   assert.isTrue(result, 'login is not working');
-  // });
+  it('testing login', async () => {
+    const result = networkF.logon('0x8da4ef21b864d2cc526dbdb2a120bd2874c36c9d0a1fb7f8c63d7f7a8b41de8f', 'password');
+    assert.isTrue(result, 'login is not working');
+  });
   it('testing getListOfFunctions', () => {
     const result = networkF.getListOfFunctions();
     assert.isArray(result, 'getListOfFunctions is not working');
-    assert.isTrue(result.includes('function1'), 'the contract is not loading the dummyABI contract');
-    assert.isTrue(result.includes('function2'), 'the contract is not loading the dummyABI contract');
+    assert.include(result, 'listFunctions', 'the test doesn\'t work');
   });
-  /* //it('testing callFunction', async () => {
-  // UnhandledPromiseRejectionWarning: TypeError: Cannot read property '1' of undefined
-  // at EtherlessContract.getArgumentsOfFunction
-  // 1) testing networkFacade interface
-  // testing callFunction:
-  // Error: The send transactions "from" field must be defined!
-    const result = await network.callFunction('createFunction', ['function2']);
-    assert.isObject(result, 'maybe there is a error, try again');
-  }); */
+  it('testing callFunction with a callable function', async () => {
+    networkF.getAllLoadedFunction()
+      .then((result:string[]) => assert.isTrue(result.includes('function1'), 'The promise should return true'))
+      .catch(assert.fail);
+  });
+  it('testing getCostOfFunction(functionName: string)', () => {
+    provider.injectResult(web3.utils.toHex(10));
+    networkF.getCostOfFunction('RemoteFunctionName')
+      .then((result) => { assert.equal(result, 10, 'the cost returned is different than expected'); })
+      .catch(assert.fail);
+  });
 });

@@ -12,8 +12,8 @@ import { Contract } from 'web3-eth-contract';
 
 import Ganache from 'ganache-core';
 
-import { ContractInterface } from '../../src/NetworkEntities/contractInterface';
-import EtherlessContract from '../../src/NetworkEntities/etherlessContract';
+import { ContractInterface } from '../../../src/NetworkEntities/contractInterface';
+import EtherlessContract from '../../../src/NetworkEntities/etherlessContract';
 
 import * as variables from './SharedVariables';
 
@@ -50,7 +50,7 @@ describe('testing the contracts implementation', () => {
   //   assert.isNumber(result, 'not a number');
   // });
   it('testing getFunctionTransaction', async () => {
-    const result = await contract.getFunctionTransaction('0xe4036e69A708Bd2C4460eEc280fa6b03Ad3D44D8', 'runFunction', ['test1', 'test2', 'test3'],100,10);
+    const result = await contract.getFunctionTransaction('0xe4036e69A708Bd2C4460eEc280fa6b03Ad3D44D8', 'runFunction', ['test1', 'test2', 'test3'], 100, 10);
     assert.isObject(result, 'not an object');
   });
   it('testing getFunctionTransaction', async () => {
