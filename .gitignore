@@ -4,3 +4,4 @@ uweirb3
 uweirb3/*
 *.map
 build
+.vscode/settings.json
