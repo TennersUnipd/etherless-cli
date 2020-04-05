@@ -21,7 +21,7 @@ jobs:
           node-version: '12.x'
     - run: npm install -g typescript@3.6
     - run: npm install -g ts-node
-    - run: npm install codemetrics-cli
+    - run: npm install -g codemetrics-cli
     - run: codemetrics-cli >> CycloComplex.txt
 
     - name: Upload Cyclomatic Complexity output as a build artifact
