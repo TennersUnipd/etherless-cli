@@ -20,4 +20,16 @@ describe('testing execution of Logout', () => {
         mockito.verify(mockFacade.logout()).called();
 
     });
+    it('testing getCommandDescriptor()', () => {
+        const result: string = command.getCommandDescriptor();
+        assert.equal(result,'logout','Name is not the same');
+    });
+    it('testing getCommandAlias()', () => {
+        const result: string = command.getCommandAlias();
+        assert.equal(result,'lo','Alias is not the same');
+    });
+    it('testing getDescription()', () => {
+        const result: string = command.getDescription();
+        assert.equal(result,'Logout from your account','Description is not the same');
+    });
 });
