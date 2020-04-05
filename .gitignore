@@ -4,3 +4,5 @@ uweirb3
 uweirb3/*
 *.map
 build
+.nyc_output
+.vscode/settings.json

@@ -1,6 +1,8 @@
 import { FunctionDefinition } from 'src/NetworkEntities/networkFacade';
-import { Command, CommandInputs } from './command';
+
 import Utils from '../utils';
+
+import { Command, CommandInputs } from './command';
 
 
 export class CreateCommand extends Command {
@@ -25,7 +27,7 @@ export class CreateCommand extends Command {
     // eslint-disable-next-line class-methods-use-this
     parseArgs(args: string[]): CommandInputs {
       return {
-        name: args[0], description: args[1], prototype: args[2], cost: args[3], filePath: args[4], password: args[5],
+        name: args[0], description: args[1], prototype: args[2], cost: args[3], filePath: args[4], password: args[5]
       };
     }
 }

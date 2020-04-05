@@ -28,7 +28,9 @@
             "js": "never",
             "jsx": "never",
             "mjs": "never"
-        }]
+        }],
+        "complexity": ["error", { "max": 10 }],
+        "max-params": ["warning",{"max":3}]
     },
     "settings": {
         "import/parsers":{
