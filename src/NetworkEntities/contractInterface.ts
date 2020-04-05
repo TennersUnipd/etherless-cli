@@ -1,3 +1,5 @@
+import { Contract } from 'web3-eth-contract';
+
 /**
  * ContractInterface
  * @brief This Interface defines all the method that a ContractInterface should implements
@@ -5,6 +7,8 @@
  * @memberof Network
  */
 export abstract class ContractInterface {
+  public contract: Contract;
+
   /**
    * getListOfFunctions
    * @brief this method returns all the available methods of the contract

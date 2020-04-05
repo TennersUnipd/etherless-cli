@@ -12,7 +12,7 @@ type fCall = (args:any[]) => any;
 class EtherlessContract extends ContractInterface {
   private readonly GASBASE = 1000000
 
-  private contract: Contract;
+  public contract: Contract;
 
   private web3: Web3;
 
@@ -151,8 +151,9 @@ class EtherlessContract extends ContractInterface {
     });
 
     this.commandLoader.set('createFunction', (args:any[]):any => this.contract.methods.createFunction(args[0], args[1], args[2], args[3], args[4]));
-    this.commandLoader.set('listFunctions', (args:any[]):any => this.contract.methods.listFunctions());
+    this.commandLoader.set('listFunctions', ():any => this.contract.methods.listFunctions());
     this.commandLoader.set('costOfFunction', (args:any[]):any => this.contract.methods.costOfFunction(args[0]));
+    this.commandLoader.set('findFunction', (args:any[]):any => this.contract.methods.findFunction(args[0]));
     this.commandLoader.set('runFunction', (args:any[]):any => this.contract.methods.runFunction(args[0], args[1], args[2]));
   }
 

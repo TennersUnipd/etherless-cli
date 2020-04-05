@@ -30,6 +30,8 @@ export class NetworkFacade {
 
     private static costOfFunction = 'costOfFunction';
 
+    private static findFunction = 'findFunction';
+
     private network: NetworkInterface;
 
     private session: SessionInterface;
@@ -147,6 +149,15 @@ export class NetworkFacade {
      */
     public async getAllLoadedFunction() : Promise<any> {
       return this.callFunction(NetworkFacade.listCommand, []);
+    }
+
+    /**
+     * @method getFunctionDetails()
+     * @param password wallet password
+     * @returns searched function details
+     */
+    public async getFunctionDetails(fnName: string) : Promise<any> {
+      return this.callFunction(NetworkFacade.findFunction, [fnName]);
     }
 
     public async getCostOfFunction(functionName: string) : Promise<number> {

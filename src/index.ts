@@ -8,6 +8,7 @@ import RunCommand from './CommandEntities/runCommand';
 import ListCommand from './CommandEntities/listCommand';
 import NetworkUtils from './NetworkEntities/networkUtils';
 import { CreateCommand } from './CommandEntities/createCommand';
+import FindCommand from './CommandEntities/findCommand';
 
 const network = NetworkUtils.getEtherlessNetworkFacadeInstance();
 
@@ -15,6 +16,7 @@ const network = NetworkUtils.getEtherlessNetworkFacadeInstance();
 const commands = [
   ListCommand,
   AccountCreateCommand,
+  FindCommand,
   // TestCommand,
   AccountLogoutCommand,
   AccountLoginCommand,
