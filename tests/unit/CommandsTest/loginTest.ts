@@ -13,19 +13,12 @@ const mockFacade: NetworkFacade = mockito.mock(NetworkFacade);
 const testPassword: string = 'testP';
 const testPrivateKey: string = 'testPK';
 
-describe('testing ListTest', () => {
+describe('testing LoginTest', () => {
   const command:Command = new LoginCommand(mockito.instance(mockFacade));
   it('testing execution of Login', () => {
-    mockito.when(mockFacade.logon('private key','password'))
-    /*.thenReturn(boolean => {
-        if (privatek === testPrivateKey && passwordt === testPassword) {
-            return true;
-        }
-        return false;*/
-    });
-    /*mockito.when(mockFacade.logon('bhj','hdfhkf')).thenReturn(new Promise<boolean>((resolve, reject) => {
-      resolve('login ok');
-      reject(new Error('testError'));
-    }));*/
-    command.exec(command.parseArgs(['private key','password']));  
+    mockito.when(mockFacade.logon('private key','password')).thenReturn(true);
+    command.exec(command.parseArgs(['private key','password'])).then((result) => {
+      assert.equal(result,'Logged in successfully', 'not ok');
+  }).catch(console.error);
+  });
 });

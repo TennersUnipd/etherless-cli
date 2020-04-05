@@ -11,8 +11,13 @@ import { NetworkFacade } from '../../../src/NetworkEntities/networkFacade';
 const mockFacade: NetworkFacade = mockito.mock(NetworkFacade);
 
 describe('testing execution of Logout', () => {
-    const command:Command = new LogoutCommand(mockFacade);
-    /*mockito.when(mockFacade.logout()).thenReturn(new Promise<any>(resolve) => {
-        resolve('Logout is working');
-    });*/
+    const command:Command = new LogoutCommand(mockito.instance(mockFacade));
+    it ('testing execution of Loguot', () =>{
+        mockito.when(mockFacade.logout()).thenCall(()=>{assert.isTrue(true,'should be true')});
+        command.exec(command.parseArgs([])).then((result)=>{
+            assert.equal(result,'Logged out', 'not ok');
+        })
+        mockito.verify(mockFacade.logout()).called();
+
+    });
 });
