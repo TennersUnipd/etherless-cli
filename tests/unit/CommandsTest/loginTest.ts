@@ -27,9 +27,5 @@ describe('testing ListTest', () => {
       resolve('login ok');
       reject(new Error('testError'));
     }));*/
-    command.exec(command.parseArgs(['private key','password'])).then((result) => {
-        console.log(result);
-    }).catch(console.error);
-  });
-  
+    command.exec(command.parseArgs(['private key','password']));  
 });
