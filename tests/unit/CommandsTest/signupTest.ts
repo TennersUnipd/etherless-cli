@@ -1,6 +1,6 @@
 import 'mocha';
 
-import {assert, expect} from 'chai';
+import {assert} from 'chai';
 
 import mockito from 'ts-mockito';
 
@@ -20,4 +20,5 @@ describe('testing execution of SignUp', () => {
         }).catch(console.error);
         mockito.verify(mockFacade.signup('password')).called();
     });
+    
 });
