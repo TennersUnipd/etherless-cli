@@ -19,7 +19,7 @@ describe('testing Class CreateTest', () =>{
             resolve(['new function created']);
             reject(new Error('testError'));
         }));
-        command.exec(command.parseArgs(['name', 'description', 'prototype', '10', './dummy.js', 'password'])).then((result) =>{
+        command.exec(command.parseArgs(['name', 'description', 'prototype', '10', './tests/unit/CommandsTest/dummy.js', 'password'])).then((result) =>{
             console.log(result);
         }).catch(console.error);
     });
