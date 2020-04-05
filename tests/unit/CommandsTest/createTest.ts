@@ -23,4 +23,16 @@ describe('testing Class CreateTest', () =>{
             console.log(result);
         }).catch(console.error);
     });
+    it('testing getCommandDescriptor()', () => {
+        const result: string = command.getCommandDescriptor();
+        assert.equal(result,'create <name> <description> <prototype> <cost> <file> <password>','Name is not the same');
+    });
+    it('testing getCommandAlias()', () => {
+        const result: string = command.getCommandAlias();
+        assert.equal(result,'c','Alias is not the same');
+    });
+    it('testing getDescription()', () => {
+        const result: string = command.getDescription();
+        assert.equal(result,'Create a new function on Etherless','Description is not the same');
+    });
 });
