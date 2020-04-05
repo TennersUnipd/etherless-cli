@@ -11,7 +11,12 @@ class AccountCreateCommand extends Command {
     exec(inputs: SignupCommandInputs): Promise<any> {
       return new Promise<string>((resolve) => {
         const success = this.network.signup(inputs.password);
-        resolve(success ? 'Signed up successfully' : 'Unable to sign up');
+        var successResponse = 'Signed up successfully\n';
+        if (success) {
+          let account = this.network.getUserAccount(inputs.password);
+          successResponse += 'Address: '+account.address+'\nPrivate key:'+account.privateKey;
+        }
+        resolve(success ? successResponse : 'Unable to sign up');
       });
     }
 

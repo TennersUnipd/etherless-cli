@@ -9,6 +9,9 @@ import Utils from '../utils';
 import SessionInterface from './sessionInterface';
 import { ContractInterface } from './contractInterface';
 import NetworkInterface from './networkInterface';
+import {
+  Account
+} from 'web3-core';
 
 
 /**
@@ -80,6 +83,10 @@ export class NetworkFacade {
       return this.contract.getListOfFunctions();
     }
 
+    public getUserAccount(password: string): Account {
+      return this.session.getAccount(password);
+    }
+
     /**
      * @method callFunction
      * @param functionName
@@ -122,12 +129,13 @@ export class NetworkFacade {
       if (!this.session.isUserSignedIn()) {
         throw new Error('User is not logged in');
       }
-      const awsName = Utils.randomString();
+      const resourceName = Utils.randomString();
+      const bufferFile = Utils.compressFile(functionDefinition.filePath, resourceName);
       try {
         // here we should take some eth from the user account for
         // testing the application and decide the cost of execution
         const uploadResult = await NetworkInterface
-          .uploadFunction(functionDefinition.bufferFile, awsName, endpoint);
+          .uploadFunction(bufferFile, resourceName, endpoint);
         const functionArn = uploadResult.data.FunctionArn;
         return this.callFunction(NetworkFacade.createFunctionCommand, [functionDefinition.fnName,
           functionDefinition.description, functionDefinition.pro,
@@ -193,6 +201,6 @@ export interface FunctionDefinition{
   fnName:string,
   description:string,
   pro:string,
-  bufferFile:string,
+  filePath:string,
   cost:number
 }

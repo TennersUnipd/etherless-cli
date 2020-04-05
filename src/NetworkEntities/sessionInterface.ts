@@ -1,3 +1,6 @@
+import {
+   Account
+ } from 'web3-core';
 /**
  * @author Tenners
  * SessionInterface is the contract that defines which function every session object should have
@@ -50,4 +53,6 @@ export default abstract class SessionInterface {
    * @returns the balance
    */
   public abstract getBalance():Promise<number>;
+
+  public abstract getAccount(password: string): Account;
 }

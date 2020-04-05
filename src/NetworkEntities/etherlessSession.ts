@@ -66,7 +66,7 @@ export default class EtherlessSession extends SessionInterface {
   }
 
 
-  private getAccount(password: string): Account {
+  public getAccount(password: string): Account {
     const encryptedWallet = EtherlessSession.getWallet();
     try {
       const wallet = this.web3.eth.accounts.wallet.decrypt(encryptedWallet, password);

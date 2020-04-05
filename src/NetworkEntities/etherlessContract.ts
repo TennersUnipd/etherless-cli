@@ -63,7 +63,6 @@ class EtherlessContract extends ContractInterface {
         if (err !== null) {
           reject(new Error(`Could not get the signal requested error: ${err}`));
         }
-        console.log('RESULT', event.returnValues[0]);
         // eslint-disable-next-line no-underscore-dangle
         resolve(JSON.parse(event.returnValues._response));
       });

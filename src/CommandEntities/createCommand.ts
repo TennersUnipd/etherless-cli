@@ -13,11 +13,10 @@ export class CreateCommand extends Command {
     COMMAND_DESCRIPTION = 'Create a new function on Etherless';
 
     exec(inputs: CreateCommandInputs): Promise<any> {
-      const compressedFile = Utils.compressFile(inputs.filePath);
       const functionToUpload: FunctionDefinition = {
         fnName: inputs.name,
         description: inputs.description,
-        bufferFile: compressedFile,
+        filePath: inputs.filePath,
         pro: inputs.prototype,
         cost: inputs.cost,
       };
