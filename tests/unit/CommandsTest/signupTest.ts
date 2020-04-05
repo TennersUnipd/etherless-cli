@@ -20,5 +20,16 @@ describe('testing execution of SignUp', () => {
         }).catch(console.error);
         mockito.verify(mockFacade.signup('password')).called();
     });
-    
+    it('testing getCommandDescriptor()', () => {
+        const result: string = command.getCommandDescriptor();
+        assert.equal(result,'signup <password>','Name is not the same');
+    });
+    it('testing getCommandAlias()', () => {
+        const result: string = command.getCommandAlias();
+        assert.equal(result,'su','Alias is not the same');
+    });
+    it('testing getDescription()', () => {
+        const result: string = command.getDescription();
+        assert.equal(result,'Create a new account','Description is not the same');
+    });
 });
