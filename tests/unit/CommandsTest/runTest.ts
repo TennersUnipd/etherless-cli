@@ -23,4 +23,16 @@ describe('testing Class RunTest', () => {
       assert.equal(result,'execution result','not ok');
     });
   });
+  it('testing getCommandDescriptor()', () => {
+      const result: string = command.getCommandDescriptor();
+      assert.equal(result,'run <functionName> <password> [parameters...]','Name is not the same');
+  });
+  it('testing getCommandAlias()', () => {
+      const result: string = command.getCommandAlias();
+      assert.equal(result,'r','Alias is not the same');
+  });
+  it('testing getDescription()', () => {
+      const result: string = command.getDescription();
+      assert.equal(result,'Request function execution','Description is not the same');
+  });
 });
