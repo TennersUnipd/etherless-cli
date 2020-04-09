@@ -9,9 +9,6 @@ import Utils from '../utils';
 import SessionInterface from './sessionInterface';
 import { ContractInterface } from './contractInterface';
 import NetworkInterface from './networkInterface';
-import {
-  Account
-} from 'web3-core';
 
 
 /**
@@ -51,6 +48,10 @@ export class NetworkFacade {
       this.contract = contract;
     }
 
+    /**
+     * @method logout
+     * @brief discards the user credential.
+     */
     public logout() {
       this.session.logout();
       this.network.disconnect();
@@ -59,7 +60,7 @@ export class NetworkFacade {
     /**
      * @method signup
      * @param password required for registration
-     * @brief this method provides the signup service
+     * @brief provides the functionality or registration to the service
      */
     public signup(password: string): boolean {
       this.session.logout();// because this.logout() use also this.disconnect()
@@ -70,20 +71,28 @@ export class NetworkFacade {
      * @method logon
      * @param address User address required for logon
      * @param password password required for logon
+     * @brief provides the logon service.
      */
     public logon(privateKey:string, password:string): boolean {
       return this.session.logon(privateKey, password);
     }
 
     /**
-     * @method getListOfFunctions()
+     * @method getListOfFunctions
      * @returns an array of strings that represents the history of the user;
+     * @brief retrieves the list of the available Contract's methods.
      */
     public getListOfFunctions(): string[] {
       return this.contract.getListOfFunctions();
     }
 
-    public getUserAccount(password: string): Account {
+    /**
+     * @method getUserAccount
+     * @param password 
+     * @returns the user's credential
+     * @brief returns the user credential
+     */
+    public getUserAccount(password: string): [string,string] {
       return this.session.getAccount(password);
     }
 
@@ -92,7 +101,7 @@ export class NetworkFacade {
      * @param functionName
      * @param parameters
      * @param password
-     * @brief this method execute the function on the ethereum network.
+     * @brief executes the function on the ethereum network.
      * DOES NOT EXECUTE USER LOADED FUNCTION
      */
     private async callFunction(functionName:string, parameters:any[], password?:string, isCallable: boolean = true, value: number = undefined)
@@ -121,8 +130,7 @@ export class NetworkFacade {
      * @method uploadFunction
      * @param functionDefinition
      * @param password
-     * @brief this method upload on the AWS endpoint the required function
-     * and register it on the eth network.
+     * @brief uploads on the AWS endpoint the required function and register it on the eth network.
      */
     public async createFunction(functionDefinition:FunctionDefinition, password?:string): Promise<any> {
       const endpoint = `${process.env.AWS_ENDPOINT}createFunction`;
@@ -148,6 +156,7 @@ export class NetworkFacade {
     /**
      * @method getAllLoadedFunction()
      * @returns a list of string that contains the all the function loaded on the platform
+     * @brief retrieves all the functions loaded on the smart contract.
      */
     public async getAllLoadedFunction() : Promise<any> {
       return this.callFunction(NetworkFacade.listCommand, []);
@@ -156,16 +165,29 @@ export class NetworkFacade {
     /**
      * @method getFunctionDetails()
      * @param password wallet password
-     * @returns searched function details
+     * @returns a promise that will return the searched function details
+     * @brief retrieves from the smart contract the details about the requested function.
      */
     public async getFunctionDetails(fnName: string) : Promise<any> {
       return this.callFunction(NetworkFacade.findFunction, [fnName]);
     }
-
+    /**
+     * @method getCostOfFunction
+     * @param functionName 
+     * @brief retrieves from the smart contract the cost of a specific function loaded on the service.
+     */
     public async getCostOfFunction(functionName: string) : Promise<number> {
       return this.callFunction(NetworkFacade.costOfFunction, [functionName]);
     }
 
+    /**
+     * @method runFunction
+     * @param fName 
+     * @param serializedParams 
+     * @param password 
+     * @returns the result of the remote execution
+     * @brief runs a remote function 
+     */
     public async runFunction(fName:string, serializedParams:string, password:string)
     :Promise<any> {
       const identifier = Utils.randomString();
@@ -185,12 +207,17 @@ export class NetworkFacade {
       return resultProm;
     }
 
+    /**
+     * @method getLog
+     * @brief this method is used to retrieve the past commands executed by the user.
+     */
     public async getLog() : Promise<string[]> {
       return this.contract.getLog(this.session.getUserAddress());
     }
 
     /**
-     * @method disconnect is used for disconnect the client from the network
+     * @method disconnect
+     * @brief disconnects the application from the network.
      */
     disconnect() {
       this.network.disconnect();

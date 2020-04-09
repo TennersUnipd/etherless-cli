@@ -1,6 +1,3 @@
-import {
-   Account
- } from 'web3-core';
 /**
  * @author Tenners
  * SessionInterface is the contract that defines which function every session object should have
@@ -9,14 +6,14 @@ import {
  */
 export default abstract class SessionInterface {
   /**
-     * @brief This method provides the signup functionality
+     * @brief provides the signup functionality
      * @returns boolean
      * @param password is need for encrypt the privateKey
      */
   public abstract signup(password:string): boolean;
 
   /**
-     * @brief This method should provide the logon functionality for external credential
+     * @brief provides the logon functionality for external credential
      * @param address is required for the user identification
      * @param privateKey is required for verify the user identity
      * @param password needed for saving the credential and unlocking the account
@@ -38,21 +35,31 @@ export default abstract class SessionInterface {
   public abstract signTransaction(transaction:object, password:string): Promise<any>;
 
   /**
-     * isUserSignedIn
-     * This method return true if the user has his credential saved.
+     * @method isUserSignedIn
+     * @brief checks that the user is logged.
+     * @return true if the user has his credential saved.
      */
   public abstract isUserSignedIn():boolean;
 
   /**
-     * getUserAddress
+     * @method getUserAddress
+     * @brief retrieves the user address
+     * @returns string that represents the user public address.
      */
   public abstract getUserAddress():string;
 
   /**
    * @method getBalance()
-   * @returns the balance
+   * @returns a promise that contains the number that represents the balance of the current account
+   * @brief retrieves the balance from the account
    */
   public abstract getBalance():Promise<number>;
 
-  public abstract getAccount(password: string): Account;
+  /**
+   * @abstract
+   * @method getAccount
+   * @param password needed for local unlock
+   * @brief returns the account information
+   */
+  public abstract getAccount(password: string): [string, string];
 }
