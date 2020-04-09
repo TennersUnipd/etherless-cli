@@ -1,6 +1,6 @@
 import 'mocha';
 
-import {assert} from 'chai';
+import {assert,expect} from 'chai';
 
 import mockito from 'ts-mockito';
 
@@ -15,10 +15,12 @@ describe('testing execution of SignUp', () => {
     const command:Command = new SignUpCommand(mockito.instance(mockFacade));
     it ('testing execution of SignUp', () =>{
         mockito.when(mockFacade.signup('password')).thenReturn(true);
+        mockito.when(mockFacade.getUserAccount('password')).thenReturn(['address','privateKey']);
         command.exec(command.parseArgs(['password'])).then((result) => {
-            assert.equal(result,'Signed up successfully', 'not ok');
+            expect(result).to.contain('Signed up successfully','The signUp is not working correctly');
         }).catch(console.error);
         mockito.verify(mockFacade.signup('password')).called();
+        mockito.verify(mockFacade.getUserAccount('password')).called();
     });
     it('testing getCommandDescriptor()', () => {
         const result: string = command.getCommandDescriptor();

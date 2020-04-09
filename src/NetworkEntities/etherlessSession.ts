@@ -96,7 +96,7 @@ export default class EtherlessSession extends SessionInterface {
   public async signTransaction(transaction: object, password: string): Promise<SignedTransaction> {
     const loggedUser = this.getAccount(password);
     return new Promise<any>((resolve, reject) => {
-      const signPromise = this.web3.eth.accounts.signTransaction(transaction, loggedUser.privateKey);
+      const signPromise = this.web3.eth.accounts.signTransaction(transaction, loggedUser[1]);
       signPromise.then((signedTx) => {
         resolve(signedTx);
       }).catch((error) => {

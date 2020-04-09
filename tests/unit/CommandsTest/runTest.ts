@@ -15,8 +15,7 @@ describe('testing Class RunTest', () => {
   const command:Command = new RunCommand(mockito.instance(mockFacade));
   it('testing execution of Run', () => {
     mockito.when(mockFacade.runFunction('RemoteFunction', mockito.anyString(), 'password')).thenReturn(new Promise((resolve, reject) => {
-      console.log('called');
-      resolve('execution result');
+      resolve({StatusCode:200,Payload:'execution result'});
       reject(new Error('testError'));
     }));
     command.exec(command.parseArgs(['RemoteFunction', 'password', 'arg1', 'arg2'])).then((result)=>{

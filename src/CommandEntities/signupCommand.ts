@@ -14,7 +14,7 @@ class AccountCreateCommand extends Command {
         var successResponse = 'Signed up successfully\n';
         if (success) {
           let account = this.network.getUserAccount(inputs.password);
-          successResponse += 'Address: '+account.address+'\nPrivate key:'+account.privateKey;
+          successResponse += 'Address: '+account[0]+'\nPrivate key:'+account[1];
         }
         resolve(success ? successResponse : 'Unable to sign up');
       });
