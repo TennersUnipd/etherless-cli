@@ -25,11 +25,10 @@ jobs:
     - run: npm install -g chai
     - run: npm install -g nyc
     - run: npm install
-    - run: nyc npm run test
-    - run: nyc npm run test > CC.txt
+    - run: nyc --reporter=lcov --reporter=text-summary npm test
     
     - name: Upload CodeCoverage output as a build artifact
       uses: actions/upload-artifact@v1
       with:
         name: CodeCoverage
-        path: CC.txt
+        path: coverage
