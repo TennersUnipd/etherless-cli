@@ -6,7 +6,7 @@
   "scripts": {
     "run": "ts-node src/index.ts",
     "tsc": "tsc",
-    "test": "mocha -r ts-node/register tests/*/*/*.ts"
+    "test": "mocha -r ts-node/register tests/unit/*/*.ts && mocha -r ts-node/register tests/integration/*.ts"
   },
   "author": "Tenners",
   "license": "MIT",

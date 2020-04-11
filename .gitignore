@@ -7,3 +7,4 @@ build
 .nyc_output
 .vscode/settings.json
 docs
+coverage
