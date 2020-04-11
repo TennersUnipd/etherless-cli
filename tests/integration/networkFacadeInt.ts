@@ -44,17 +44,4 @@ describe('NetworkFacade integration test', () => {
     assert.isArray(result, 'getListOfFunctions is not working');
     assert.include(result, 'listFunctions', 'the test doesn\'t work');
   });
-  // it('testing callFunction with a callable function', async () => {
-    
-  //   provider.injectResult(web3.utils.toHex('function1'))
-  //   networkF.getAllLoadedFunction()
-  //     .then((result:string[]) => assert.isTrue(result.includes('function1'), 'The promise should return true'))
-  //     .catch(assert.fail);
-  // });
-  // it('testing getCostOfFunction(functionName: string)', () => {
-  //   provider.injectResult(10);
-  //   networkF.getCostOfFunction('RemoteFunctionName')
-  //     .then((result) => { assert.equal(result, 10, 'the cost returned is different than expected'); })
-  //     .catch(assert.fail);
-  // });
 });

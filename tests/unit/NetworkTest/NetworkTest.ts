@@ -10,11 +10,17 @@ import {
   transactionEmpty, dummyAbi, contractAddress, dummyAddress,
 } from './SharedVariables';
 
+
+import { ContractInterface } from '../../../src/NetworkEntities/contractInterface';
+import EtherlessContract from '../../../src/NetworkEntities/etherlessContract';
+
 const FakeProvider = require('web3-fake-provider');
 
 const provider = new FakeProvider();
 
 const web3:Web3 = new Web3(provider);
+
+const contract:ContractInterface = new EtherlessContract(dummyAbi, contractAddress, web3);
 
 
 describe('testing the network implementation', () => {
@@ -30,9 +36,19 @@ describe('testing the network implementation', () => {
     }).catch((err) => {
       assert.fail('this is an error');
     });
-    provider.injectValidation((payload) => {
-      assert.equal(payload.method, 'eth_getTransactionReceipt');
-      assert.equal(payload.jsonrpc, '2.0');
+  });
+  it('testing callable()',()=>{
+    provider.injectValidation((payload) =>{
+      assert.equal(payload.method, 'eth_call');
     });
+    const callable = contract.getCallable('listFunctions',[]);
+    network.callMethod(callable, dummyAddress).then((result)=>{
+      assert.isNull(result,'the return is wrong');
+    }).catch((err)=>{
+      assert.fail('the network doesn\'t send the right method');
+    })
+  })
+  it('testing disconnect()',()=>{
+    network.disconnect();
   });
 });
