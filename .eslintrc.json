@@ -16,7 +16,7 @@
     },
     "parser": "@typescript-eslint/parser",
     "parserOptions": {
-        "ecmaVersion": 2018
+        "ecmaVersion": 2015
     },
     "plugins": [
         "@typescript-eslint"
@@ -28,7 +28,9 @@
             "js": "never",
             "jsx": "never",
             "mjs": "never"
-        }]
+        }],
+        "complexity": ["error", { "max": 10 }],
+        "max-params": ["warning",{"max":3}]
     },
     "settings": {
         "import/parsers":{

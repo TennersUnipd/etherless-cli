@@ -1,5 +1,4 @@
 import { Command } from './command';
-import SessionManager from '../sessionManager';
 
 class AccountLogoutCommand extends Command {
     COMMAND_NAME = 'logout';
@@ -10,7 +9,7 @@ class AccountLogoutCommand extends Command {
 
     // eslint-disable-next-line class-methods-use-this
     exec(): Promise<any> {
-      SessionManager.getInstance().logout();
+      this.network.logout();
       return new Promise<any>((resolve) => {
         resolve('Logged out');
       });
