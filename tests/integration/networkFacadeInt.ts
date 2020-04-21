@@ -22,7 +22,7 @@ const FakeProvider = require('web3-fake-provider');
 
 const provider = new FakeProvider();
 
-const web3:Web3 = new Web3(provider);
+const web3: Web3 = new Web3(provider);
 
 const network: NetworkInterface = new EtherlessNetwork(web3);
 const session: SessionInterface = new EtherlessSession(web3);

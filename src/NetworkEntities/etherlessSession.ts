@@ -26,15 +26,15 @@ export default class EtherlessSession extends SessionInterface {
   static readonly chain = 'ropsten';
 
 
-  private web3:Web3;
+  private web3: Web3;
 
-  private accountAddress:string;
+  private accountAddress: string;
 
   /**
    * this constructor shouldn't be called outside the
    * network package
    */
-  constructor(provider:any) {
+  constructor(provider: any) {
     super();
     this.web3 = provider;
     if (this.isUserSignedIn()) {
@@ -42,13 +42,13 @@ export default class EtherlessSession extends SessionInterface {
     }
   }
 
-  public signup(password:string): boolean {
+  public signup(password: string): boolean {
     const newAccount = this.web3.eth.accounts.create();
     this.storeAccount(newAccount, password);
     return true;
   }
 
-  public logon(privateKey:string, password:string): boolean {
+  public logon(privateKey: string, password: string): boolean {
     const account = this.web3.eth.accounts.privateKeyToAccount(privateKey);
     this.storeAccount(account, password);
     return true;
@@ -60,7 +60,7 @@ export default class EtherlessSession extends SessionInterface {
     Utils.localStorage.setItem(EtherlessSession.STORAGE_WALLET_KEY, JSON.stringify(encrypted));
   }
 
-  public logout():void {
+  public logout(): void {
     this.accountAddress = undefined;
     Utils.localStorage.removeItem(EtherlessSession.STORAGE_WALLET_KEY);
   }
@@ -70,7 +70,7 @@ export default class EtherlessSession extends SessionInterface {
     const encryptedWallet = EtherlessSession.getWallet();
     try {
       const wallet = this.web3.eth.accounts.wallet.decrypt(encryptedWallet, password);
-      return [wallet[0].address,wallet[0].privateKey];
+      return [wallet[0].address, wallet[0].privateKey];
     } catch {
       throw new Error('Unable to read internal storage');
     }

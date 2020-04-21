@@ -20,7 +20,7 @@ const FakeProvider = require('web3-fake-provider');
 
 const provider = new FakeProvider();
 
-const web3:Web3 = new Web3(provider);
+const web3: Web3 = new Web3(provider);
 
 const dummyToReturn = web3.utils.toHex(100);
 
@@ -34,7 +34,7 @@ const DummyTransaction = {
 
 
 describe('Testing EtherlessSession class', async () => {
-  const session:SessionInterface = new EtherlessSession(web3);
+  const session: SessionInterface = new EtherlessSession(web3);
   it('testing signup method', () => {
     const result = session.signup('test');
     assert.isTrue(result, 'The signup method doesn\'t work');
@@ -62,8 +62,8 @@ describe('Testing EtherlessSession class', async () => {
     provider.injectResult(100);
     provider.injectResult(100);
     session.signTransaction(DummyTransaction, 'password').then((result) => {
-      assert.isObject(result,'Is not valid object');
-      expect(result).to.have.property('rawTransaction')
+      assert.isObject(result, 'Is not valid object');
+      expect(result).to.have.property('rawTransaction');
     }).catch(console.log);
   });
 

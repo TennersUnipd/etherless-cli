@@ -17,11 +17,12 @@ import EtherlessContract from '../../../src/NetworkEntities/etherlessContract';
 
 import * as variables from './SharedVariables';
 
-var FakeProvider = require('web3-fake-provider');
+const FakeProvider = require('web3-fake-provider');
+
 const provider = new FakeProvider();
 const web3 = new Web3(provider);
 describe('testing the contracts implementation', () => {
-  const contract:ContractInterface = new EtherlessContract(variables.dummyAbi,
+  const contract: ContractInterface = new EtherlessContract(variables.dummyAbi,
     variables.contractAddress, web3);
   it('testing getListOfFunctions', () => {
     const result = contract.getListOfFunctions();
@@ -44,9 +45,10 @@ describe('testing the contracts implementation', () => {
     provider.injectResult(web3.utils.toHex(50));
     contract.estimateGasCost(
       '0xe4036e69A708Bd2C4460eEc280fa6b03Ad3D44D8',
-      'createFunction', ['fnName','string','string', 'ab', 10],
-      10)
-      .then((result)=>{assert.equal(result,50,'GasCost is returning the wrong number')})
+      'createFunction', ['fnName', 'string', 'string', 'ab', 10],
+      10,
+    )
+      .then((result) => { assert.equal(result, 50, 'GasCost is returning the wrong number'); })
       .catch(assert.fail);
   });
   it('testing getFunctionTransaction', async () => {

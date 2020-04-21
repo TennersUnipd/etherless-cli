@@ -1,9 +1,9 @@
 import { GatewayConfiguration } from './gateway';
 
 export enum EnvType {
-    Local,
-    Test,
-    Stage
+  Local,
+  Test,
+  Stage
 }
 export function getConfiguration(forEnv: EnvType): GatewayConfiguration {
   switch (forEnv) {

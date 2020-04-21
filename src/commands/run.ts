@@ -34,7 +34,7 @@ export function CMDRun(gateway: Gateway, accountAddress: string, params: RunFNDa
 
 function awaitResponse(gateway: Gateway, identifier: string) {
   // TODO: add timeout
-  gateway.contract.once('RemoteResponse', { filter: { _identifier: identifier } }, (error:any, event:any) => {
+  gateway.contract.once('RemoteResponse', { filter: { _identifier: identifier } }, (error: any, event: any) => {
     if (event.id == '34') {
 
       // è il mio fe
@@ -50,6 +50,6 @@ function awaitResponse(gateway: Gateway, identifier: string) {
 }
 
 export interface RunFNData {
-    name: string;
-    parameters: string[];
+  name: string;
+  parameters: string[];
 }
