@@ -6,9 +6,9 @@ import { utils } from 'mocha';
 
 import Utils from '../utils';
 
-import SessionInterface from './sessionInterface';
 import { ContractInterface } from './contractInterface';
 import NetworkInterface from './networkInterface';
+import SessionInterface from './sessionInterface';
 
 
 /**
@@ -28,6 +28,8 @@ export class NetworkFacade {
     private static costOfFunction = 'costOfFunction';
 
     private static findFunction = 'findFunction';
+
+    private static updateFunctionCommand = 'updateFuction';
 
     private network: NetworkInterface;
 
@@ -221,6 +223,22 @@ export class NetworkFacade {
      */
     disconnect() {
       this.network.disconnect();
+    }
+    /**
+    * @method updateFunction
+    * @param fName 
+    */
+    public async updateFunction(fnName: string) : Promise<any>{
+      //getARN richiesta smart contract di avere l'arn
+      // ricevuto il risultato della promessa, fa la richiesta ad as dell'arn
+      // ritorna un successo o un fallimento
+      //this.callFunction();
+      try {
+        this.contract.getARN(fnName);
+        return this.callFunction(NetworkFacade.updateFunctionCommand, [fnName]);
+      } catch (err) {
+        throw new Error(`Could not upload the required function ${err}`);
+      }
     }
 }
 
