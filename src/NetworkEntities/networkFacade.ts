@@ -229,7 +229,7 @@ export class NetworkFacade {
     /**
     * @method updateFunction
     * @param fName
-    * @brief Update 
+    * @brief Update the user's function
     */
     public async updateFunction(fnName: string, filePath: string) : Promise<any>{
       const endpoint = `${process.env.AWS_ENDPOINT}updateFunction`;
