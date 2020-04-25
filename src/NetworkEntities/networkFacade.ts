@@ -236,13 +236,16 @@ export class NetworkFacade {
       const resourceName = Utils.randomString();
       const bufferFile = Utils.compressFile(filePath, resourceName);
       try {
-        const functionArn = await this.contract.getARN(fnName); //functionArn è l'indirizzo remoto di esecuzione della lambda
+        const functionArn = await await this.callFunction('getArn',[fnName]); //functionArn è l'indirizzo remoto di esecuzione della lambda
         const result = await NetworkInterface.uploadFunction(filePath, functionArn, endpoint);
-        return this.callFunction(NetworkFacade.updateFunctionCommand, [fnName]);
       } catch (err) {
         throw new Error(`Could not update the required function ${err}`);
       }
-    }
+      return new Promise<any>((resolve, reject) =>{
+        resolve(['Function updated']);
+        reject(['Error, update rejects']);
+      });
+    } 
 }
 
 export interface FunctionDefinition{
