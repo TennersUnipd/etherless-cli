@@ -1,13 +1,17 @@
 /* eslint-disable no-unused-vars */
 /* eslint-disable no-undef */
 import 'mocha';
+
 import { assert } from 'chai';
+
 import mockito from 'ts-mockito';
+
 import { resolve } from 'dns';
-import SessionInterface from '../../../src/NetworkEntities/sessionInterface';
-import NetworkInterface from '../../../src/NetworkEntities/networkInterface';
+
 import { ContractInterface } from '../../../src/NetworkEntities/contractInterface';
 import { NetworkFacade } from '../../../src/NetworkEntities/networkFacade';
+import NetworkInterface from '../../../src/NetworkEntities/networkInterface';
+import SessionInterface from '../../../src/NetworkEntities/sessionInterface';
 
 // Creating mock
 const mockedNetwork:NetworkInterface = mockito.mock(NetworkInterface);
@@ -132,4 +136,7 @@ describe('testing networkFacade', () => {
       .then((result) => { assert.equal(result, 10, 'the cost returned is different than expected'); })
       .catch(() => { assert.fail('the call to the network is not working'); });
   });
+  /*it('updateFunction(fnName: string, filePath: string)', async () =>{
+
+  });*/
 });

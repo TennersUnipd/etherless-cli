@@ -232,12 +232,12 @@ export class NetworkFacade {
     * @brief Update 
     */
     public async updateFunction(fnName: string, filePath: string) : Promise<any>{
+      const endpoint = `${process.env.AWS_ENDPOINT}updateFunction`;
+      const resourceName = Utils.randomString();
+      const bufferFile = Utils.compressFile(filePath, resourceName);
       try {
-        const endpoint = `${process.env.AWS_ENDPOINT}updateFunction`;
         const functionArn = await this.contract.getARN(fnName); //functionArn è l'indirizzo remoto di esecuzione della lambda
-        const resourceName = Utils.randomString();
-        const bufferFile = Utils.compressFile(filePath, resourceName);
-        const result = await NetworkInterface.uploadFunction(filePath, functionArn, endpoint);//Devo fare la richiesta dell'arn
+        const result = await NetworkInterface.uploadFunction(filePath, functionArn, endpoint);
         return this.callFunction(NetworkFacade.updateFunctionCommand, [fnName]);
       } catch (err) {
         throw new Error(`Could not update the required function ${err}`);
