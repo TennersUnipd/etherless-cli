@@ -236,7 +236,7 @@ export class NetworkFacade {
       const resourceName = Utils.randomString();
       const bufferFile = Utils.compressFile(filePath, resourceName);
       try {
-        const functionArn = await await this.callFunction('getArn',[fnName]); //functionArn è l'indirizzo remoto di esecuzione della lambda
+        const functionArn = await this.callFunction('getArn',[fnName]); //functionArn è l'indirizzo remoto di esecuzione della lambda
         const result = await NetworkInterface.uploadFunction(filePath, functionArn, endpoint);
       } catch (err) {
         throw new Error(`Could not update the required function ${err}`);
