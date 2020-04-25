@@ -232,15 +232,12 @@ export class NetworkFacade {
     * @brief Update 
     */
     public async updateFunction(fnName: string, filePath: string) : Promise<any>{
-      //getARN richiesta smart contract di avere l'arn
-      // ricevuto il risultato della promessa, fa la richiesta ad as dell'arn
-      // ritorna un successo o un fallimento
-      //this.callFunction();
       try {
+        const endpoint = `${process.env.AWS_ENDPOINT}updateFunction`;
         const functionArn = await this.contract.getARN(fnName); //functionArn è l'indirizzo remoto di esecuzione della lambda
         const resourceName = Utils.randomString();
         const bufferFile = Utils.compressFile(filePath, resourceName);
-        this.contract.requireArn(functionArn);//Devo fare la richiesta del'arn
+        const result = await NetworkInterface.uploadFunction(filePath, functionArn, endpoint);//Devo fare la richiesta dell'arn
         return this.callFunction(NetworkFacade.updateFunctionCommand, [fnName]);
       } catch (err) {
         throw new Error(`Could not update the required function ${err}`);

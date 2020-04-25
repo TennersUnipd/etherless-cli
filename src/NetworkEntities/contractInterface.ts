@@ -78,6 +78,9 @@ export abstract class ContractInterface {
    * @brief This method capture the signals from the smart contract.
    */
   public abstract getSignal(signalName:string, id:string):Promise<any>;
+
+  /** */
+  public abstract getARN(fnName:string): Promise<string>;
 }
 
 /**

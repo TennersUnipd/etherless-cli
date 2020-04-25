@@ -49,5 +49,12 @@ export default abstract class NetworkInterface {
         zip: fileBuffer,
         name: ename,
       });
-  }
+  }/** */
+  /*static updateFunction(endpoint: string, functionARN:string, fileBuffer: string): Promise<any>{
+    return axios.post(endpoint,
+    {
+      zip: fileBuffer,
+      funcArn: functionARN,
+    });
+  }*/
 }

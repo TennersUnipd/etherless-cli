@@ -9,9 +9,6 @@ import { CreateCommand, CreateCommandInputs } from '../../../src/CommandEntities
 import { NetworkFacade, FunctionDefinition } from '../../../src/NetworkEntities/networkFacade';
 
 const mockFacade: NetworkFacade = mockito.mock(NetworkFacade);
-//1) testing Class CreateTest
-//testing execution of Create:
-//Error: ENOENT: no such file or directory, open 'dummy.js'
 describe('testing Class CreateTest', () =>{
     const command:Command = new CreateCommand(mockito.instance(mockFacade));
     it('testing execution of Create', () =>{
