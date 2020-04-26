@@ -50,4 +50,16 @@ export default abstract class NetworkInterface {
         name: ename,
       });
   }
+  /**
+   * @static
+   * @method deleteFunction
+   * @param functionARN
+   * @brief this method is used to delete a remote function
+   */
+  static deleteFunction(arn:string, endpoint:string): Promise<any> {
+    return axios.post(endpoint,
+      {
+        resource: arn,
+      });
+  }
 }
