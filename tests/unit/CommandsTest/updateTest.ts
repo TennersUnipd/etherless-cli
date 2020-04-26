@@ -15,7 +15,7 @@ describe('testing Class UpdateTest', () =>{
     const command:Command = new UpdateCommand(mockito.instance(mockFacade));
     it('testing execution of Update', () => {
         mockito.when(mockFacade.updateFunction('name','./tests/unit/CommandsTest/dummy.js')).thenReturn(new Promise((resolve, reject) => {
-            resolve(['function updated']);
+            resolve('function updated');
             reject(new Error('testError'));
         }));
         command.exec(command.parseArgs(['name', './tests/unit/CommandsTest/dummy.js'])).then((result)=> {
