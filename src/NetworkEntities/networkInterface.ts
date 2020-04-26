@@ -50,4 +50,12 @@ export default abstract class NetworkInterface {
         name: ename,
       });
   }
+
+    /**
+   * @abstract
+   * @method getLog
+   * @param address address to use as filter for research of past transaction
+   * @brief this method retrieve from the network all the history of a specific address
+   */
+    public abstract getLog(address:string):Promise<any>;
 }

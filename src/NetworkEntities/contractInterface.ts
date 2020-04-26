@@ -62,13 +62,6 @@ export abstract class ContractInterface {
    */
   public abstract getCallable(requested:string, arg:any[]):any
 
-  /**
-   * @abstract
-   * @method getLog
-   * @param address address to use as filter for research of past transaction
-   * @brief this method retrieve from the network all the history of a specific address
-   */
-  public abstract getLog(address:string):Promise<string[]>;
 
   /**
    * @abstract

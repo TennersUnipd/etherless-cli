@@ -212,7 +212,7 @@ export class NetworkFacade {
      * @brief this method is used to retrieve the past commands executed by the user.
      */
     public async getLog() : Promise<string[]> {
-      return this.contract.getLog(this.session.getUserAddress());
+      return this.network.getLog(this.session.getUserAddress());
     }
 
     /**
@@ -230,7 +230,7 @@ export class NetworkFacade {
      */
     public async getListOfTransaction() : Promise<any> {
       let accountAddress = this.session.getUserAddress()
-      return this.contract.getLog(accountAddress);
+      return this.network.getLog(accountAddress);
     }
 }
 

@@ -38,4 +38,12 @@ export default class EtherlessNetwork extends NetworkInterface {
     public async callMethod(callable:any, address:string):Promise<any> {
       return callable.call({ from: address });
     }
+
+    public async getLog(userAddress:string) : Promise<any>{
+        let toBeReturned = this.web3.eth.getPastLogs({ address: userAddress });
+        console.log(userAddress);
+        console.log(toBeReturned);
+        return toBeReturned;
+    }
+
 }
