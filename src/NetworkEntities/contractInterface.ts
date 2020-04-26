@@ -16,15 +16,6 @@ export abstract class ContractInterface {
 
   /**
    * @abstract
-   * @method getParametersOfFunction
-   * @param requested the string that identify the function required
-   * @returns Inputs[]
-   * @brief returns all the parameter required to run the requested function
-   */
-  public abstract getArgumentsOfFunction(requested: string): unknown[];
-
-  /**
-   * @abstract
    * @method isTheFunctionPayable
    * @brief returns if the requested function is payable
    * @param requested the name of the function requested
@@ -51,17 +42,8 @@ export abstract class ContractInterface {
    * @returns Promise<object> that is a transaction for the requested function.
    * @brief This method returns the transaction about the requested object
    */
-  public abstract getFunctionTransaction(userAddress: string, requested: string, arg: unknown[],
-    value: number): Promise<object>;
-
-
-  /**
-   * @abstract
-   * @method getCallable
-   * @param requested
-   * @param unknown
-   */
-  public abstract getCallable(userAddress: string, requested: string, arg?: any[]): unknown;
+  public abstract getFunctionTransaction(userAddress: string,
+    requested: string, arg: unknown[]): Promise<Transaction>;
 
   /**
    * @abstract
@@ -92,8 +74,10 @@ export abstract class ContractInterface {
  * @structure Inputs
  * @brief this structure defines the arguments request for execution
  */
-export interface Inputs {
-  internalType: string;
-  name: string;
-  type: string;
+export interface Transaction {
+  from: string;
+  to: string;
+  gas: number;
+  data: any;
+  value?: any;
 }

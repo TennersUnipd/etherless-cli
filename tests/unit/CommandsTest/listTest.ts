@@ -15,12 +15,17 @@ describe('testing ListTest', () => {
   const command: Command = new ListCommand(mockito.instance(mockFacade));
   it('testing execution of List', () => {
     mockito.when(mockFacade.getAllLoadedFunction()).thenReturn(new Promise((resolve, reject) => {
-      resolve({name:'function 1', cost:10,prototype:'void',description:'test description'});
+      resolve([{
+        name: 'function 1',
+        cost: 10,
+        prototype: 'void',
+        description: 'test description',
+      }]);
       reject(new Error('testError'));
     }));
     command.exec(command.parseArgs([])).then((result) => {
       expect(result).to.include('function 1');
-    }).catch((err)=>{
+    }).catch((err) => {
       console.log(err);
       assert.fail('ListTest failing');
     });

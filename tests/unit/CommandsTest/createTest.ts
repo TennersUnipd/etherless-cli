@@ -20,7 +20,7 @@ describe('testing Class CreateTest', () => {
       reject(new Error('testError'));
     }));
     command.exec(command.parseArgs(['name', 'description', 'prototype', '10', './tests/unit/CommandsTest/dummy.js', 'password'])).then((result) => {
-      console.log(result);
+      assert.isOk(true);
     }).catch(console.error);
   });
   it('testing getCommandDescriptor()', () => {

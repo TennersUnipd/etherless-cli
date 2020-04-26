@@ -1,17 +1,13 @@
-import { Contract, EventData } from 'web3-eth-contract';
+import { Contract } from 'web3-eth-contract';
 
 import { AbiItem, AbiInput } from 'web3-utils';
 import { Log } from 'web3-core';
 
 
 import Web3 from 'web3';
-import { ContractInterface, Inputs } from './contractInterface';
-
-
-type fCall = (args: any[]) => any;
+import { ContractInterface, Transaction } from './contractInterface';
 
 class EtherlessContract extends ContractInterface {
-
   private readonly GASBASE = 1000000;
 
   private contract: Contract;
@@ -57,7 +53,7 @@ class EtherlessContract extends ContractInterface {
   }
 
   public decodeResponse(requested: string, encodedResult: any): any {
-    const out = this.commandList.filter((ele) => ele.name === requested)[0].outputs
+    const out = this.commandList.filter((ele) => ele.name === requested)[0].outputs;
     return this.web3.eth.abi.decodeParameters(out, encodedResult)[0];
   }
 
@@ -87,21 +83,16 @@ class EtherlessContract extends ContractInterface {
   /**
    *
    */
-  // eslint-disable-next-line class-methods-use-this
   public getListOfFunctions(): string[] {
     const toReturn: string[] = [];
     this.commandList.filter((elem) => {
-      if (!elem.name.includes('(')) {
+      if (elem.name !== undefined && !elem.name.includes('(')) {
         toReturn.push(elem.name);
         return true;
       }
       return false;
     });
     return toReturn;
-  }
-
-  public getCallable(userAddress: string, requested: string, arg?: any[]): any {
-    return this.prepareTransaction(userAddress, requested, arg);
   }
 
   /**
@@ -115,20 +106,13 @@ class EtherlessContract extends ContractInterface {
     return false;
   }
 
-  public getArgumentsOfFunction(requested: string): Inputs[] {
-    console.log(this.commandList.filter((ele) => ele.name === requested)[0].inputs);
-    return [{ internalType: 'test', name: 'test', type: 'test' }];
-  }
-
   /**
    *
    */
   public async getLog(userAddress: string): Promise<string[]> {
-    let gasG = await this.web3.eth.getTransactionCount(userAddress);
     return new Promise((resolve, reject) => {
       this.web3.eth.getTransactionCount(userAddress)
         .then((value) => {
-          console.log(value);
           resolve([value.toString()]);
         })
         .catch((err) => { reject(err); });
@@ -142,25 +126,24 @@ class EtherlessContract extends ContractInterface {
    * @param args
    */
   public async getFunctionTransaction(userAddress: string, requested: string,
-    args: any[], value: number = undefined): Promise<object> {
+    args: any[]): Promise<Transaction> {
     if (this.commandList.find((fn) => fn.name === requested) === undefined) {
       throw new Error('Function not found');
     }
-    return this.prepareTransaction(userAddress, requested, args, value);
+    return this.prepareTransaction(userAddress, requested, args);
   }
 
   /**
    *
    */
-  private async prepareTransaction(userAddress: string, requested: string, args: any[],
-    value: number = undefined): Promise<object> {
-    const gasEstimate = await this.estimateGasCost(userAddress, requested, args, value);
+  private async prepareTransaction(userAddress: string, requested: string,
+    args: any[]): Promise<Transaction> {
+    const gasEstimate = await this.estimateGasCost(userAddress, requested, args);
     return {
       from: userAddress,
       to: this.contract.options.address,
       gas: gasEstimate * 2,
       data: this.getAbiEncode(requested, args),
-      value,
     };
   }
 }

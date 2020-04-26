@@ -104,25 +104,17 @@ export class NetworkFacade {
      * @brief executes the function on the ethereum network.
      * DOES NOT EXECUTE USER LOADED FUNCTION
      */
-  private async callFunction(functionName: string, parameters: any[], password?: string, isCallable = true, value: number = undefined): Promise<any> {
+  private async callFunction(functionName: string, parameters: any[], password?: string, value: number = undefined): Promise<any> {
     const address = this.session.getUserAddress();
     const payable = this.contract.isTheFunctionPayable(functionName);
-    if (payable || !isCallable) {
-      // get cost of function
-      const gasCost = await this.contract.estimateGasCost(
-        address,
-        functionName,
-        parameters,
-        value,
-      );
-      const transaction = await this.contract
-        .getFunctionTransaction(address, functionName, parameters, value);
+    const transaction = await this.contract
+      .getFunctionTransaction(address, functionName, parameters);
+    if (payable) {
+      transaction.value = value;
       const signedTransaction = await this.session.signTransaction(transaction, password);
       return this.network.sendTransaction(signedTransaction);
     }
-    // not payable
-    const callable = await this.contract.getCallable(address, functionName, parameters);
-    return this.network.callMethod(callable, address)
+    return this.network.callMethod(transaction, address)
       .then((result) => this.contract.decodeResponse(functionName, result));
   }
 
@@ -140,14 +132,17 @@ export class NetworkFacade {
     const resourceName = Utils.randomString();
     const bufferFile = Utils.compressFile(functionDefinition.filePath, resourceName);
     try {
-      // here we should take some eth from the user account for
-      // testing the application and decide the cost of execution
       const uploadResult = await NetworkInterface
         .uploadFunction(bufferFile, resourceName, endpoint);
       const functionArn = uploadResult.data.FunctionArn;
-      return this.callFunction(NetworkFacade.createFunctionCommand, [functionDefinition.fnName,
-      functionDefinition.description, functionDefinition.pro,
-        functionArn, functionDefinition.cost], password, false);
+      return this
+        .callFunction(NetworkFacade.createFunctionCommand,
+          [functionDefinition.fnName,
+          functionDefinition.description,
+          functionDefinition.pro,
+            functionArn,
+          functionDefinition.cost],
+          password);
     } catch (err) {
       throw new Error(`Could not upload the required function ${err}`);
     }
@@ -195,7 +190,7 @@ export class NetworkFacade {
     const resultProm = new Promise<string>((resolve, reject) => {
       this.callFunction(NetworkFacade.remoteExecCommand,
         [fName, serializedParams, identifier],
-        password, false, cost)
+        password, cost)
         .then(() => {
           console.log('Request sent');
           this.contract.getSignal(NetworkFacade.remoteExecSignal, identifier)

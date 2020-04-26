@@ -36,6 +36,7 @@ export abstract class Command {
      * @returns a type CommandInput or one of his extension
      * @brief This method takes the arguments passed with the command line interface at the exec method.
      */
+  // eslint-disable-next-line class-methods-use-this
   parseArgs(args: string[]): CommandInputs {
     if (args === undefined || args.length === 0) {
       return {};

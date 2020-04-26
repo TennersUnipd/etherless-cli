@@ -7,7 +7,7 @@ import { assert, expect } from 'chai';
 import Web3 from 'web3';
 
 
-import { ContractInterface } from '../../../src/NetworkEntities/contractInterface';
+import { ContractInterface, Transaction } from '../../../src/NetworkEntities/contractInterface';
 import EtherlessContract from '../../../src/NetworkEntities/etherlessContract';
 
 import * as variables from './SharedVariables';
@@ -22,12 +22,8 @@ describe('testing the contracts implementation', () => {
     variables.contractAddress, web3);
   it('testing getListOfFunctions', () => {
     const result = contract.getListOfFunctions();
-    assert.isArray(result, 'getListOfFunctions is not working');
-    assert.isTrue(result.includes('costOfFunction'));
-  });
-  it('testing getArgumentsOfFunction', () => {
-    const result = contract.getArgumentsOfFunction('costOfFunction');
-    assert.isArray(result, 'getArgumentsOfFunction is not working');
+    assert.isArray(result, 'The function returns the wrong type');
+    assert.include(result, 'listFunctions');
   });
   it('testing isTheFunctionPayable with a payable function', () => {
     const result = contract.isTheFunctionPayable('runFunction');
@@ -37,31 +33,10 @@ describe('testing the contracts implementation', () => {
     const result = contract.isTheFunctionPayable('costOfFunction');
     assert.isFalse(result, 'isTheFunctionPayable is not working');
   });
-  it('testing estimateGasCost', () => {
-    provider.injectResult(web3.utils.toHex(50));
-    provider.injectValidation((call) => { console.log(call); });
-    contract.estimateGasCost(
-      '0xe4036e69A708Bd2C4460eEc280fa6b03Ad3D44D8',
-      'createFunction', ['fnName', 'string', 'string', 'ab', 10],
-      10,
-    )
-      .then((result) => { assert.equal(result, 50, 'GasCost is returning the wrong number'); })
-      .catch(assert.fail);
-  });
   it('testing getFunctionTransaction', async () => {
-    const result = await contract.getFunctionTransaction('0xe4036e69A708Bd2C4460eEc280fa6b03Ad3D44D8', 'runFunction', ['test1', 'test2', 'test3'], 100, 10);
-    assert.isObject(result, 'not an object');
+    const result: Transaction = await contract.getFunctionTransaction('0xe4036e69A708Bd2C4460eEc280fa6b03Ad3D44D8', 'runFunction', ['test1', 'test2', 'test3']);
+    assert.isOk(result.from === '0xe4036e69A708Bd2C4460eEc280fa6b03Ad3D44D8');
   });
-  it('testing getFunctionTransaction', async () => {
-    const result = await contract.getFunctionTransaction('0xe4036e69A708Bd2C4460eEc280fa6b03Ad3D44D8', 'listFunctions', [], 100, 10);
-    assert.isObject(result, 'not an object');
-  });
-  // it('testing history of transaction', async () => {
-  //   AssertionError: Should be tested in a better environment: expected undefined to be an array
-  //   const result = await contract.getLog(variables.dummyAddress);
-  //   assert.isUndefined(result, 'This test should not be undefined');
-  //   assert.isArray(result, 'Should be tested in a better environment');
-  // });
 });
 
 
