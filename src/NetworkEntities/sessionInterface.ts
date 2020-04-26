@@ -62,4 +62,5 @@ export default abstract class SessionInterface {
    * @brief returns the account information
    */
   public abstract getAccount(password: string): [string, string];
+
 }

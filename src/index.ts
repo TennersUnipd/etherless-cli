@@ -9,6 +9,7 @@ import ListCommand from './CommandEntities/listCommand';
 import NetworkUtils from './NetworkEntities/networkUtils';
 import { CreateCommand } from './CommandEntities/createCommand';
 import FindCommand from './CommandEntities/findCommand';
+import LogCommand from './CommandEntities/logCommand';
 
 const network = NetworkUtils.getEtherlessNetworkFacadeInstance();
 
@@ -22,6 +23,7 @@ const commands = [
   AccountLoginCommand,
   RunCommand,
   CreateCommand,
+  LogCommand,
   // TestCommand,
 ];
 

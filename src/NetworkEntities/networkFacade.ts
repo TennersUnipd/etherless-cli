@@ -222,6 +222,16 @@ export class NetworkFacade {
     disconnect() {
       this.network.disconnect();
     }
+
+    /**
+     * @method getListOfTransaction()
+     * @returns a promise that will return the transactions exec from that account
+     * @brief retrieves transactions from the account logged to the smart of etherless.
+     */
+    public async getListOfTransaction() : Promise<any> {
+      let accountAddress = this.session.getUserAddress()
+      return this.contract.getLog(accountAddress);
+    }
 }
 
 export interface FunctionDefinition{

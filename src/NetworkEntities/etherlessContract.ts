@@ -109,13 +109,21 @@ class EtherlessContract extends ContractInterface {
    *
    */
   public async getLog(userAddress:string): Promise<string[]> {
-    let toBeReturned:string[];
+    let toBeReturned : string[];
+    /*= await this.web3.eth.getPastLogs({fromBlock:'0x0',address:'0x9e3319636e2126e3c0bc9e3134AEC5e1508A46c7'})
+    .then(res => {
+      res.forEach(rec => {
+        console.log(rec.blockNumber, rec.transactionHash, rec.topics);
+      });
+    }).catch(err => console.log("getPastLogs failed", err));
     // filter may be wrong
+    */
     const pastEvents = await this.contract.getPastEvents('allEvents',
-      { filter: { address: userAddress }, fromBlock: 0, toBlock: 'latest' });
+      { /*filter: { address: userAddress },*/ fromBlock: 0, toBlock: 'latest' });
     pastEvents.forEach((element) => {
       toBeReturned.push(`${element.logIndex}: ${element.event} ${element.address}`);
     });
+    console.log(toBeReturned);
     return toBeReturned;
   }
 
