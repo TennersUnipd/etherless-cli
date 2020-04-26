@@ -10,7 +10,7 @@ import NetworkUtils from './NetworkEntities/networkUtils';
 import { CreateCommand } from './CommandEntities/createCommand';
 import FindCommand from './CommandEntities/findCommand';
 import SetCommand from './CommandEntities/setCommand';
-import DeleteCommand from './CommandEntities/deleteFunction';
+import DeleteCommand from './CommandEntities/deleteCommand';
 
 const network = NetworkUtils.getEtherlessNetworkFacadeInstance();
 
