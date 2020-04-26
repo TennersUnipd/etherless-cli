@@ -116,13 +116,14 @@ export class NetworkFacade {
         value,
       );
       const transaction = await this.contract
-        .getFunctionTransaction(address, functionName, parameters, gasCost, value);
+        .getFunctionTransaction(address, functionName, parameters, value);
       const signedTransaction = await this.session.signTransaction(transaction, password);
       return this.network.sendTransaction(signedTransaction);
     }
     // not payable
-    const callable = this.contract.getCallable(functionName, parameters);
-    return this.network.callMethod(callable, address);
+    const callable = await this.contract.getCallable(address, functionName, parameters);
+    return this.network.callMethod(callable, address)
+      .then((result) => this.contract.decodeResponse(functionName, result));
   }
 
   /**
@@ -145,7 +146,7 @@ export class NetworkFacade {
         .uploadFunction(bufferFile, resourceName, endpoint);
       const functionArn = uploadResult.data.FunctionArn;
       return this.callFunction(NetworkFacade.createFunctionCommand, [functionDefinition.fnName,
-        functionDefinition.description, functionDefinition.pro,
+      functionDefinition.description, functionDefinition.pro,
         functionArn, functionDefinition.cost], password, false);
     } catch (err) {
       throw new Error(`Could not upload the required function ${err}`);
@@ -221,9 +222,13 @@ export class NetworkFacade {
   disconnect() {
     this.network.disconnect();
   }
+
+  getlog(): Promise<string[]> {
+    return this.contract.getLog(this.session.getUserAddress());
+  }
 }
 
-export interface FunctionDefinition{
+export interface FunctionDefinition {
   fnName: string;
   description: string;
   pro: string;

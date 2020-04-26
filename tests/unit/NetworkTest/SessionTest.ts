@@ -1,16 +1,10 @@
-/* eslint-disable no-unused-vars */
-/* eslint-disable no-undef */
+
 import 'mocha';
 
 import { assert, expect } from 'chai';
 
-import mockito, { instance } from 'ts-mockito';
-
-import Ganache from 'ganache-core';
-
 import Web3 from 'web3';
 
-import { ContractInterface } from '../../../src/NetworkEntities/contractInterface';
 import EtherlessSession from '../../../src/NetworkEntities/etherlessSession';
 import SessionInterface from '../../../src/NetworkEntities/sessionInterface';
 
@@ -33,7 +27,7 @@ const DummyTransaction = {
 // END MOCKS
 
 
-describe('Testing EtherlessSession class', async () => {
+describe('Testing EtherlessSession class', () => {
   const session: SessionInterface = new EtherlessSession(web3);
   it('testing signup method', () => {
     const result = session.signup('test');
@@ -45,7 +39,7 @@ describe('Testing EtherlessSession class', async () => {
     assert.isTrue(result, "The logon method doesn't work");
   });
 
-  it('testing getBalance method', async () => {
+  it('testing getBalance method', () => {
     provider.injectResult(dummyToReturn);
     session.getBalance().then((result) => {
       assert.equal(result, 100, 'should return the correct amount');
@@ -57,7 +51,7 @@ describe('Testing EtherlessSession class', async () => {
     assert.isString(address, 'the return type is wrong');
   });
 
-  it('testing signTransaction method', async () => {
+  it('testing signTransaction method', () => {
     provider.injectResult(100);
     provider.injectResult(100);
     provider.injectResult(100);

@@ -6,17 +6,13 @@ import { assert, expect } from 'chai';
 
 import Web3 from 'web3';
 
-import { AbiItem, AbiInput } from 'web3-utils';
-
-import { Contract } from 'web3-eth-contract';
-
-import Ganache from 'ganache-core';
 
 import { ContractInterface } from '../../../src/NetworkEntities/contractInterface';
 import EtherlessContract from '../../../src/NetworkEntities/etherlessContract';
 
 import * as variables from './SharedVariables';
 
+// eslint-disable-next-line @typescript-eslint/no-var-requires
 const FakeProvider = require('web3-fake-provider');
 
 const provider = new FakeProvider();
@@ -41,8 +37,9 @@ describe('testing the contracts implementation', () => {
     const result = contract.isTheFunctionPayable('costOfFunction');
     assert.isFalse(result, 'isTheFunctionPayable is not working');
   });
-  it('testing estimateGasCost', async () => {
+  it('testing estimateGasCost', () => {
     provider.injectResult(web3.utils.toHex(50));
+    provider.injectValidation((call) => { console.log(call); });
     contract.estimateGasCost(
       '0xe4036e69A708Bd2C4460eEc280fa6b03Ad3D44D8',
       'createFunction', ['fnName', 'string', 'string', 'ab', 10],

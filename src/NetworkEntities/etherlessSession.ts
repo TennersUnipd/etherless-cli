@@ -13,8 +13,6 @@ import {
 import { isAddress } from 'web3-utils';
 
 import { Wallet } from 'web3-eth-accounts';
-import { Transaction } from 'ethereumjs-tx';
-import { Buffer } from 'buffer';
 import Utils from '../utils';
 
 import SessionInterface from './sessionInterface';
@@ -54,7 +52,7 @@ export default class EtherlessSession extends SessionInterface {
     return true;
   }
 
-  private storeAccount(account: Account, password: string) {
+  private storeAccount(account: Account, password: string): void {
     this.web3.eth.accounts.wallet.add(account);
     const encrypted = this.web3.eth.accounts.wallet.encrypt(password);
     Utils.localStorage.setItem(EtherlessSession.STORAGE_WALLET_KEY, JSON.stringify(encrypted));

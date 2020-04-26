@@ -11,7 +11,7 @@ export default class EtherlessNetwork extends NetworkInterface {
   /**
      * constructor
      */
-  public constructor(provider: string|any) {
+  public constructor(provider: string | any) {
     super(provider);
     this.web3 = provider;
   }
@@ -36,6 +36,6 @@ export default class EtherlessNetwork extends NetworkInterface {
 
   // eslint-disable-next-line class-methods-use-this
   public async callMethod(callable: any, address: string): Promise<any> {
-    return callable.call({ from: address });
+    return this.web3.eth.call(callable);
   }
 }
