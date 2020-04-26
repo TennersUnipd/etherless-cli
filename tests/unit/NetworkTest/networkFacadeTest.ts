@@ -8,6 +8,7 @@ import mockito from 'ts-mockito';
 
 import { resolve } from 'dns';
 
+import Utils from '../../../src/utils';
 import { ContractInterface } from '../../../src/NetworkEntities/contractInterface';
 import { NetworkFacade } from '../../../src/NetworkEntities/networkFacade';
 import NetworkInterface from '../../../src/NetworkEntities/networkInterface';
@@ -17,6 +18,7 @@ import SessionInterface from '../../../src/NetworkEntities/sessionInterface';
 const mockedNetwork:NetworkInterface = mockito.mock(NetworkInterface);
 const mockedSession:SessionInterface = mockito.mock(SessionInterface);
 const mockedContract:ContractInterface = mockito.mock(ContractInterface);
+const mockedUtils:Utils = mockito.mock(Utils);
 
 const tPassword = 'passwordTest';
 const tUserKey = 'validPrivateKey';
@@ -137,6 +139,6 @@ describe('testing networkFacade', () => {
       .catch(() => { assert.fail('the call to the network is not working'); });
   });
   /*it('updateFunction(fnName: string, filePath: string)', async () =>{
-
+    
   });*/
 });

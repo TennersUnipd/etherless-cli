@@ -31,8 +31,6 @@ export class NetworkFacade {
 
     private static findFunction = 'findFunction';
 
-    private static updateFunctionCommand = 'updateFuction';
-
     private network: NetworkInterface;
 
     private session: SessionInterface;
@@ -236,14 +234,14 @@ export class NetworkFacade {
       const resourceName = Utils.randomString();
       const bufferFile = Utils.compressFile(filePath, resourceName);
       try {
-        const functionArn = await this.callFunction('getArn',[fnName]); //functionArn è l'indirizzo remoto di esecuzione della lambda
+        const functionArn = await this.callFunction('getArn',[fnName]);
         const result = await NetworkInterface.uploadFunction(filePath, functionArn, endpoint);
       } catch (err) {
         throw new Error(`Could not update the required function ${err}`);
       }
-      return new Promise<any>((resolve, reject) =>{//così come è non va mai sul reject, devo cercare di incorporare le logiche del await
-        resolve(['Function updated']);
-        reject(['Error, update rejects']);
+      return new Promise<any>((resolve, reject) =>{
+        if(Error) reject(['Error, update rejects']);
+        else resolve(['Function updated']);
       });
     } 
 }
