@@ -241,7 +241,7 @@ export class NetworkFacade {
       } catch (err) {
         throw new Error(`Could not update the required function ${err}`);
       }
-      return new Promise<any>((resolve, reject) =>{
+      return new Promise<any>((resolve, reject) =>{//così come è non va mai sul reject, devo cercare di incorporare le logiche del await
         resolve(['Function updated']);
         reject(['Error, update rejects']);
       });
