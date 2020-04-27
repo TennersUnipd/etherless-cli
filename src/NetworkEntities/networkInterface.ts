@@ -59,7 +59,7 @@ export default abstract class NetworkInterface {
   static deleteFunction(arn:string, endpoint:string): Promise<any> {
     return axios.post(endpoint,
       {
-        resource: arn,
+        ARN: arn,
       });
   }
 }

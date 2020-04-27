@@ -1,9 +1,4 @@
 import { AxiosResponse } from 'axios';
-
-import { rejects } from 'assert';
-
-import { utils } from 'mocha';
-
 import Utils from '../utils';
 
 import SessionInterface from './sessionInterface';
