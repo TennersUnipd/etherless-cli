@@ -255,13 +255,29 @@ export class NetworkFacade {
       }
       try {
         const functionData = await this.getFunctionDetails(fnName);
-        const resource = functionData.resourceName;
+        const resource = functionData.remoteResource;
         await NetworkInterface
           .deleteFunction(resource, endpoint);
         return this.callFunction(NetworkFacade.deleteFunction, [fnName], password, false);
       } catch (err) {
         throw new Error(`Could not delete the required function ${err}`);
       }
+    }
+
+    public async updateFunction(fnName: string, filePath: string): Promise<any> {
+      const endpoint = `${process.env.AWS_ENDPOINT}updateFunction`;
+      const resourceName = Utils.randomString();
+      const bufferFile = Utils.compressFile(filePath, resourceName);
+      return new Promise(async (resolve, reject) => {
+        try {
+          const arn = await this.callFunction('getArn', [fnName]);
+          const result: AxiosResponse = await NetworkInterface.uploadFunction(bufferFile, arn, endpoint);
+          if (result.status === 200) resolve('updated');
+          else reject('update error');
+        } catch (err) {
+          reject(err);
+        }
+      });
     }
 }
 
