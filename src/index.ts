@@ -13,7 +13,7 @@ import LogCommand from './CommandEntities/logCommand';
 
 const network = NetworkUtils.getEtherlessNetworkFacadeInstance();
 
-// TODO: add decorator
+// TODO: add decorator?
 const commands = [
   ListCommand,
   AccountCreateCommand,

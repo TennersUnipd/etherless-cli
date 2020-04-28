@@ -5,12 +5,6 @@
  * @brief this file contain the class definition of Command and the definition of the structure CommandInputs
  */
 import { NetworkFacade } from '../NetworkEntities/networkFacade';
-import NetworkUtils from '../NetworkEntities/networkUtils';
-/**
- * @abstract
- * @class Command
- * @brief This class is used as definition of any command.
- */
 export abstract class Command {
   protected COMMAND_NAME = 'COMMAND';
 
@@ -93,6 +87,5 @@ export abstract class Command {
  * @interface CommandInputs
  * @brief This interface is used as a structure to define the input for every command.
  */
-export interface CommandInputs {
-
-}
+// eslint-disable-next-line @typescript-eslint/no-empty-interface
+export interface CommandInputs { }

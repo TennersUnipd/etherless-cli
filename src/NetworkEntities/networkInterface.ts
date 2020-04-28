@@ -37,18 +37,11 @@ export default abstract class NetworkInterface {
   public abstract callMethod(callable: any, address: string): Promise<any>;
 
   /**
-   * @static
    * @method uploadFunction
    * @param fileBuffer
    * @param ename
    * @param endpoint
    * @brief this method is used for the upload of a function to the AWS service.
    */
-  static uploadFunction(fileBuffer: string, ename: string, endpoint: string): Promise<any> {
-    return axios.post(endpoint,
-      {
-        zip: fileBuffer,
-        name: ename,
-      });
-  }
+  public abstract postRequest(endpoint: string, bodyRequest: string): Promise<[number, string]>;
 }

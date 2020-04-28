@@ -3,7 +3,7 @@ import { AxiosResponse } from 'axios';
 import Utils from '../utils';
 
 import SessionInterface from './sessionInterface';
-import { ContractInterface, Transaction } from './contractInterface';
+import { ContractInterface } from './contractInterface';
 import NetworkInterface from './networkInterface';
 
 
@@ -100,17 +100,23 @@ export class NetworkFacade {
      * @brief executes the function on the ethereum network.
      * DOES NOT EXECUTE USER LOADED FUNCTION
      */
-  private async callFunction(functionName: string, parameters: any[], password?: string,
+  private async callFunction(functionName: string, args: any[], password?: string,
     value: number = undefined): Promise<any> {
-    const address = this.session.getUserAddress();
+    const userAddress = this.session.getUserAddress();
     const payable = this.contract.isTheFunctionPayable(functionName);
+
     try {
-      const transaction = await this.contract.getFunctionTransaction(address, functionName, parameters, value);
+      const transaction = await this.contract.getFunctionTransaction({
+        userAddress,
+        functionName,
+        args,
+        value,
+      });
       if (payable) {
         const signedTransaction = await this.session.signTransaction(transaction, password);
         return this.network.sendTransaction(signedTransaction);
       }
-      return this.network.callMethod(transaction, address)
+      return this.network.callMethod(transaction, userAddress)
         .then((result) => this.contract.decodeResponse(functionName, result));
     } catch (err) {
       throw new Error(err);
@@ -136,11 +142,13 @@ export class NetworkFacade {
       const functionArn = uploadResult.data.FunctionArn;
       return this
         .callFunction(NetworkFacade.createFunctionCommand,
-          [functionDefinition.fnName,
-          functionDefinition.description,
-          functionDefinition.pro,
+          [
+            functionDefinition.fnName,
+            functionDefinition.description,
+            functionDefinition.pro,
             functionArn,
-          functionDefinition.cost],
+            functionDefinition.cost,
+          ],
           password);
     } catch (err) {
       throw new Error(`Could not upload the required function ${err}`);
@@ -186,7 +194,19 @@ export class NetworkFacade {
   public async runFunction(fName: string, serializedParams: string, password: string): Promise<any> {
     const identifier = Utils.randomString();
     const cost = await this.getCostOfFunction(fName);
-    return cost;
+    return new Promise((resolve, reject) => {
+      this.callFunction(NetworkFacade.remoteExecCommand,
+        [fName, serializedParams, identifier],
+        password,
+        cost)
+        .then(() => {
+          console.log('Request sent');
+          this.contract.getSignal(NetworkFacade.remoteExecSignal, identifier)
+            .then(resolve)
+            .catch(reject);
+        })
+        .catch((err) => { reject(err); });
+    });
   }
 
   /**

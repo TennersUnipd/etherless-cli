@@ -31,8 +31,7 @@ export abstract class ContractInterface {
    * @param userAddress
    * @param requested the name of the function requested
    */
-  public abstract estimateGasCost(userAddress: string, requested: string,
-    args: string[], value?: number): Promise<number>;
+  public abstract estimateGasCost(request: FunctionRequest): Promise<number>;
 
   /**
    * @abstract
@@ -42,8 +41,7 @@ export abstract class ContractInterface {
    * @returns Promise<object> that is a transaction for the requested function.
    * @brief This method returns the transaction about the requested object
    */
-  public abstract getFunctionTransaction(userAddress: string,
-    requested: string, arg: string[], value?: number): Promise<Transaction>;
+  public abstract getFunctionTransaction(request: FunctionRequest): Promise<Transaction>;
 
   /**
    * @abstract
@@ -71,7 +69,7 @@ export abstract class ContractInterface {
 }
 
 /**
- * @structure Inputs
+ * @structure Transaction
  * @brief this structure defines the arguments request for execution
  */
 export interface Transaction {
@@ -80,4 +78,11 @@ export interface Transaction {
   gas: number;
   data: any;
   value?: any;
+}
+
+export interface FunctionRequest {
+  userAddress: string;
+  functionName: string;
+  args?: string[];
+  value?: number;
 }

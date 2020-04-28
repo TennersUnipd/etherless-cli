@@ -5,7 +5,7 @@ import { Log } from 'web3-core';
 
 
 import Web3 from 'web3';
-import { ContractInterface, Transaction } from './contractInterface';
+import { ContractInterface, Transaction, FunctionRequest } from './contractInterface';
 
 class EtherlessContract extends ContractInterface {
   private readonly GASBASE = 1000000;
@@ -38,18 +38,18 @@ class EtherlessContract extends ContractInterface {
    * @param requested
    * @param args
    */
-  public async estimateGasCost(userAddress: string, requested: string, args: string[],
-    value: number = undefined): Promise<number> {
-    const fEncoded = this.getAbiEncode(requested, args);
+  public async estimateGasCost(request: FunctionRequest): Promise<number> {
     return new Promise((resolve, reject) => {
       this.web3.eth.estimateGas({
-        from: userAddress,
+        from: request.userAddress,
         to: this.contract.options.address,
         gas: this.GASBASE,
-        data: this.getAbiEncode(requested, args),
-        value,
+        data: this.getAbiEncode(request.functionName, request.args),
+        value: request.value,
       })
-        .then((cost: number) => resolve(cost))
+        .then((cost: number) => {
+          resolve(cost);
+        })
         .catch((err) => {
           reject(err);
         });
@@ -64,7 +64,6 @@ class EtherlessContract extends ContractInterface {
   private getAbiEncode(requested: string, args: string[]): string {
     const functionAbi = this.contract
       .options.jsonInterface.filter((element) => element.name === requested)[0];
-    console.log(functionAbi);
     return this.web3.eth.abi.encodeFunctionCall(functionAbi, args);
   }
 
@@ -107,7 +106,7 @@ class EtherlessContract extends ContractInterface {
   public isTheFunctionPayable(requested: string): boolean {
     const item: AbiItem[] = this.commandList.filter((ele) => ele.name === requested);
     if (item[0] === undefined) throw new Error('the called function is missing');
-    return item[0].stateMutability === 'payable';
+    return item[0].stateMutability !== 'view';
   }
 
   /**
@@ -129,27 +128,25 @@ class EtherlessContract extends ContractInterface {
    * @param requested
    * @param args
    */
-  public async getFunctionTransaction(userAddress: string, requested: string,
-    args: any[]): Promise<Transaction> {
-    if (this.commandList.find((fn) => fn.name === requested) === undefined) {
+  public async getFunctionTransaction(request: FunctionRequest): Promise<Transaction> {
+    if (this.commandList.find((fn) => fn.name === request.functionName) === undefined) {
       throw new Error('Function not found');
     }
-    return this.prepareTransaction(userAddress, requested, args);
+    return this.prepareTransaction(request);
   }
 
   /**
    *
    */
-  private async prepareTransaction(userAddress: string, requested: string,
-    args: any[], value?: any): Promise<Transaction> {
+  private async prepareTransaction(request: FunctionRequest): Promise<Transaction> {
     return new Promise((resolve, reject) => {
-      this.estimateGasCost(userAddress, requested, args, value).then((gasEstimate: number) => {
+      this.estimateGasCost(request).then((gasEstimate: number) => {
         resolve({
-          from: userAddress,
+          from: request.userAddress,
           to: this.contract.options.address,
           gas: gasEstimate,
-          data: this.getAbiEncode(requested, args),
-          value,
+          data: this.getAbiEncode(request.functionName, request.args),
+          value: request.value,
         });
       }).catch((err) => {
         reject(err);
