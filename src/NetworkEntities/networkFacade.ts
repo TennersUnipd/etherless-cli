@@ -1,13 +1,9 @@
 import { AxiosResponse } from 'axios';
 
-import { rejects } from 'assert';
-
-import { utils } from 'mocha';
-
 import Utils from '../utils';
 
 import SessionInterface from './sessionInterface';
-import { ContractInterface } from './contractInterface';
+import { ContractInterface, Transaction } from './contractInterface';
 import NetworkInterface from './networkInterface';
 
 
@@ -104,18 +100,21 @@ export class NetworkFacade {
      * @brief executes the function on the ethereum network.
      * DOES NOT EXECUTE USER LOADED FUNCTION
      */
-  private async callFunction(functionName: string, parameters: any[], password?: string, value: number = undefined): Promise<any> {
+  private async callFunction(functionName: string, parameters: any[], password?: string,
+    value: number = undefined): Promise<any> {
     const address = this.session.getUserAddress();
     const payable = this.contract.isTheFunctionPayable(functionName);
-    const transaction = await this.contract
-      .getFunctionTransaction(address, functionName, parameters);
-    if (payable) {
-      transaction.value = value;
-      const signedTransaction = await this.session.signTransaction(transaction, password);
-      return this.network.sendTransaction(signedTransaction);
+    try {
+      const transaction = await this.contract.getFunctionTransaction(address, functionName, parameters, value);
+      if (payable) {
+        const signedTransaction = await this.session.signTransaction(transaction, password);
+        return this.network.sendTransaction(signedTransaction);
+      }
+      return this.network.callMethod(transaction, address)
+        .then((result) => this.contract.decodeResponse(functionName, result));
+    } catch (err) {
+      throw new Error(err);
     }
-    return this.network.callMethod(transaction, address)
-      .then((result) => this.contract.decodeResponse(functionName, result));
   }
 
   /**
@@ -187,19 +186,7 @@ export class NetworkFacade {
   public async runFunction(fName: string, serializedParams: string, password: string): Promise<any> {
     const identifier = Utils.randomString();
     const cost = await this.getCostOfFunction(fName);
-    const resultProm = new Promise<string>((resolve, reject) => {
-      this.callFunction(NetworkFacade.remoteExecCommand,
-        [fName, serializedParams, identifier],
-        password, cost)
-        .then(() => {
-          console.log('Request sent');
-          this.contract.getSignal(NetworkFacade.remoteExecSignal, identifier)
-            .then(resolve)
-            .catch(reject);
-        })
-        .catch(resolve);
-    });
-    return resultProm;
+    return cost;
   }
 
   /**

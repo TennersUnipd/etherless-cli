@@ -12,7 +12,7 @@ class RunCommand extends Command {
 
   exec(inputs: RunCommandInputs): Promise<any> {
     return this.network.runFunction(inputs.name, inputs.parameters, inputs.password).then((response) => {
-      if (response.StatusCode != 200) {
+      if (response.StatusCode !== 200) {
         return 'Something went wrong with the remote function!';
       }
       return response.Payload;

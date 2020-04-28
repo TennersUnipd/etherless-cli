@@ -4,8 +4,10 @@
   "description": "Our Etherless CLI client",
   "main": "./src/index.ts",
   "scripts": {
+    "start": "node build/src/index.js run func01 giercafi 11 --dev",
+    "prestart": "npm run build",
+    "build": "tsc",
     "run": "ts-node src/index.ts",
-    "tsc": "tsc",
     "test": "mocha -r ts-node/register tests/unit/*/*.ts && mocha -r ts-node/register tests/integration/*.ts"
   },
   "author": "Tenners",
@@ -14,16 +16,10 @@
     "etherless": "src/index.ts"
   },
   "dependencies": {
-    "@types/axios": "^0.14.0",
-    "@types/dotenv-flow": "^3.0.0",
-    "@types/node": "^13.11.0",
     "adm-zip": "^0.4.14",
     "axios": "^0.19.2",
     "commander": "^4.1.1",
     "dotenv-flow": "^3.1.0",
-    "ethereumjs-tx": "^2.1.2",
-    "inquirer": "^7.0.4",
-    "node-libcurl": "^2.0.3",
     "node-localstorage": "^2.1.5",
     "nyc": "^15.0.1",
     "typescript": "^3.6.5",
@@ -50,12 +46,12 @@
     "eslint-plugin-jsx-a11y": "^6.2.3",
     "eslint-plugin-react": "^7.19.0",
     "eslint-plugin-react-hooks": "^3.0.0",
-    "ganache-core": "^2.10.2",
     "mocha": "^7.1.1",
     "ts-mockito": "^2.5.0",
     "ts-node": "^8.8.1",
     "web3-fake-provider": "^0.1.0",
-    "web3-mock": "^1.0.1"
+    "web3-mock": "^1.0.1",
+    "typescript": "^3.6.5"
   },
   "repository": {
     "type": "git",

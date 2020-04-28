@@ -9,10 +9,6 @@ import Web3 from 'web3';
 import {
   RLPEncodedTransaction, Account, EncryptedKeystoreV3Json, SignedTransaction,
 } from 'web3-core';
-
-import { isAddress } from 'web3-utils';
-
-import { Wallet } from 'web3-eth-accounts';
 import Utils from '../utils';
 
 import SessionInterface from './sessionInterface';

@@ -32,7 +32,7 @@ export abstract class ContractInterface {
    * @param requested the name of the function requested
    */
   public abstract estimateGasCost(userAddress: string, requested: string,
-    args: unknown[], value: number): Promise<number>;
+    args: string[], value?: number): Promise<number>;
 
   /**
    * @abstract
@@ -43,7 +43,7 @@ export abstract class ContractInterface {
    * @brief This method returns the transaction about the requested object
    */
   public abstract getFunctionTransaction(userAddress: string,
-    requested: string, arg: unknown[]): Promise<Transaction>;
+    requested: string, arg: string[], value?: number): Promise<Transaction>;
 
   /**
    * @abstract

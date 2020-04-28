@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/unbound-method */
 /* eslint-disable no-unused-vars */
 /* eslint-disable no-undef */
 import 'mocha';
@@ -19,10 +20,7 @@ const mockedUtils: Utils = mockito.mock(Utils);
 
 const tPassword = 'passwordTest';
 const tUserKey = 'validPrivateKey';
-const tUserAddress = 'validAddress';
 const tWrongPassword = '';
-const callableFunction = 'callable';
-const notCallableFunction = 'notCallable';
 const trs: Transaction = {
   from: 'realAddress',
   to: 'realAddress',
@@ -69,7 +67,7 @@ describe('testing networkFacade', () => {
     assert.isFalse(networkFacade.signup(tWrongPassword), 'signup is not working, should return false because the password does not match');
   });
   // TESTING LOGON
-  it('testing logon function', async () => {
+  it('testing logon function', () => {
     mockito.when(mockedSession.logon)
       .thenReturn((privateKey: string, password: string): boolean => {
         if (privateKey === tUserKey && password === tPassword) {

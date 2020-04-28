@@ -4,10 +4,7 @@ import 'mocha';
 
 import { assert } from 'chai';
 
-import Ganache from 'ganache-core';
-
 import Web3 from 'web3';
-import NetworkUtils from '../../src/NetworkEntities/networkUtils';
 import SessionInterface from '../../src/NetworkEntities/sessionInterface';
 import { ContractInterface } from '../../src/NetworkEntities/contractInterface';
 import EtherlessContract from '../../src/NetworkEntities/etherlessContract';

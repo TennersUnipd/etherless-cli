@@ -39,17 +39,21 @@ class EtherlessContract extends ContractInterface {
    * @param args
    */
   public async estimateGasCost(userAddress: string, requested: string, args: string[],
-    _value: number = undefined): Promise<number> {
+    value: number = undefined): Promise<number> {
     const fEncoded = this.getAbiEncode(requested, args);
-    const gasCost = await this.web3.eth
-      .estimateGas({
-        gas: this.web3.utils.toHex(this.GASBASE),
-        to: this.address,
+    return new Promise((resolve, reject) => {
+      this.web3.eth.estimateGas({
         from: userAddress,
-        data: fEncoded,
-        value: _value,
-      });
-    return gasCost;
+        to: this.contract.options.address,
+        gas: this.GASBASE,
+        data: this.getAbiEncode(requested, args),
+        value,
+      })
+        .then((cost: number) => resolve(cost))
+        .catch((err) => {
+          reject(err);
+        });
+    });
   }
 
   public decodeResponse(requested: string, encodedResult: any): any {
@@ -58,9 +62,10 @@ class EtherlessContract extends ContractInterface {
   }
 
   private getAbiEncode(requested: string, args: string[]): string {
-    return this.web3.eth.abi
-      .encodeFunctionCall(this.commandList
-        .filter((element: AbiItem) => element.name === requested)[0], args);
+    const functionAbi = this.contract
+      .options.jsonInterface.filter((element) => element.name === requested)[0];
+    console.log(functionAbi);
+    return this.web3.eth.abi.encodeFunctionCall(functionAbi, args);
   }
 
   /**
@@ -102,8 +107,7 @@ class EtherlessContract extends ContractInterface {
   public isTheFunctionPayable(requested: string): boolean {
     const item: AbiItem[] = this.commandList.filter((ele) => ele.name === requested);
     if (item[0] === undefined) throw new Error('the called function is missing');
-    if (item[0].payable) return true;
-    return false;
+    return item[0].stateMutability === 'payable';
   }
 
   /**
@@ -137,14 +141,20 @@ class EtherlessContract extends ContractInterface {
    *
    */
   private async prepareTransaction(userAddress: string, requested: string,
-    args: any[]): Promise<Transaction> {
-    const gasEstimate = await this.estimateGasCost(userAddress, requested, args);
-    return {
-      from: userAddress,
-      to: this.contract.options.address,
-      gas: gasEstimate * 2,
-      data: this.getAbiEncode(requested, args),
-    };
+    args: any[], value?: any): Promise<Transaction> {
+    return new Promise((resolve, reject) => {
+      this.estimateGasCost(userAddress, requested, args, value).then((gasEstimate: number) => {
+        resolve({
+          from: userAddress,
+          to: this.contract.options.address,
+          gas: gasEstimate,
+          data: this.getAbiEncode(requested, args),
+          value,
+        });
+      }).catch((err) => {
+        reject(err);
+      });
+    });
   }
 }
 
