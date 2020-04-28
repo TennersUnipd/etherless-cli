@@ -1,5 +1,3 @@
-import { AxiosResponse } from 'axios';
-
 import Utils from '../utils';
 
 import SessionInterface from './sessionInterface';
@@ -130,16 +128,16 @@ export class NetworkFacade {
      * @brief uploads on the AWS endpoint the required function and register it on the eth network.
      */
   public async createFunction(functionDefinition: FunctionDefinition, password?: string): Promise<any> {
-    const endpoint = `${process.env.AWS_ENDPOINT}createFunction`;
+    const endpoint = 'createFunction';
     if (!this.session.isUserSignedIn()) {
       throw new Error('User is not logged in');
     }
     const resourceName = Utils.randomString();
     const bufferFile = Utils.compressFile(functionDefinition.filePath, resourceName);
+    const req = { zip: bufferFile, name: resourceName };
     try {
-      const uploadResult = await NetworkInterface
-        .uploadFunction(bufferFile, resourceName, endpoint);
-      const functionArn = uploadResult.data.FunctionArn;
+      const uploadResult = await this.network.postRequest(endpoint, JSON.stringify(req));
+      const functionArn = JSON.parse(uploadResult[1]).FunctionArn;
       return this
         .callFunction(NetworkFacade.createFunctionCommand,
           [

@@ -1,18 +1,7 @@
-import axios from 'axios';
 /**
  * @abstract NetworkInterface defines the method that all NetworkInterface classes should implements
  */
 export default abstract class NetworkInterface {
-  protected provider: string;
-
-  /**
-   * @method constructor
-   * @param provider the provider for the network connection
-   */
-  public constructor(provider: string) {
-    this.provider = provider;
-  }
-
   /**
    * @method disconnect
    * @brief terminate the connection to the provider
@@ -41,7 +30,7 @@ export default abstract class NetworkInterface {
    * @param fileBuffer
    * @param ename
    * @param endpoint
-   * @brief this method is used for the upload of a function to the AWS service.
+   * @brief this method is used for postRequest with json body.
    */
   public abstract postRequest(endpoint: string, bodyRequest: string): Promise<[number, string]>;
 }
