@@ -2,7 +2,7 @@ import Web3 from 'web3';
 
 import { WebsocketProvider } from 'web3-providers-ws';
 
-import { SignedTransaction } from 'web3-core';
+import { SignedTransaction, Log } from 'web3-core';
 import NetworkInterface from './networkInterface';
 
 export default class EtherlessNetwork extends NetworkInterface {
@@ -40,10 +40,7 @@ export default class EtherlessNetwork extends NetworkInterface {
     }
 
     public async getLog(userAddress:string) : Promise<any>{
-        let toBeReturned = this.web3.eth.getPastLogs({ address: userAddress });
-        console.log(userAddress);
-        console.log(toBeReturned);
-        return toBeReturned;
+        let logs = await this.web3.eth.getPastLogs({ address: '0x6F9954E183b86B289aFe9f04E7cF60Af0c410a6B', fromBlock:0 , toBlock: 'latest'});
+        return logs;
     }
-
 }

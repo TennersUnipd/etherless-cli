@@ -229,8 +229,10 @@ export class NetworkFacade {
      * @brief retrieves transactions from the account logged to the smart of etherless.
      */
     public async getListOfTransaction() : Promise<any> {
-      let accountAddress = this.session.getUserAddress()
-      return this.network.getLog(accountAddress);
+      let accountAddress = this.session.getUserAddress();
+      let logToDecode = await this.network.getLog(accountAddress);
+      let attheend = await this.contract.getDecodeLog(logToDecode[0]);
+      return attheend;
     }
 }
 

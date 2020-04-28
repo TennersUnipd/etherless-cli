@@ -71,6 +71,14 @@ export abstract class ContractInterface {
    * @brief This method capture the signals from the smart contract.
    */
   public abstract getSignal(signalName:string, id:string):Promise<any>;
+  
+  /**
+   * @abstract
+   * @method getDecodeLog
+   * @param logToDecode name of the array of string of log to decode;
+   * @brief This method decode the array of string from network.
+   */
+  public abstract getDecodeLog(logToDecode: string): Promise<any>;
 }
 
 /**
