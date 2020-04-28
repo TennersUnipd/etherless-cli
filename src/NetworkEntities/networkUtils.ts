@@ -37,7 +37,7 @@ export default class NetworkUtils {
     if (this.facade === undefined) {
       this.checkAbiUpdate(process.env.CONTRACT_ADDRESS);
       const provider = new Web3(process.env.PROVIDER_API);
-      const eNetwork: EtherlessNetwork = new EtherlessNetwork(provider);
+      const eNetwork: EtherlessNetwork = new EtherlessNetwork(provider, process.env.AWS_ENDPOINT);
       const eContract: EtherlessContract = new EtherlessContract(
         NetworkUtils.getAbi(process.env.ABI_PATH),
         process.env.CONTRACT_ADDRESS,
@@ -55,7 +55,7 @@ export default class NetworkUtils {
    * @brief this method checks if it is necessary update the local ABI file
    * @callback updateAbi
    */
-  private static checkAbiUpdate(contractAddress: string) {
+  private static checkAbiUpdate(contractAddress: string): void {
     if (contractAddress !== Utils.localStorage.getItem('lastAbiAddress')) {
       NetworkUtils.updateAbi(process.env.CONTRACT_ADDRESS, process.env.ABI_PATH);
       Utils.localStorage.setItem('lastAbiAddress', process.env.CONTRACT_ADDRESS);
