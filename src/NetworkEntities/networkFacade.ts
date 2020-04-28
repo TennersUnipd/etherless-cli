@@ -14,6 +14,8 @@ export class NetworkFacade {
   // group commands under common structure (like an enum mapping to strings)
   private static createFunctionCommand = 'createFunction';
 
+  private static getArn = 'getArn';
+
   private static listCommand = 'listFunctions';
 
   private static remoteExecCommand = 'runFunction';
@@ -222,12 +224,14 @@ export class NetworkFacade {
   * @brief Update the user's function
   */
   public async updateFunction(fnName: string, filePath: string): Promise<any> {
-    const resourceName = Utils.randomString();
-    const bufferFile = Utils.compressFile(filePath, resourceName);
+    const endpoint = `${process.env.AWS_ENDPOINT}updateFunction`;
     return new Promise(async (resolve, reject) => {
       try {
-        const arn = await this.callFunction('getArn', [fnName]);
-        const result: AxiosResponse = await this.network.uploadFunction(bufferFile, arn, 'updateFunction');
+        const arn = await this.callFunction(NetworkFacade.getArn, [fnName]);
+        const index = arn.lastIndexOf(':');
+        const resourceName = arn.substr(index+1);
+        const bufferFile = Utils.compressFile(filePath, resourceName);
+        const result: AxiosResponse = await NetworkInterface.updateFunction(bufferFile, arn, endpoint);
         if (result.status === 200) resolve('updated');
         else reject('update error');
       } catch (err) {

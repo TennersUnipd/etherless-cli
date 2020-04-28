@@ -15,7 +15,7 @@ export class UpdateCommand extends Command{
         return this.network.updateFunction(inputs.functionName, inputs.filePath);
     }
 
-    parseArgs(args: string[]): UpdateInputs {
+    parseArgs(args: string[]): CommandInputs {
         return { functionName: args[0], filePath: args[1]};
       }
 }

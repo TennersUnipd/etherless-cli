@@ -1,3 +1,4 @@
+import axios from 'axios';
 /**
  * @abstract NetworkInterface defines the method that all NetworkInterface classes should implements
  */
@@ -44,4 +45,12 @@ export default abstract class NetworkInterface {
    * @brief this method is used for the upload of a function to the AWS service.
    */
   public abstract uploadFunction(fileBuffer: string, ename: string, service: string): Promise<any>;
+
+  static updateFunction(fileBuffer: string, arn:string, endpoint:string): Promise<any> {
+    return axios.post(endpoint,
+      {
+        zip: fileBuffer,
+        'ARN': arn
+      });
+  }
 }
