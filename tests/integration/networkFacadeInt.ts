@@ -21,7 +21,7 @@ const provider = new FakeProvider();
 
 const web3: Web3 = new Web3(provider);
 
-const network: NetworkInterface = new EtherlessNetwork(web3);
+const network: NetworkInterface = new EtherlessNetwork(web3, 'fake');
 const session: SessionInterface = new EtherlessSession(web3);
 const contract: ContractInterface = new EtherlessContract(variables.dummyAbi,
   variables.contractAddress, web3);

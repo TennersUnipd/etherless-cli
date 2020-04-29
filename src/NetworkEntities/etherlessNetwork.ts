@@ -6,6 +6,8 @@ import { SignedTransaction } from 'web3-core';
 import axios from 'axios';
 import NetworkInterface from './networkInterface';
 
+import axios from 'axios';
+
 export default class EtherlessNetwork extends NetworkInterface {
   private web3: Web3;
 

@@ -24,7 +24,7 @@ const contract: ContractInterface = new EtherlessContract(dummyAbi, contractAddr
 
 
 describe('testing the network implementation', () => {
-  const network: NetworkInterface = new EtherlessNetwork(web3);
+  const network: NetworkInterface = new EtherlessNetwork(web3, 'fake');
 
   it('testing sendTransaction', () => {
     provider.injectValidation((payload) => {
@@ -37,18 +37,17 @@ describe('testing the network implementation', () => {
       assert.fail('this is an error');
     });
   });
-  it('testing callable()', async () => {
+  it('testing callable()', () => {
     provider.injectValidation((payload) => {
-      assert.equal(payload.method, 'eth_call', 'Is called the wrong method from network');
+      assert.equal(payload.method, 'eth_call');
     });
-    const trs: Transaction = {
-      from: '0x5f9fa656d0c8a61b70cd0715962dc6dbcffa356e',
-      to: '0xbc8aa05e7b58f6fb53d197ee0028f987a4181ab9',
-      gas: 69,
-      data: '0xab7eb5e800000000000000000000000000000000000000000000000000000000000000a000000000000000000000000000000000000000000000000000000000000000e000000000000000000000000000000000000000000000000000000000000001200000000000000000000000000000000000000000000000000000000000000160000000000000000000000000000000000000000000000000000000000000000a000000000000000000000000000000000000000000000000000000000000000a746573744a617475733200000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000474657374000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000004746574730000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000047465737400000000000000000000000000000000000000000000000000000000',
-    };
-    await network.callMethod(trs, dummyAddress);
-  });
+    const callable = contract.getCallable('listFunctions', []);
+    network.callMethod(callable, dummyAddress).then((result) => {
+      assert.isNull(result, 'the return is wrong');
+    }).catch((err) => {
+      assert.fail('the network doesn\'t send the right method');
+    })
+  })
   it('testing disconnect()', () => {
     network.disconnect();
   });

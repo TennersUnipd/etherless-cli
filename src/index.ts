@@ -1,15 +1,19 @@
 #!/usr/bin/env node
 
 import Commander from './CommandEntities/commander';
-import AccountCreateCommand from './CommandEntities/signupCommand';
-import AccountLogoutCommand from './CommandEntities/logoutCommand';
-import AccountLoginCommand from './CommandEntities/loginCommand';
-import RunCommand from './CommandEntities/runCommand';
+import { CreateCommand } from './CommandEntities/createCommand';
+import FindCommand from './CommandEntities/findCommand';
 import ListCommand from './CommandEntities/listCommand';
+import AccountLoginCommand from './CommandEntities/loginCommand';
+import AccountLogoutCommand from './CommandEntities/logoutCommand';
+import RunCommand from './CommandEntities/runCommand';
+import AccountCreateCommand from './CommandEntities/signupCommand';
+import UpdateCommand from './CommandEntities/updateCommand';
 import NetworkUtils from './NetworkEntities/networkUtils';
 import { CreateCommand } from './CommandEntities/createCommand';
 import FindCommand from './CommandEntities/findCommand';
-import LogCommand from './CommandEntities/logCommand';
+import SetCommand from './CommandEntities/setCommand';
+import DeleteCommand from './CommandEntities/deleteCommand';
 
 const network = NetworkUtils.getEtherlessNetworkFacadeInstance();
 
@@ -23,6 +27,9 @@ const commands = [
   AccountLoginCommand,
   RunCommand,
   CreateCommand,
+  UpdateCommand,
+  SetCommand,
+  DeleteCommand
   // TestCommand,
   LogCommand,
 ];

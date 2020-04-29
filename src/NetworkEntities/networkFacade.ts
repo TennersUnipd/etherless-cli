@@ -1,8 +1,8 @@
 import Utils from '../utils';
 
-import SessionInterface from './sessionInterface';
 import { ContractInterface } from './contractInterface';
 import NetworkInterface from './networkInterface';
+import SessionInterface from './sessionInterface';
 
 
 /**
@@ -29,6 +29,7 @@ export class NetworkFacade {
 
   private contract: ContractInterface;
 
+  private static deleteFunction = 'deleteFunction';
 
   /**
    * @function constructor this method should not be called outside the network scope
