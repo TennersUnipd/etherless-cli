@@ -2,7 +2,6 @@
 /* eslint-disable no-undef */
 import 'mocha';
 import { assert } from 'chai';
-import Ganache from 'ganache-core';
 import EtherlessSession from '../../src/NetworkEntities/etherlessSession';
 import SessionInterface from '../../src/NetworkEntities/SessionInterface';
 import * as sv from './SharedVariables';
@@ -12,7 +11,7 @@ const provider = Ganache.provider({ mnemonic: 'face doll lava rail horror bus ju
 // const provider = 'wss://ropsten.infura.io/ws/v3/f4347c3f96d448499a8e7940793d93a6';
 
 describe('Testing EtherlessSession class', async () => {
-  const session:SessionInterface = new EtherlessSession(provider);
+  const session: SessionInterface = new EtherlessSession(provider);
   it('testing signup method', async () => {
     const result = await session.signup('test');
     assert.isTrue(result, 'The signup method doesn\'t work');

@@ -6,8 +6,6 @@ import { SignedTransaction } from 'web3-core';
 import axios from 'axios';
 import NetworkInterface from './networkInterface';
 
-import axios from 'axios';
-
 export default class EtherlessNetwork extends NetworkInterface {
   private web3: Web3;
 
@@ -16,8 +14,8 @@ export default class EtherlessNetwork extends NetworkInterface {
   /**
    * constructor
    *
-   * @param provider
-   * @param awsAddress
+   * @param {any} provider web3 instance
+   * @param {string} awsAddress lambda endpoint
    */
   public constructor(provider: any, awsAddress: string) {
     super();

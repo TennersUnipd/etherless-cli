@@ -46,8 +46,8 @@ describe('testing the network implementation', () => {
       assert.isNull(result, 'the return is wrong');
     }).catch((err) => {
       assert.fail('the network doesn\'t send the right method');
-    })
-  })
+    });
+  });
   it('testing disconnect()', () => {
     network.disconnect();
   });

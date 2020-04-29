@@ -9,12 +9,12 @@ import mockito, { mock } from 'ts-mockito';
 
 import { resolve } from 'dns';
 
+import { AxiosResponse } from 'axios';
 import Utils from '../../../src/utils';
 import { ContractInterface } from '../../../src/NetworkEntities/contractInterface';
 import { NetworkFacade } from '../../../src/NetworkEntities/networkFacade';
 import NetworkInterface from '../../../src/NetworkEntities/networkInterface';
 import SessionInterface from '../../../src/NetworkEntities/sessionInterface';
-import { AxiosResponse } from 'axios';
 
 // Creating mock
 const mockedNetwork: NetworkInterface = mockito.mock(NetworkInterface);
@@ -150,7 +150,7 @@ describe('testing networkFacade', () => {
     mockito.when(mockedSession.getUserAddress)
       .thenReturn(() => 'Valid Address');
     mockito.when(mockedContract.isTheFunctionPayable)
-      .thenReturn((methodName: string) => { if (methodName === 'getArn') return false; })
+      .thenReturn((methodName: string) => { if (methodName === 'getArn') return false; });
     mockito.when(mockedContract.getCallable).thenReturn((methodName) => callableFunction);
     mockito.when(mockedNetwork.callMethod).thenReturn((call) => new Promise((resolve) => {
       resolve('arnValid');
@@ -159,7 +159,7 @@ describe('testing networkFacade', () => {
     mockito.when(mockedNetwork.uploadFunction)
       .thenReturn((file, ename, serice) => new Promise((resolve) => resolve({ status: 200, data: 'ok' })));
     networkFacade.updateFunction('test', './tests/dummy.js')
-      .then((res) => { assert.equal(res, 'updated', 'Update bruh') })
-      .catch((err) => { assert.fail('bruh') });
+      .then((res) => { assert.equal(res, 'updated', 'Update bruh'); })
+      .catch((err) => { assert.fail('bruh'); });
   });
 });

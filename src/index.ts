@@ -8,12 +8,10 @@ import AccountLoginCommand from './CommandEntities/loginCommand';
 import AccountLogoutCommand from './CommandEntities/logoutCommand';
 import RunCommand from './CommandEntities/runCommand';
 import AccountCreateCommand from './CommandEntities/signupCommand';
-import UpdateCommand from './CommandEntities/updateCommand';
 import NetworkUtils from './NetworkEntities/networkUtils';
-import { CreateCommand } from './CommandEntities/createCommand';
-import FindCommand from './CommandEntities/findCommand';
 import SetCommand from './CommandEntities/setCommand';
 import DeleteCommand from './CommandEntities/deleteCommand';
+import { UpdateCommand } from './CommandEntities/updateCommand';
 
 const network = NetworkUtils.getEtherlessNetworkFacadeInstance();
 
@@ -27,11 +25,9 @@ const commands = [
   AccountLoginCommand,
   RunCommand,
   CreateCommand,
-  UpdateCommand,
   SetCommand,
-  DeleteCommand
-  // TestCommand,
-  LogCommand,
+  DeleteCommand,
+  UpdateCommand,
 ];
 
 Commander.config();
