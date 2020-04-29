@@ -155,6 +155,8 @@ class EtherlessContract extends ContractInterface {
     this.commandLoader.set('findFunction', (args:any[]):any => this.contract.methods.findFunction(args[0]));
     this.commandLoader.set('runFunction', (args:any[]):any => this.contract.methods.runFunction(args[0], args[1], args[2]));
     this.commandLoader.set('getArn', (args:any[]):any => this.contract.methods.getArn(args[0]));
+    this.commandLoader.set('setFunctionProperty', (args:any[]):any => this.contract.methods.setFunctionProperty(args[0], args[1], args[2]));
+    this.commandLoader.set('deleteFunction', (args:any[]):any => this.contract.methods.deleteFunction(args[0]));
   }
 
   /**
