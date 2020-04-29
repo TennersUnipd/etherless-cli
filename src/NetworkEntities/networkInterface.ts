@@ -1,15 +1,23 @@
 /**
- * @abstract NetworkInterface defines the method that all NetworkInterface classes should implements
+ * @abstract
  */
 export default abstract class NetworkInterface {
   /**
-   * @method disconnect
+   * @function disconnect
    * @brief terminate the connection to the provider
    */
   public abstract disconnect(): void;
 
   /**
-   * @method sendTransaction
+   *
+   * @param contractAddress
+   * @param topic
+   * @param identifier
+   */
+  public abstract subscribeEvent(contractAddress: string, topic: string): Promise<any>;
+
+  /**
+   * @function sendTransaction
    * @brief this method sends an signed transaction
    * @param transaction required transaction object
    */
@@ -17,7 +25,7 @@ export default abstract class NetworkInterface {
 
   /**
    * @abstract
-   * @method callMethod
+   * @function callMethod
    * @param callable
    * @param address
    * @returns a Promise that contain the result of the request
@@ -26,7 +34,7 @@ export default abstract class NetworkInterface {
   public abstract callMethod(callable: any, address: string): Promise<any>;
 
   /**
-   * @method uploadFunction
+   * @function uploadFunction
    * @param fileBuffer
    * @param ename
    * @param endpoint

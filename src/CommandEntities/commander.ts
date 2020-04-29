@@ -8,9 +8,9 @@ class Commander {
   private static DESCRIPTION = 'Etherless CLI';
 
   /**
-     * @method config()
-     * @brief This static method is needed for initialization of the external library Commander
-     */
+   * @function config()
+   * @brief This static method is needed for initialization of the external library Commander
+   */
   static config() {
     commander
       .version('0.0.1')
@@ -18,10 +18,10 @@ class Commander {
   }
 
   /**
-     * @method addCommand()
-     * @param cmd
-     * @method This static method adds to the external library Commander a new command.
-     */
+   * @function addCommand()
+   * @param cmd
+   * @function This static method adds to the external library Commander a new command.
+   */
   static addCommand(cmd: Command) {
     commander
       .command(cmd.getCommandDescriptor())
@@ -43,10 +43,10 @@ class Commander {
   }
 
   /**
-     * @method addCommand()
-     * @param cmd
-     * @method This static method starts the execution of a function parsing the inputs from the command line.
-     */
+   * @function addCommand()
+   * @param cmd
+   * @function This static method starts the execution of a function parsing the inputs from the command line.
+   */
   static start() {
     commander.parse(process.argv);
   }

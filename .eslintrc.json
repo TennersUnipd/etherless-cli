@@ -8,7 +8,8 @@
         "airbnb/hooks",
         "plugin:@typescript-eslint/eslint-recommended",
         "plugin:@typescript-eslint/recommended",
-        "plugin:@typescript-eslint/recommended-requiring-type-checking"
+        "plugin:@typescript-eslint/recommended-requiring-type-checking",
+        "plugin:jsdoc/recommended"
     ],
     "globals": {
         "Atomics": "readonly",
@@ -20,7 +21,8 @@
         "project": "tsconfig.json"
     },
     "plugins": [
-        "@typescript-eslint"
+        "@typescript-eslint",
+        "jsdoc"
     ],
     "rules": {
         "import/extensions": [

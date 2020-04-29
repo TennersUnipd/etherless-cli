@@ -1,7 +1,7 @@
 /**
  * @class SessionEtherlessSmart
  * @implements SessionInterface
- * @constructor the constructor of this class should be not called outside the network package
+ * @class the constructor of this class should be not called outside the network package
  */
 
 import Web3 from 'web3';
@@ -27,6 +27,8 @@ export default class EtherlessSession extends SessionInterface {
   /**
    * this constructor shouldn't be called outside the
    * network package
+   *
+   * @param provider
    */
   constructor(provider: any) {
     super();

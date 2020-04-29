@@ -33,9 +33,9 @@ class EtherlessContract extends ContractInterface {
   }
 
   /**
-   *
    * @param userAddress
    * @param requested
+   * @param request
    * @param args
    */
   public async estimateGasCost(request: FunctionRequest): Promise<number> {
@@ -110,7 +110,7 @@ class EtherlessContract extends ContractInterface {
   }
 
   /**
-   *
+   * @param userAddress
    */
   public async getLog(userAddress: string): Promise<string[]> {
     return new Promise((resolve, reject) => {
@@ -123,9 +123,9 @@ class EtherlessContract extends ContractInterface {
   }
 
   /**
-   *
    * @param userAddress
    * @param requested
+   * @param request
    * @param args
    */
   public async getFunctionTransaction(request: FunctionRequest): Promise<Transaction> {
@@ -136,7 +136,7 @@ class EtherlessContract extends ContractInterface {
   }
 
   /**
-   *
+   * @param request
    */
   private async prepareTransaction(request: FunctionRequest): Promise<Transaction> {
     return new Promise((resolve, reject) => {
@@ -152,6 +152,12 @@ class EtherlessContract extends ContractInterface {
         reject(err);
       });
     });
+  }
+
+  public getTopic(signature: string): string {
+    const element = JSON.parse(JSON.stringify(this.contract.options.jsonInterface))
+      .filter((AbiElement) => AbiElement.signature === signature)[0];
+    return element;
   }
 }
 

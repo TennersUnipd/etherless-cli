@@ -12,8 +12,11 @@ export default class EtherlessNetwork extends NetworkInterface {
   private awsAddress: string;
 
   /**
-     * constructor
-     */
+   * constructor
+   *
+   * @param provider
+   * @param awsAddress
+   */
   public constructor(provider: any, awsAddress: string) {
     super();
     this.web3 = provider;
@@ -24,6 +27,15 @@ export default class EtherlessNetwork extends NetworkInterface {
     if (this.web3.currentProvider instanceof Web3.providers.WebsocketProvider) {
       (this.web3.currentProvider as WebsocketProvider).disconnect(20, 'execution ended');
     }
+  }
+
+  public subscribeEvent(contractAddress: string, topic: string): Promise<any> {
+    return new Promise((resolve, reject) => {
+      this.web3.eth.subscribe('logs', { address: contractAddress, topics: [topic] }, (error, result) => {
+        if (!error) reject(error);
+        resolve(result);
+      });
+    });
   }
 
   public async sendTransaction(signedTransaction: SignedTransaction): Promise<any> {

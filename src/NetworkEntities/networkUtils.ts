@@ -30,7 +30,7 @@ export default class NetworkUtils {
   static facade: NetworkFacade;
 
   /**
-   * @method getEtherlessNetworkFacadeInstance
+   * @function getEtherlessNetworkFacadeInstance
    * @brief this method initialize the NetworkFacade and returns an instance
    */
   static getEtherlessNetworkFacadeInstance(): NetworkFacade {
@@ -50,7 +50,7 @@ export default class NetworkUtils {
   }
 
   /**
-   * @method checkAbiUpdate
+   * @function checkAbiUpdate
    * @param contractAddress
    * @brief this method checks if it is necessary update the local ABI file
    * @callback updateAbi
@@ -63,7 +63,7 @@ export default class NetworkUtils {
   }
 
   /**
-   * @method updateAbi
+   * @function updateAbi
    * @param contractAddress
    * @param destinationPath
    * @brief this method downloads the new ABI file from etherscan.io
@@ -79,7 +79,7 @@ export default class NetworkUtils {
   }
 
   /**
-   * @method getAbi
+   * @function getAbi
    * @param abiPath
    * @brief this method loads the ABI file from local storage
    */

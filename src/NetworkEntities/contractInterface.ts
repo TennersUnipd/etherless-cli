@@ -1,5 +1,6 @@
 /**
  * ContractInterface
+ *
  * @brief This Interface defines all the method that a ContractInterface should implements
  * @interface
  * @class ContractInterface
@@ -8,7 +9,7 @@
 export abstract class ContractInterface {
   /**
    * @abstract
-   * @method getListOfFunctions
+   * @function getListOfFunctions
    * @returns string[]
    * @brief retrieves all the available contract's methods
    */
@@ -16,7 +17,7 @@ export abstract class ContractInterface {
 
   /**
    * @abstract
-   * @method isTheFunctionPayable
+   * @function isTheFunctionPayable
    * @brief returns if the requested function is payable
    * @param requested the name of the function requested
    * @returns boolean true if the function is payable
@@ -26,7 +27,7 @@ export abstract class ContractInterface {
 
   /**
    * @abstract
-   * @method estimateGasCost
+   * @function estimateGasCost
    * @brief return the estimated gas cost of running a function
    * @param userAddress
    * @param requested the name of the function requested
@@ -35,7 +36,7 @@ export abstract class ContractInterface {
 
   /**
    * @abstract
-   * @method callFunction
+   * @function callFunction
    * @param requested the string that identify the function required
    * @param arg an array of required parameters for the execution of the requested function
    * @returns Promise<object> that is a transaction for the requested function.
@@ -45,7 +46,7 @@ export abstract class ContractInterface {
 
   /**
    * @abstract
-   * @method getLog
+   * @function getLog
    * @param address address to use as filter for research of past transaction
    * @brief this method retrieve from the network all the history of a specific address
    */
@@ -60,12 +61,18 @@ export abstract class ContractInterface {
 
   /**
    * @abstract
-   * @method getSignal
+   * @function getSignal
    * @param signal the name of the signal thats needs to be captured
    * @param id the identifier of the signal to avoid collision with another request
    * @brief This method capture the signals from the smart contract.
    */
   public abstract getSignal(signalName: string, id: string): Promise<unknown>;
+
+  /**
+   *
+   * @param functionName
+   */
+  public abstract getTopic(functionName: string): string;
 }
 
 /**
