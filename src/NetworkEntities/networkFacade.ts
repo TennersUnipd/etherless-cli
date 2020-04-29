@@ -18,7 +18,7 @@ export class NetworkFacade {
   private static getArn = 'getArn';
 
   private static listCommand = 'listFunctions';
-  
+
   private static setExecCommand = 'setFunctionProperty';
 
   private static remoteExecCommand = 'runFunction';
@@ -28,7 +28,7 @@ export class NetworkFacade {
   private static costOfFunction = 'costOfFunction';
 
   private static findFunction = 'findFunction';
-  
+
   private static deleteFunction = 'deleteFunction';
 
   private network: NetworkInterface;
@@ -234,7 +234,7 @@ export class NetworkFacade {
       try {
         const arn = await this.callFunction(NetworkFacade.getArn, [fnName]);
         const index = arn.lastIndexOf(':');
-        const resourceName = arn.substr(index+1);
+        const resourceName = arn.substr(index + 1);
         const bufferFile = Utils.compressFile(filePath, resourceName);
         const result: AxiosResponse = await NetworkInterface.updateFunction(bufferFile, arn, endpoint);
         if (result.status === 200) resolve('updated');
@@ -244,65 +244,49 @@ export class NetworkFacade {
       }
     });
   }
-    
 
-    /**
-     * @method setFunctionProperty
-     * @param fnName Function name
-     * @param property Property to update
-     * @param newValue New value for property
-     * @param password Wallet password
-     * @brief Updates function prperties like cost, description and prototype.
-     */
-    public async setFunctionProperty(fnName: string, property: string, newValue: string | number, password?:string): Promise<any> {
-      // check available properties
-      if (["prototype", "cost", "description"].indexOf(property) == -1)
-        throw new Error("Invalid property. Only cost, description and prototype can be updated");
-      
-        if (!this.session.isUserSignedIn()) {
-          throw new Error('User is not logged in');
-        }
 
-      return this.callFunction(NetworkFacade.setExecCommand, [fnName, property, newValue], password, false);
+  /**
+   * @method setFunctionProperty
+   * @param fnName Function name
+   * @param property Property to update
+   * @param newValue New value for property
+   * @param password Wallet password
+   * @brief Updates function properties like cost, description and prototype.
+   */
+  public async setFunctionProperty(fnName: string, property: string, newValue: string | number, password?: string): Promise<any> {
+    // check available properties
+    if (["prototype", "cost", "description"].indexOf(property) == -1)
+      throw new Error("Invalid property. Only cost, description and prototype can be updated");
+
+    if (!this.session.isUserSignedIn()) {
+      throw new Error('User is not logged in');
     }
 
-    /**
-     * @method deleteFunction
-     * @param fnName Function name
-     * @param password Wallet password
-     * @brief Deletes a function
-     */
-    public async deleteFunction(fnName: string, password?:string): Promise<any> {
-      const endpoint = `${process.env.AWS_ENDPOINT}deleteFunction`;
-      if (!this.session.isUserSignedIn()) {
-        throw new Error('User is not logged in');
-      }
-      try {
-        const functionData = await this.getFunctionDetails(fnName);
-        const resource = functionData.remoteResource;
-        await NetworkInterface
-          .deleteFunction(resource, endpoint);
-        return this.callFunction(NetworkFacade.deleteFunction, [fnName], password, false);
-      } catch (err) {
-        throw new Error(`Could not delete the required function ${err}`);
-      }
-    }
+    return this.callFunction(NetworkFacade.setExecCommand, [fnName, property, newValue], password, false);
+  }
 
-    public async updateFunction(fnName: string, filePath: string): Promise<any> {
-      const endpoint = `${process.env.AWS_ENDPOINT}updateFunction`;
-      const resourceName = Utils.randomString();
-      const bufferFile = Utils.compressFile(filePath, resourceName);
-      return new Promise(async (resolve, reject) => {
-        try {
-          const arn = await this.callFunction('getArn', [fnName]);
-          const result: AxiosResponse = await NetworkInterface.uploadFunction(bufferFile, arn, endpoint);
-          if (result.status === 200) resolve('updated');
-          else reject('update error');
-        } catch (err) {
-          reject(err);
-        }
-      });
+  /**
+   * @method deleteFunction
+   * @param fnName Function name
+   * @param password Wallet password
+   * @brief Deletes a function
+   */
+  public async deleteFunction(fnName: string, password?: string): Promise<any> {
+    const endpoint = `${process.env.AWS_ENDPOINT}deleteFunction`;
+    if (!this.session.isUserSignedIn()) {
+      throw new Error('User is not logged in');
     }
+    try {
+      const functionData = await this.getFunctionDetails(fnName);
+      const resource = functionData.remoteResource;
+      await NetworkInterface
+        .deleteFunction(resource, endpoint);
+      return this.callFunction(NetworkFacade.deleteFunction, [fnName], password, false);
+    } catch (err) {
+      throw new Error(`Could not delete the required function ${err}`);
+    }
+  }
 }
 
 export interface FunctionDefinition {
