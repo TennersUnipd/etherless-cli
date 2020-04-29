@@ -18,13 +18,13 @@ const FakeProvider = require('web3-fake-provider');
 
 const provider = new FakeProvider();
 
-const web3:Web3 = new Web3(provider);
+const web3: Web3 = new Web3(provider);
 
-const contract:ContractInterface = new EtherlessContract(dummyAbi, contractAddress, web3);
+const contract: ContractInterface = new EtherlessContract(dummyAbi, contractAddress, web3);
 
 
 describe('testing the network implementation', () => {
-  const network:NetworkInterface = new EtherlessNetwork(web3);
+  const network: NetworkInterface = new EtherlessNetwork(web3, 'fake');
 
   it('testing sendTransaction', async () => {
     provider.injectValidation((payload) => {
@@ -37,18 +37,18 @@ describe('testing the network implementation', () => {
       assert.fail('this is an error');
     });
   });
-  it('testing callable()',()=>{
-    provider.injectValidation((payload) =>{
+  it('testing callable()', () => {
+    provider.injectValidation((payload) => {
       assert.equal(payload.method, 'eth_call');
     });
-    const callable = contract.getCallable('listFunctions',[]);
-    network.callMethod(callable, dummyAddress).then((result)=>{
-      assert.isNull(result,'the return is wrong');
-    }).catch((err)=>{
+    const callable = contract.getCallable('listFunctions', []);
+    network.callMethod(callable, dummyAddress).then((result) => {
+      assert.isNull(result, 'the return is wrong');
+    }).catch((err) => {
       assert.fail('the network doesn\'t send the right method');
     })
   })
-  it('testing disconnect()',()=>{
+  it('testing disconnect()', () => {
     network.disconnect();
   });
 });
