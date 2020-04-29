@@ -78,7 +78,7 @@ export abstract class ContractInterface {
    * @param logToDecode name of the array of string of log to decode;
    * @brief This method decode the array of string from network.
    */
-  public abstract getDecodeLog(logToDecode: string[]): Promise<any>;
+  public abstract getDecodeLog(logToDecode: string): Promise<any>;
 }
 
 /**

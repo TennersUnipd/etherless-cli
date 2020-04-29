@@ -107,11 +107,26 @@ class EtherlessContract extends ContractInterface {
   }
 
    
-  public async getDecodeLog(logToDecode:string[]): Promise<any> {
-    let toBeReturned: string[] = new Array;
-    logToDecode.forEach(todec => toBeReturned.push((JSON.parse(JSON.stringify(this.contract.options.jsonInterface)).filter((elem)=>{return elem.signature === todec}))));
-    console.log(toBeReturned);
-    return ;
+  public async getDecodeLog(logToDecode:string): Promise<any> {
+    let decode = this.web3.eth.abi.decodeLog([{
+      type: 'string',
+      name:'fnName'
+    },
+    {
+      type: 'string',
+      name: 'paramers'
+    },
+    {
+      type: 'string',
+      name: 'identifier'
+    }
+  ],
+  logToDecode,
+  [
+
+  ]);
+  console.log(decode);
+  return ;
   }
 
   /**

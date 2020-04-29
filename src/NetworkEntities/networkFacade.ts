@@ -1,4 +1,4 @@
-import { AxiosResponse } from 'axios';
+import axios, { AxiosResponse } from 'axios';
 
 import { rejects } from 'assert';
 
@@ -9,6 +9,7 @@ import Utils from '../utils';
 import SessionInterface from './sessionInterface';
 import { ContractInterface } from './contractInterface';
 import NetworkInterface from './networkInterface';
+import Web3 from 'web3';
 
 
 /**
@@ -229,10 +230,11 @@ export class NetworkFacade {
      * @brief retrieves transactions from the account logged to the smart of etherless.
      */
     public async getListOfTransaction() : Promise<any> {
+      //let attheend = await axios.get(`https://api-ropsten.etherscan.io/api?module=logs&action=getLogs&fromBlock=0&toBlock=latest&address=0x6F9954E183b86B289aFe9f04E7cF60Af0c410a6B&apikey=${process.env.ETHSCAN}`)
       let accountAddress = this.session.getUserAddress();
       let logToDecode = await this.network.getLog(accountAddress);
       let attheend = await this.contract.getDecodeLog(logToDecode);
-      return attheend;
+      return ;
     }
 }
 

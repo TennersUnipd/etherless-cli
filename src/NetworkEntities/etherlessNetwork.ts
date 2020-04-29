@@ -1,5 +1,7 @@
 import Web3 from 'web3';
 
+import axios from 'axios';
+
 import { WebsocketProvider } from 'web3-providers-ws';
 
 import { SignedTransaction, Log } from 'web3-core';
@@ -40,12 +42,16 @@ export default class EtherlessNetwork extends NetworkInterface {
     }
 
     public async getLog(userAddress:string) : Promise<any>{
-        let logs = await this.web3.eth.getPastLogs({ address: '0x6F9954E183b86B289aFe9f04E7cF60Af0c410a6B', fromBlock:0 , toBlock: 'latest'});
-        console.log(logs);
-        let toBeReturned: string[] = new Array;
-        logs.forEach(element => {
-          toBeReturned.push(element.topics[0]);
-        });
-        return toBeReturned;
+      console.log(userAddress);
+      let attheend = await axios.get(`https://api-ropsten.etherscan.io/api?module=logs&action=getLogs&fromBlock=0&toBlock=latest&address=${userAddress}&apikey=${process.env.ETHSCAN}`)
+      /*let accountAddress = this.session.getUserAddress();
+      let logToDecode = await this.network.getLog(accountAddress);
+      let attheend = await this.contract.getDecodeLog(logToDecode);*/
+      console.log(attheend);
+      console.log(attheend.data.result[0].transactionHash);
+      console.log(this.web3.utils.hexToNumber(attheend.data.result[0].gasUsed)+'GAS');
+      let date = new Date(attheend.data.result[0].timeStamp*1000);
+      console.log(date);
+      return attheend.data.result[0].data;
     }
 }
