@@ -1,6 +1,6 @@
 import { Contract } from 'web3-eth-contract';
 
-import { AbiItem, AbiInput, stringToHex } from 'web3-utils';
+import { AbiItem, AbiInput, stringToHex, jsonInterfaceMethodToString } from 'web3-utils';
 
 import Web3 from 'web3';
 import { ContractInterface, Inputs } from './contractInterface';
@@ -107,26 +107,11 @@ class EtherlessContract extends ContractInterface {
   }
 
    
-  public async getDecodeLog(logToDecode:string): Promise<any> {
-    let decoded = this.web3.eth.abi.decodeLog([{
-        type: 'string',
-        name: 'fnName'
-      },
-      {
-        type: 'string',
-        name: 'description'
-      },
-      {
-        type: 'string',
-        name: 'prototype'
-      },
-    ],
-    logToDecode,
-    [
-      
-    ]);
-    console.log(decode);
-    return decode;
+  public async getDecodeLog(logToDecode:string[]): Promise<any> {
+    let toBeReturned: string[] = new Array;
+    logToDecode.forEach(todec => toBeReturned.push((JSON.parse(JSON.stringify(this.contract.options.jsonInterface)).filter((elem)=>{return elem.signature === todec}))));
+    console.log(toBeReturned);
+    return ;
   }
 
   /**

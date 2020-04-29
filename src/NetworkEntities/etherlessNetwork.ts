@@ -41,6 +41,11 @@ export default class EtherlessNetwork extends NetworkInterface {
 
     public async getLog(userAddress:string) : Promise<any>{
         let logs = await this.web3.eth.getPastLogs({ address: '0x6F9954E183b86B289aFe9f04E7cF60Af0c410a6B', fromBlock:0 , toBlock: 'latest'});
-        return logs;
+        console.log(logs);
+        let toBeReturned: string[] = new Array;
+        logs.forEach(element => {
+          toBeReturned.push(element.topics[0]);
+        });
+        return toBeReturned;
     }
 }

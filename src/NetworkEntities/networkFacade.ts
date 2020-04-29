@@ -231,7 +231,7 @@ export class NetworkFacade {
     public async getListOfTransaction() : Promise<any> {
       let accountAddress = this.session.getUserAddress();
       let logToDecode = await this.network.getLog(accountAddress);
-      let attheend = await this.contract.getDecodeLog(logToDecode[0]);
+      let attheend = await this.contract.getDecodeLog(logToDecode);
       return attheend;
     }
 }
