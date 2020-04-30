@@ -199,9 +199,11 @@ export class NetworkFacade {
         password, false, cost)
         .then(() => {
           console.log('Request sent');
-          this.contract.getSignal(NetworkFacade.remoteExecSignal, identifier)
+          /*this.contract.getSignal(NetworkFacade.remoteExecSignal, identifier)
             .then(resolve)
-            .catch(reject);
+            .catch(reject);*/
+            console.log(cost);
+            resolve(JSON.stringify({fName, serializedParams, cost}));
         })
         .catch(resolve);
     });

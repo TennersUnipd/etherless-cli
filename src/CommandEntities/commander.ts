@@ -23,6 +23,7 @@ class Commander {
      * @method This static method adds to the external library Commander a new command.
      */
     static addCommand(cmd: Command) {
+
       commander
         .command(cmd.getCommandDescriptor())
         .alias(cmd.getCommandAlias())
