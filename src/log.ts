@@ -6,11 +6,10 @@ export default class Logger{
         this.loadJSON();
         this.addLog(log);
         this.saveOnJSON();
-        console.log(this.logs);
     }
     private addLog(log: Log){
-        if(this.logs.unshift(log) > 20 ){ // dubbio
-            this.logs.pop();
+        if(this.logs.unshift(log) > 20 ){
+            this.logs = this.logs.slice(0,20);
         };
     }
     private saveOnJSON(){

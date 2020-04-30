@@ -202,7 +202,6 @@ export class NetworkFacade {
           /*this.contract.getSignal(NetworkFacade.remoteExecSignal, identifier)
             .then(resolve)
             .catch(reject);*/
-            console.log(cost);
             resolve(JSON.stringify({fName, serializedParams, cost}));
         })
         .catch(resolve);
