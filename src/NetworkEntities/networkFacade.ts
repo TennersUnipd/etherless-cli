@@ -131,7 +131,7 @@ export class NetworkFacade {
    * @function uploadFunction
    * @param functionDefinition
    * @param password
-   * @brief uploads on the AWS endpoint the required function and register it on the eth network.
+   *  uploads on the AWS endpoint the required function and register it on the eth network.
    */
   public async createFunction(functionDefinition: FunctionDefinition,
     password?: string): Promise<any> {
@@ -163,7 +163,7 @@ export class NetworkFacade {
   /**
    * @function getAllLoadedFunction()
    * @returns Promise:any a list of string that contains the all the function loaded by the users
-   * @brief retrieves all the functions loaded on the smart contract.
+   *  retrieves all the functions loaded on the smart contract.
    */
   public async getAllLoadedFunction(): Promise<any> {
     return this.callFunction(NetworkFacade.listCommand, []);
@@ -174,7 +174,7 @@ export class NetworkFacade {
    * @param fnName
    * @param password wallet password
    * @returns a promise that will return the searched function details
-   * @brief retrieves from the smart contract the details about the requested function.
+   *  retrieves from the smart contract the details about the requested function.
    */
   public async getFunctionDetails(fnName: string): Promise<any> {
     return this.callFunction(NetworkFacade.findFunction, [fnName]);
@@ -183,7 +183,7 @@ export class NetworkFacade {
   /**
    * @function getCostOfFunction
    * @param functionName
-   * @brief retrieves from the smart contract the cost of a specific function loaded on the service.
+   *  retrieves from the smart contract the cost of a specific function loaded on the service.
    */
   public async getCostOfFunction(functionName: string): Promise<number> {
     return this.callFunction(NetworkFacade.costOfFunction, [functionName]);
@@ -195,7 +195,7 @@ export class NetworkFacade {
    * @param serializedParams
    * @param password
    * @returns the result of the remote execution
-   * @brief runs a remote function
+   *  runs a remote function
    */
   public async runFunction(fName: string, serializedParams: string,
     password: string): Promise<any> {
@@ -222,7 +222,7 @@ export class NetworkFacade {
    * @param property Property to update
    * @param newValue New value for property
    * @param password Wallet password
-   * @brief Updates function properties like cost, description and prototype.
+   *  Updates function properties like cost, description and prototype.
    */
   public async setFunctionProperty(fnName: string, property: string,
     newValue: string, password?: string): Promise<any> {
@@ -241,7 +241,7 @@ export class NetworkFacade {
    * @function deleteFunction
    * @param fnName Function name
    * @param password Wallet password
-   * @brief Deletes a function
+   *  Deletes a function
    */
   public async deleteFunction(fnName: string, password?: string): Promise<any> {
     const endpoint = 'deleteFunction';
@@ -263,7 +263,7 @@ export class NetworkFacade {
    * @param fnName
    * @param filePath
    * @param fName
-   * @brief Update the user's function
+   *  Update the user's function
    */
   public async updateFunction(fnName: string, filePath: string): Promise<any> {
     const endpoint = 'updateFunction';
@@ -276,7 +276,7 @@ export class NetworkFacade {
 
   /**
    * @function disconnect
-   * @brief disconnects the application from the network.
+   *  disconnects the application from the network.
    */
   disconnect() {
     this.network.disconnect();

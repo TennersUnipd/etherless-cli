@@ -4,7 +4,7 @@
 export default abstract class NetworkInterface {
   /**
    * @function disconnect
-   * @brief terminate the connection to the provider
+   *  terminate the connection to the provider
    */
   public abstract disconnect(): void;
 
@@ -18,7 +18,7 @@ export default abstract class NetworkInterface {
 
   /**
    * @function sendTransaction
-   * @brief this method sends an signed transaction
+   *  this method sends an signed transaction
    * @param transaction required transaction object
    */
   public abstract sendTransaction(transaction: any): Promise<any>;
@@ -29,7 +29,7 @@ export default abstract class NetworkInterface {
    * @param callable
    * @param address
    * @returns a Promise that contain the result of the request
-   * @brief this method is used to ask at the contract the execution of non payable methods
+   *  this method is used to ask at the contract the execution of non payable methods
    */
   public abstract callMethod(callable: any, address: string): Promise<any>;
 
@@ -38,7 +38,7 @@ export default abstract class NetworkInterface {
    * @param fileBuffer
    * @param ename
    * @param endpoint
-   * @brief this method is used for postRequest with json body.
+   *  this method is used for postRequest with json body.
    */
   public abstract postRequest(endpoint: string, bodyRequest: string): Promise<[number, string]>;
 }

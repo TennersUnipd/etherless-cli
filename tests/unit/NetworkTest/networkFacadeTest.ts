@@ -3,9 +3,7 @@ import 'mocha';
 
 import { assert } from 'chai';
 
-import { should, eventually } from 'chai-as-promised';
-
-import mockito, { mock } from 'ts-mockito';
+import mockito from 'ts-mockito';
 
 import Utils from '../../../src/utils';
 

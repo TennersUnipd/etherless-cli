@@ -1,6 +1,6 @@
+import commander from 'commander';
 import { Command } from './command';
 
-const commander = require('commander');
 
 class Commander {
   private static VERSION = '1.0';
@@ -9,7 +9,7 @@ class Commander {
 
   /**
    * @function config()
-   * @brief This static method is needed for initialization of the external library Commander
+   *  This static method is needed for initialization of the external library Commander
    */
   static config() {
     commander
@@ -45,7 +45,7 @@ class Commander {
   /**
    * @function addCommand()
    * @param cmd
-   * @function This static method starts the execution of a function parsing the inputs from the command line.
+   * static method starts the execution of a function parsing the inputs from the command line.
    */
   static start() {
     commander.parse(process.argv);

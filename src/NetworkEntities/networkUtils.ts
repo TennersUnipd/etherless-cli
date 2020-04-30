@@ -6,6 +6,7 @@ import axios, { AxiosResponse } from 'axios';
 
 import Web3 from 'web3';
 
+import fs from 'fs';
 import Utils from '../utils';
 
 import { NetworkFacade } from './networkFacade';
@@ -13,7 +14,6 @@ import EtherlessContract from './etherlessContract';
 import EtherlessNetwork from './etherlessNetwork';
 import EtherlessSession from './etherlessSession';
 
-const fs = require('fs');
 
 let envConfig = {};
 if (process.argv.includes('--dev')) {
@@ -31,7 +31,7 @@ export default class NetworkUtils {
 
   /**
    * @function getEtherlessNetworkFacadeInstance
-   * @brief this method initialize the NetworkFacade and returns an instance
+   *  this method initialize the NetworkFacade and returns an instance
    */
   static getEtherlessNetworkFacadeInstance(): NetworkFacade {
     if (this.facade === undefined) {
@@ -52,7 +52,7 @@ export default class NetworkUtils {
   /**
    * @function checkAbiUpdate
    * @param contractAddress
-   * @brief this method checks if it is necessary update the local ABI file
+   *  this method checks if it is necessary update the local ABI file
    * @callback updateAbi
    */
   private static checkAbiUpdate(contractAddress: string): void {
@@ -66,13 +66,13 @@ export default class NetworkUtils {
    * @function updateAbi
    * @param contractAddress
    * @param destinationPath
-   * @brief this method downloads the new ABI file from etherscan.io
+   *  this method downloads the new ABI file from etherscan.io
    */
   private static async updateAbi(contractAddress: string, destinationPath: string) {
     try {
       console.log('DOWNLOADING contract abi');
       const response: AxiosResponse<EtherscanResponse> = await axios.get(`https://api-ropsten.etherscan.io/api?module=contract&action=getabi&address=${contractAddress}&apikey=${process.env.ETHSCAN}`);
-      await fs.writeFileSync(destinationPath, response.data.result, { flag: 'w' });
+      fs.writeFileSync(destinationPath, response.data.result, { flag: 'w' });
     } catch (error) {
       throw new Error('Unable to update contract ABI');
     }
@@ -81,7 +81,7 @@ export default class NetworkUtils {
   /**
    * @function getAbi
    * @param abiPath
-   * @brief this method loads the ABI file from local storage
+   *  this method loads the ABI file from local storage
    */
   public static getAbi(abiPath: string): AbiItem[] {
     try {

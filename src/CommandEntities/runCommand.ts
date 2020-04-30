@@ -11,12 +11,13 @@ class RunCommand extends Command {
   static RESP_AWAIT_TIMEOUT = 30; // seconds
 
   exec(inputs: RunCommandInputs): Promise<any> {
-    return this.network.runFunction(inputs.name, inputs.parameters, inputs.password).then((response) => {
-      if (response.StatusCode !== 200) {
-        return 'Something went wrong with the remote function!';
-      }
-      return response.Payload;
-    });
+    return this.network.runFunction(inputs.name, inputs.parameters, inputs.password)
+      .then((response) => {
+        if (response.StatusCode !== 200) {
+          return 'Something went wrong with the remote function!';
+        }
+        return response.Payload;
+      });
   }
 
   // eslint-disable-next-line class-methods-use-this

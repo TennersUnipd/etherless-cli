@@ -2,7 +2,8 @@
  * @class Command
  * @interface CommandInputs
  * @file command.ts
- * @brief this file contain the class definition of Command and the definition of the structure CommandInputs
+ * this file contain the class definition of Command and
+ * the definition of the structure CommandInputs
  */
 import { NetworkFacade } from '../NetworkEntities/networkFacade';
 
@@ -19,7 +20,7 @@ export abstract class Command {
    * @abstract
    * @function exec
    * @param inputs required for the correct execution
-   * @brief This abstract method is called for every execution.
+   *  This abstract method is called for every execution.
    */
 
   abstract exec(inputs: CommandInputs): Promise<any>;
@@ -29,7 +30,7 @@ export abstract class Command {
    * @function parseArgs
    * @param args the arguments passed by the invocation.
    * @returns a type CommandInput or one of his extension
-   * @brief This method takes the arguments passed with the command line interface at the exec method.
+   * This method takes the arguments passed with the command line interface at the exec method.
    */
   // eslint-disable-next-line class-methods-use-this
   parseArgs(args: string[]): CommandInputs {
@@ -42,7 +43,7 @@ export abstract class Command {
   /**
    * @function getDescription()
    * @returns the content of COMMAND_NAME
-   * @brief This method is used as getter of the variable COMMAND_NAME
+   *  This method is used as getter of the variable COMMAND_NAME
    */
   getCommandDescriptor(): string {
     return this.COMMAND_NAME;
@@ -51,7 +52,7 @@ export abstract class Command {
   /**
    * @function getCommandAlias()
    * @returns the content of COMMAND_ALIAS
-   * @brief This method is used as getter of the variable COMMAND_ALIAS
+   *  This method is used as getter of the variable COMMAND_ALIAS
    */
   getCommandAlias(): string {
     return this.COMMAND_ALIAS;
@@ -60,7 +61,7 @@ export abstract class Command {
   /**
    * @function getDescription()
    * @returns the content of COMMAND_DESCRIPTION
-   * @brief This method is used as getter of the variable COMMAND_DESCRIPTION
+   *  This method is used as getter of the variable COMMAND_DESCRIPTION
    */
   getDescription(): string {
     return this.COMMAND_DESCRIPTION;
@@ -68,7 +69,7 @@ export abstract class Command {
 
   /**
    * @function disconnect()
-   * @brief This method is needed at the end of the execution to close the connection with the network.
+   * This method is needed at the end of the execution to close the connection with the network.
    */
   disconnect(): void {
     this.network.disconnect();
@@ -77,7 +78,8 @@ export abstract class Command {
   /**
    * @class
    * @param network required for the correct implementation, and exposes the dependency.
-   * @brief This method is used to define the dependency of the Commands object from the NetworkFacade and obliges the extenders to keep this dependency.
+   * This method is used to define the dependency of the Commands object
+   *  from the NetworkFacade and obliges the extenders to keep this dependency.
    */
   constructor(network: NetworkFacade) {
     this.network = network;
@@ -86,7 +88,7 @@ export abstract class Command {
 
 /**
  * @interface CommandInputs
- * @brief This interface is used as a structure to define the input for every command.
+ *  This interface is used as a structure to define the input for every command.
  */
 // eslint-disable-next-line @typescript-eslint/no-empty-interface
 export interface CommandInputs { }
