@@ -217,14 +217,6 @@ export class NetworkFacade {
   }
 
   /**
-   * @function getLog
-   * @brief this method is used to retrieve the past commands executed by the user.
-   */
-  public async getLog(): Promise<string[]> {
-    return this.contract.getLog(this.session.getUserAddress());
-  }
-
-  /**
    * @function setFunctionProperty
    * @param fnName Function name
    * @param property Property to update
@@ -235,7 +227,9 @@ export class NetworkFacade {
   public async setFunctionProperty(fnName: string, property: string,
     newValue: string, password?: string): Promise<any> {
     // check available properties
-    if (!['prototype', 'cost', 'description'].includes(property)) throw new Error('Invalid property. Only cost, description and prototype can be updated');
+    if (!['prototype', 'cost', 'description'].includes(property)) {
+      throw new Error('Invalid property. Only cost, description and prototype can be updated');
+    }
 
     if (!this.session.isUserSignedIn()) {
       throw new Error('User is not logged in');
@@ -286,10 +280,6 @@ export class NetworkFacade {
    */
   disconnect() {
     this.network.disconnect();
-  }
-
-  getlog(): Promise<string[]> {
-    return this.contract.getLog(this.session.getUserAddress());
   }
 }
 

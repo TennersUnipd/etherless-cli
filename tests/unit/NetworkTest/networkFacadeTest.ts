@@ -1,19 +1,20 @@
 /* eslint-disable @typescript-eslint/unbound-method */
-/* eslint-disable no-unused-vars */
-/* eslint-disable no-undef */
 import 'mocha';
 
 import { assert } from 'chai';
 
+import { should, eventually } from 'chai-as-promised';
+
 import mockito, { mock } from 'ts-mockito';
 
-import { resolve } from 'dns';
-
-import { AxiosResponse } from 'axios';
 import Utils from '../../../src/utils';
-import { ContractInterface } from '../../../src/NetworkEntities/contractInterface';
+
+import { ContractInterface, Transaction, FunctionRequest } from '../../../src/NetworkEntities/contractInterface';
+
 import { NetworkFacade } from '../../../src/NetworkEntities/networkFacade';
+
 import NetworkInterface from '../../../src/NetworkEntities/networkInterface';
+
 import SessionInterface from '../../../src/NetworkEntities/sessionInterface';
 
 // Creating mock
@@ -24,34 +25,35 @@ const mockedUtils: Utils = mockito.mock(Utils);
 
 const tPassword = 'passwordTest';
 const tUserKey = 'validPrivateKey';
+const tUserAddress = 'realUserAddress';
 const tWrongPassword = '';
 const trs: Transaction = {
   from: 'realAddress',
   to: 'realAddress',
   gas: 10,
   data: 'trueData',
+  value: 10,
 };
 
-mockito.when(mockedContract.isTheFunctionPayable).thenReturn((nFunction) => {
-  if (nFunction === 'function 1') { return true; }
-  return false;
-});
+const fr: FunctionRequest = {
+  userAddress: 'realAddres',
+  functionName: 'function',
+  args: ['arg1'],
+  value: 0,
+};
+
+const listOfPayable = ['createFunction', 'runFunction', 'deleteFunction'];
+
+mockito.when(mockedContract.isTheFunctionPayable)
+  .thenReturn((req) => listOfPayable.includes(req));
 
 mockito.when(mockedSession.getUserAddress).thenReturn(() => 'Indirizzo verissimo');
 
 mockito.when(mockedSession.logout).thenReturn(() => { assert.call(mockedSession.logout, 'called another method'); });
 
-mockito.when(mockedContract.getFunctionTransaction)
-  .thenReturn((address, fname, args) => new Promise((resolve, reject) => {
-    resolve(trs);
-    reject(new Error('generic error'));
-  }));
+mockito.when(mockedContract.getFunctionTransaction);
 
-mockito.when(mockedNetwork.sendTransaction)
-  .thenReturn((transaction: any) => new Promise((resolve, reject) => {
-    resolve(true);
-    reject(new Error('generic error sendTransaction'));
-  }));
+mockito.when(mockedNetwork.sendTransaction);
 
 describe('testing networkFacade', () => {
   const networkFacade: NetworkFacade = new NetworkFacade(
@@ -60,7 +62,7 @@ describe('testing networkFacade', () => {
     mockito.instance(mockedContract),
   );
   // TESTING SIGNUP
-  it('testing signup function', async () => {
+  it('testing signup function', () => {
     // stub method before execution
     mockito.when(mockedSession.signup)
       .thenReturn((password: string): boolean => {
@@ -88,78 +90,137 @@ describe('testing networkFacade', () => {
     assert.isArray(result, 'getListOfFunctions is not working');
     assert.isTrue(result.includes('function 1'), 'getListOfFunction doesn\'t report the correct array of function from the class Contract');
   });
-  it('testing callFunction with a callable function', async () => {
-    mockito.when(mockedSession.getUserAddress)
-      .thenReturn(() => tUserAddress);
-    mockito.when(mockedContract.isTheFunctionPayable)
-      .thenReturn(() => false);
-    mockito.when(mockedContract.getCallable)
-      .thenReturn((requested: string, arg: any[]) => callableFunction);
-    mockito.when(mockedContract.estimateGasCost)
-      .thenThrow(new Error('This function shouldn\'t be called in this test'));
-    mockito.when(mockedNetwork.callMethod)
-      .thenReturn((callable: any, address: string): Promise<any> => new Promise((resolve, reject) => {
-        if (callable === callableFunction) { resolve(['function1', 'function2']); }
-        reject(new Error('called the wrong function'));
-      }));
-    networkFacade.getAllLoadedFunction()
-      .then((result: string[]) => assert.isTrue(result.includes('function1'), 'The promise should return true'));
+  it('testing getUserAccount', () => {
+    mockito.when(mockedSession.getAccount)
+      .thenReturn((password: string) => {
+        if (password === tPassword) return [tUserAddress, tUserKey];
+        throw new Error('Wrong input');
+      });
+    const result = networkFacade.getUserAccount(tPassword);
+    assert.equal(result[0], tUserAddress);
+    assert.equal(result[1], tUserKey);
   });
-  it('testing getCostOfFunction(functionName: string)', () => {
-    // Mocking the behavior of the other objects
-    mockito.when(mockedSession.getUserAddress)
-      .thenReturn(() => tUserAddress);
-    mockito.when(mockedContract.isTheFunctionPayable)
-      .thenReturn(() => false);
-    mockito.when(mockedContract.getCallable)
-      .thenReturn((requested: string, arg: any[]) => callableFunction);
-    mockito.when(mockedContract.estimateGasCost)
-      .thenThrow(new Error('This function shouldn\'t be called in this test'));
-    mockito.when(mockedNetwork.callMethod)
-      .thenReturn((callable: any, address: string): Promise<any> => new Promise((resolve, reject) => {
-        if (callable === callableFunction) { resolve(10); }
-        reject(new Error('called the wrong function'));
+  it('testing createFunction', () => {
+    const FunctionDefinition = {
+      fnName: 'Function',
+      description: 'description',
+      pro: 'prototype',
+      filePath: './prima.js',
+      cost: 10,
+    };
+
+    mockito.when(mockedSession.isUserSignedIn).thenReturn(() => true);
+
+    mockito.when(mockedNetwork.postRequest)
+      .thenReturn((endpoint, body) => new Promise((resolve) => { resolve([200, '{"FunctionArn":"ok"}']); }));
+
+    mockito.when(mockedContract.getFunctionTransaction)
+      .thenReturn((FR) => new Promise((resolve) => {
+        resolve(trs);
       }));
-    // Calling the real function
-    networkFacade.getCostOfFunction('RemoteFunctionName')
-      .then((result) => { assert.equal(result, 10, 'the cost returned is different than expected'); })
-      .catch(() => { assert.fail('the call to the network is not working'); });
-  });
-  it('testing getCostOfFunction(functionName: string)', () => {
-    // Mocking the behavior of the other objects
-    mockito.when(mockedSession.getUserAddress)
-      .thenReturn(() => tUserAddress);
-    mockito.when(mockedContract.isTheFunctionPayable)
-      .thenReturn(() => false);
-    mockito.when(mockedContract.getCallable)
-      .thenReturn((requested: string, arg: any[]) => callableFunction);
-    mockito.when(mockedContract.estimateGasCost)
-      .thenThrow(new Error('This function shouldn\'t be called in this test'));
-    mockito.when(mockedNetwork.callMethod)
-      .thenReturn((callable: any, address: string): Promise<any> => new Promise((resolve, reject) => {
-        if (callable === callableFunction) { resolve(10); }
-        reject(new Error('called the wrong function'));
+
+    mockito.when(mockedSession.signTransaction)
+      .thenReturn((transaction, password) => new Promise((resolve, reject) => {
+        if (password !== tPassword) reject(new Error('wrong password'));
+        resolve('signed transaction');
       }));
-    // Calling the real function
-    networkFacade.getCostOfFunction('RemoteFunctionName')
-      .then((result) => { assert.equal(result, 10, 'the cost returned is different than expected'); })
-      .catch(() => { assert.fail('the call to the network is not working'); });
+
+    mockito.when(mockedNetwork.sendTransaction)
+      .thenReturn((transaction) => new Promise((resolve) => {
+        if (transaction === 'signed transaction') resolve('sent');
+      }));
+
+    networkFacade.createFunction(FunctionDefinition, tPassword).then((result) => {
+      assert.ok(result, 'not done yet');
+    });
   });
-  it('updateFunction(fnName: string, filePath: string)', async () => {
-    // Testing getArn from contract
-    mockito.when(mockedSession.getUserAddress)
-      .thenReturn(() => 'Valid Address');
-    mockito.when(mockedContract.isTheFunctionPayable)
-      .thenReturn((methodName: string) => { if (methodName === 'getArn') return false; });
-    mockito.when(mockedContract.getCallable).thenReturn((methodName) => callableFunction);
-    mockito.when(mockedNetwork.callMethod).thenReturn((call) => new Promise((resolve) => {
-      resolve('arnValid');
-    }));
-    // Testing the upload
-    mockito.when(mockedNetwork.uploadFunction)
-      .thenReturn((file, ename, serice) => new Promise((resolve) => resolve({ status: 200, data: 'ok' })));
-    networkFacade.updateFunction('test', './tests/dummy.js')
-      .then((res) => { assert.equal(res, 'updated', 'Update bruh'); })
-      .catch((err) => { assert.fail('bruh'); });
+  it('testing getAllLoadedFunction', () => {
+    mockito.when(mockedContract.getFunctionTransaction)
+      .thenReturn((FR) => new Promise((resolve) => {
+        resolve(trs);
+      }));
+    mockito.when(mockedNetwork.callMethod)
+      .thenReturn((tr, adr) => new Promise((resolve) => { resolve('to be decoded'); }));
+    mockito.when(mockedContract.decodeResponse)
+      .thenReturn((req, result) => 'decoded');
+    networkFacade.getAllLoadedFunction().then((result) => {
+      assert.ok(result, 'is not ok');
+    }).catch(() => { console.log('error getAllLoadedFunction'); });
+  });
+  it('testing getFunctionDetails', () => {
+    mockito.when(mockedContract.getFunctionTransaction)
+      .thenReturn((FR) => new Promise((resolve) => {
+        resolve(trs);
+      }));
+    mockito.when(mockedNetwork.callMethod)
+      .thenReturn((tr, adr) => new Promise((resolve) => { resolve('to be decoded'); }));
+    mockito.when(mockedContract.decodeResponse)
+      .thenReturn((req, result) => 'decoded');
+    networkFacade.getAllLoadedFunction().then((result) => {
+      assert.ok(result, 'is not ok');
+    }).catch(() => { console.log('error getFunctionDetails'); });
+  });
+  it('testing getCostOfFunction', () => {
+    mockito.when(mockedContract.getFunctionTransaction)
+      .thenReturn((FR) => new Promise((resolve) => {
+        resolve(trs);
+      }));
+    mockito.when(mockedNetwork.callMethod)
+      .thenReturn((tr, adr) => new Promise((resolve) => { resolve('to be decoded'); }));
+    mockito.when(mockedContract.decodeResponse)
+      .thenReturn((req, result) => 'decoded');
+    networkFacade.getAllLoadedFunction().then((result) => {
+      assert.ok(result, 'is not ok');
+    });
+  });
+  it('testing runFunction', () => {
+    mockito.when(mockedContract.getFunctionTransaction)
+      .thenReturn((FR) => new Promise((resolve) => {
+        resolve(trs);
+      }));
+    mockito.when(mockedNetwork.callMethod)
+      .thenReturn((tr, adr) => new Promise((resolve) => { resolve('to be decoded'); }));
+    mockito.when(mockedContract.decodeResponse)
+      .thenReturn((req, result) => 10);
+
+    mockito.when(mockedSession.isUserSignedIn).thenReturn(() => true);
+
+    mockito.when(mockedSession.signTransaction)
+      .thenReturn((transaction, password) => new Promise((resolve, reject) => {
+        if (password !== tPassword) reject(new Error('wrong password'));
+        resolve('signed transaction');
+      }));
+
+    mockito.when(mockedNetwork.sendTransaction)
+      .thenReturn((transaction) => new Promise((resolve) => {
+        if (transaction === 'signed transaction') resolve('sent');
+      }));
+
+    mockito.when(mockedContract.getSignal)
+      .thenReturn((sign, id) => new Promise((resolve) => {
+        resolve('successful execution');
+      }));
+
+    networkFacade.runFunction('dummyFunction', '["arg1"]', tPassword).then((result) => {
+      assert.ok(result, 'not done yet');
+    }).catch(() => { console.log('error'); });
+  });
+  it('testing setFunctionProperty', () => {
+    networkFacade.setFunctionProperty('functionName', 'prototype', 'prototype', tPassword)
+      .then((result) => { assert.ok(result, 'not ok on setFunction'); });
+  });
+  it('testing deleteFunction', () => {
+    networkFacade.deleteFunction('function', tPassword)
+      .then((value) => { assert.ok(value); });
+  });
+  it('testing updateFunction', () => {
+    mockito.when(mockedContract.decodeResponse)
+      .thenReturn((req, result) => 'arn:aws:lambda:us-west-2:123456789012:function:my-function:TEST');
+    networkFacade.updateFunction('function', './prima.js')
+      .then((value) => { assert.ok(value); });
+  });
+  it('testing disconnect()', () => {
+    mockito.when(mockedNetwork.disconnect).thenReturn(() => { });
+    networkFacade.disconnect();
   });
 });

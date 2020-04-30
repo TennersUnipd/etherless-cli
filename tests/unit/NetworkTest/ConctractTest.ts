@@ -7,7 +7,7 @@ import { assert, expect } from 'chai';
 import Web3 from 'web3';
 
 
-import { ContractInterface, Transaction } from '../../../src/NetworkEntities/contractInterface';
+import { ContractInterface, Transaction, FunctionRequest } from '../../../src/NetworkEntities/contractInterface';
 import EtherlessContract from '../../../src/NetworkEntities/etherlessContract';
 
 import * as variables from './SharedVariables';
@@ -34,7 +34,13 @@ describe('testing the contracts implementation', () => {
     assert.isFalse(result, 'isTheFunctionPayable is not working');
   });
   it('testing getFunctionTransaction', async () => {
-    const result: Transaction = await contract.getFunctionTransaction('0xe4036e69A708Bd2C4460eEc280fa6b03Ad3D44D8', 'runFunction', ['test1', 'test2', 'test3']);
+    const rqF: FunctionRequest = {
+      functionName: 'runFunction',
+      userAddress: '0xe4036e69A708Bd2C4460eEc280fa6b03Ad3D44D8',
+      args: ['test1', 'test2', 'test3'],
+      value: 10,
+    };
+    const result: Transaction = await contract.getFunctionTransaction(rqF);
     assert.isOk(result.from === '0xe4036e69A708Bd2C4460eEc280fa6b03Ad3D44D8');
   });
 });
