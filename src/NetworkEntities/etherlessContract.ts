@@ -1,27 +1,22 @@
 import { Contract } from 'web3-eth-contract';
 
 import { AbiItem, AbiInput } from 'web3-utils';
+import { Log } from 'web3-core';
+
 
 import Web3 from 'web3';
-import { ContractInterface, Inputs } from './contractInterface';
-
-import BN = require('bn.js');
-
-type fCall = (args:any[]) => any;
+import { ContractInterface, Transaction, FunctionRequest } from './contractInterface';
 
 class EtherlessContract extends ContractInterface {
-  private readonly GASBASE = 1000000
+  private readonly GASBASE = 1000000;
 
-  public contract: Contract;
+  private contract: Contract;
 
   private web3: Web3;
 
-  /**
-   * @param commandList contains all the function exposed by the contract
-   */
-  private commandList: Map<string, [AbiItem, Inputs[]]>;
+  private address: string;
 
-  private commandLoader: Map<string, fCall>
+  private commandList: AbiItem[];
 
   /**
    *
@@ -29,27 +24,47 @@ class EtherlessContract extends ContractInterface {
    * @param contractAddress
    * @param provider
    */
-  constructor(ABI:AbiItem[], contractAddress:string, provider:any) {
+  constructor(ABI: AbiItem[], contractAddress: string, provider: any) {
     super();
     this.web3 = provider;
-    this.commandList = new Map<string, [AbiItem, Inputs[]]>();
-    this.commandLoader = new Map<string, fCall>();
+    this.commandList = ABI;
     this.contract = new this.web3.eth.Contract(ABI, contractAddress);
-    this.setUpMap();
+    this.address = contractAddress;
   }
 
   /**
-   *
    * @param userAddress
    * @param requested
+   * @param request
    * @param args
    */
-  public async estimateGasCost(userAddress: string, requested: string, args:any[], value: number = undefined):
-   Promise<number> {
-    // TODO: non si puo fare su argument check su una funzione che fa tutt'altro
-    // this.argumentCheck(requested, args);
-    const gasCost = await this.commandLoader.get(requested)(args).estimateGas({ from: userAddress, value });
-    return gasCost;
+  public async estimateGasCost(request: FunctionRequest): Promise<number> {
+    return new Promise((resolve, reject) => {
+      this.web3.eth.estimateGas({
+        from: request.userAddress,
+        to: this.contract.options.address,
+        gas: this.GASBASE,
+        data: this.getAbiEncode(request.functionName, request.args),
+        value: request.value,
+      })
+        .then((cost: number) => {
+          resolve(cost);
+        })
+        .catch((err) => {
+          reject(err);
+        });
+    });
+  }
+
+  public decodeResponse(requested: string, encodedResult: any): any {
+    const out = this.commandList.filter((ele) => ele.name === requested)[0].outputs;
+    return this.web3.eth.abi.decodeParameters(out, encodedResult)[0];
+  }
+
+  private getAbiEncode(requested: string, args: string[]): string {
+    const functionAbi = this.contract
+      .options.jsonInterface.filter((element) => element.name === requested)[0];
+    return this.web3.eth.abi.encodeFunctionCall(functionAbi, args);
   }
 
   /**
@@ -59,7 +74,7 @@ class EtherlessContract extends ContractInterface {
    */
   public getSignal(signal: string, id: string): Promise<any> {
     return new Promise<string>((resolve, reject) => {
-      this.contract.once(signal, { filter: { _identifier: id } }, (err:any, event:any) => {
+      this.contract.once(signal, { filter: { _identifier: id } }, (err: any, event: any) => {
         if (err !== null) {
           reject(new Error(`Could not get the signal requested error: ${err}`));
         }
@@ -73,11 +88,15 @@ class EtherlessContract extends ContractInterface {
    *
    */
   public getListOfFunctions(): string[] {
-    return Array.from(this.commandList.keys());
-  }
-
-  public getCallable(requested: string, arg: any[]) {
-    return this.commandLoader.get(requested)(arg);
+    const toReturn: string[] = [];
+    this.commandList.filter((elem) => {
+      if (elem.name !== undefined && !elem.name.includes('(')) {
+        toReturn.push(elem.name);
+        return true;
+      }
+      return false;
+    });
+    return toReturn;
   }
 
   /**
@@ -85,119 +104,60 @@ class EtherlessContract extends ContractInterface {
    * @param requested
    */
   public isTheFunctionPayable(requested: string): boolean {
-    let command: any;
-    try {
-      // eslint-disable-next-line prefer-destructuring
-      command = this.commandList.get(requested)[0];
-    } catch {
-      throw new Error(`Function ${requested} not available`);
-    }
-    if (command.stateMutability !== 'payable') {
-      return false;
-    }
-    return true;
+    const item: AbiItem[] = this.commandList.filter((ele) => ele.name === requested);
+    if (item[0] === undefined) throw new Error('the called function is missing');
+    return item[0].stateMutability !== 'view';
   }
 
   /**
-   *
+   * @param userAddress
    */
-  public getArgumentsOfFunction(requested:string):Inputs[] {
-    return this.commandList.get(requested)[1];
-  }
-
-  /**
-   *
-   */
-  public async getLog(userAddress:string): Promise<string[]> {
-    let toBeReturned:string[];
-    // filter may be wrong
-    const pastEvents = await this.contract.getPastEvents('allEvents',
-      { filter: { address: userAddress }, fromBlock: 0, toBlock: 'latest' });
-    pastEvents.forEach((element) => {
-      toBeReturned.push(`${element.logIndex}: ${element.event} ${element.address}`);
+  public async getLog(userAddress: string): Promise<string[]> {
+    return new Promise((resolve, reject) => {
+      this.web3.eth.getTransactionCount(userAddress)
+        .then((value) => {
+          resolve([value.toString()]);
+        })
+        .catch((err) => { reject(err); });
     });
-    return toBeReturned;
   }
 
   /**
-   *
    * @param userAddress
    * @param requested
+   * @param request
    * @param args
    */
-  public getFunctionTransaction(userAddress:string, requested: string, args: any[], gasEstimate: number, value: number = undefined)
-    : Promise<object> {
-    if (!this.commandList.has(requested)) {
+  public async getFunctionTransaction(request: FunctionRequest): Promise<Transaction> {
+    if (this.commandList.find((fn) => fn.name === request.functionName) === undefined) {
       throw new Error('Function not found');
     }
-    this.argumentCheck(requested, args);
-    return this.prepareTransaction(userAddress, requested, args, gasEstimate, value);
+    return this.prepareTransaction(request);
   }
 
   /**
-   *
+   * @param request
    */
-  private setUpMap():void {
-    this.contract.options.jsonInterface.forEach((element:AbiItem) => {
-      if (element.type === 'function' && element.name !== '') {
-        const argumentsCollector: Inputs[] = [];
-        element.inputs.forEach((argm: AbiInput) => {
-          argumentsCollector
-            .push({ internalType: argm.internalType, name: argm.name, type: argm.type });
+  private async prepareTransaction(request: FunctionRequest): Promise<Transaction> {
+    return new Promise((resolve, reject) => {
+      this.estimateGasCost(request).then((gasEstimate: number) => {
+        resolve({
+          from: request.userAddress,
+          to: this.contract.options.address,
+          gas: gasEstimate,
+          data: this.getAbiEncode(request.functionName, request.args),
+          value: request.value,
         });
-        this.commandList.set(element.name, [element, argumentsCollector]);
-      }
+      }).catch((err) => {
+        reject(err);
+      });
     });
-
-    this.commandLoader.set('createFunction', (args:any[]):any => this.contract.methods.createFunction(args[0], args[1], args[2], args[3], args[4]));
-    this.commandLoader.set('listFunctions', ():any => this.contract.methods.listFunctions());
-    this.commandLoader.set('costOfFunction', (args:any[]):any => this.contract.methods.costOfFunction(args[0]));
-    this.commandLoader.set('findFunction', (args:any[]):any => this.contract.methods.findFunction(args[0]));
-    this.commandLoader.set('runFunction', (args:any[]):any => this.contract.methods.runFunction(args[0], args[1], args[2]));
-    this.commandLoader.set('getArn', (args:any[]):any => this.contract.methods.getArn(args[0]));
-    this.commandLoader.set('setFunctionProperty', (args:any[]):any => this.contract.methods.setFunctionProperty(args[0], args[1], args[2]));
-    this.commandLoader.set('deleteFunction', (args:any[]):any => this.contract.methods.deleteFunction(args[0]));
   }
 
-  /**
-   *
-   */
-  private async prepareTransaction(
-    userAddress:string,
-    requested:string,
-    args: any[],
-    gasEstimate: number,
-    value: number = undefined,
-  ) :Promise<object> {
-    return {
-      // once: await this.web3.eth.getTransactionCount(userAddress),
-      from: userAddress,
-      to: this.contract.options.address,
-      gas: gasEstimate * 2,
-      data: this.commandLoader.get(requested)(args).encodeABI(),
-      value,
-    };
-  }
-
-  /**
-   *
-   * @param requested
-   * @param args
-   */
-  private argumentCheck(requested: string, args: any[]):boolean {
-    const inputs = this.getArgumentsOfFunction(requested);
-    if (args.length !== inputs.length) {
-      throw new Error(`expected ${inputs.length} arguments found ${args.length}`);
-    }
-    for (let i = 0; i < inputs.length; i += 1) {
-      // eslint-disable-next-line valid-typeof
-      if (typeof args[i] !== inputs[i].type) {
-        if (inputs[i].type === 'unint256' && typeof args[i] !== 'number') {
-          throw new Error(`expected ${inputs[i].type} on argument ${i}`);
-        }
-      }
-    }
-    return true;
+  public getTopic(signature: string): string {
+    const element = JSON.parse(JSON.stringify(this.contract.options.jsonInterface))
+      .filter((AbiElement) => AbiElement.signature === signature)[0];
+    return element;
   }
 }
 
