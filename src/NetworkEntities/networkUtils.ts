@@ -85,7 +85,7 @@ export default class NetworkUtils {
    */
   public static getAbi(abiPath: string): AbiItem[] {
     try {
-      const parsed = JSON.parse(fs.readFileSync(abiPath));
+      const parsed = JSON.parse(fs.readFileSync(abiPath).toString('utf-8'));
       return parsed;
     } catch (error) {
       // TODO: Mocked AbiFile

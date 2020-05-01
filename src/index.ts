@@ -27,7 +27,9 @@ const commands = [
   RunCommand,
   CreateCommand,
   SetCommand,
-  DeleteCommand
+  DeleteCommand,
+  LogCommand,
+  UpdateCommand
   // TestCommand,
 ];
 

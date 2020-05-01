@@ -11,17 +11,19 @@ class RunCommand extends Command {
 
   static RESP_AWAIT_TIMEOUT = 30; // seconds
 
-    exec(inputs: RunCommandInputs): Promise<any> {   
-      return this.network.runFunction(inputs.name, inputs.parameters, inputs.password).then(response => {
-        if (response.StatusCode != 200) {
-          return "Something went wrong with the remote function!";
+  exec(inputs: RunCommandInputs): Promise<any> {
+    return this.network.runFunction(inputs.name, inputs.parameters, inputs.password)
+      .then((response) => {
+        const resparse = JSON.parse(response);
+        if (resparse.elemen.StatusCode !== 200) {
+          return 'Something went wrong with the remote function!';
         }
         const logger: Logger = new Logger({
           fname: inputs.name,
           fdate: Date(),
-          fcost: JSON.parse(response).cost,
+          fcost: resparse.cost,
         });
-        return response.Payload;
+        return resparse.elemen.Payload;
       });
   }
 
