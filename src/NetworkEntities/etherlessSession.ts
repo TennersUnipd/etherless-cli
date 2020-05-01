@@ -1,7 +1,7 @@
 /**
  * @class SessionEtherlessSmart
  * @implements SessionInterface
- * @constructor the constructor of this class should be not called outside the network package
+ * @class the constructor of this class should be not called outside the network package
  */
 
 import Web3 from 'web3';
@@ -9,12 +9,6 @@ import Web3 from 'web3';
 import {
   RLPEncodedTransaction, Account, EncryptedKeystoreV3Json, SignedTransaction,
 } from 'web3-core';
-
-import { isAddress } from 'web3-utils';
-
-import { Wallet } from 'web3-eth-accounts';
-import { Transaction } from 'ethereumjs-tx';
-import { Buffer } from 'buffer';
 import Utils from '../utils';
 
 import SessionInterface from './sessionInterface';
@@ -26,15 +20,17 @@ export default class EtherlessSession extends SessionInterface {
   static readonly chain = 'ropsten';
 
 
-  private web3:Web3;
+  private web3: Web3;
 
-  private accountAddress:string;
+  private accountAddress: string;
 
   /**
    * this constructor shouldn't be called outside the
    * network package
+   *
+   * @param provider
    */
-  constructor(provider:any) {
+  constructor(provider: any) {
     super();
     this.web3 = provider;
     if (this.isUserSignedIn()) {
@@ -42,25 +38,25 @@ export default class EtherlessSession extends SessionInterface {
     }
   }
 
-  public signup(password:string): boolean {
+  public signup(password: string): boolean {
     const newAccount = this.web3.eth.accounts.create();
     this.storeAccount(newAccount, password);
     return true;
   }
 
-  public logon(privateKey:string, password:string): boolean {
+  public logon(privateKey: string, password: string): boolean {
     const account = this.web3.eth.accounts.privateKeyToAccount(privateKey);
     this.storeAccount(account, password);
     return true;
   }
 
-  private storeAccount(account: Account, password: string) {
+  private storeAccount(account: Account, password: string): void {
     this.web3.eth.accounts.wallet.add(account);
     const encrypted = this.web3.eth.accounts.wallet.encrypt(password);
     Utils.localStorage.setItem(EtherlessSession.STORAGE_WALLET_KEY, JSON.stringify(encrypted));
   }
 
-  public logout():void {
+  public logout(): void {
     this.accountAddress = undefined;
     Utils.localStorage.removeItem(EtherlessSession.STORAGE_WALLET_KEY);
   }
@@ -70,7 +66,7 @@ export default class EtherlessSession extends SessionInterface {
     const encryptedWallet = EtherlessSession.getWallet();
     try {
       const wallet = this.web3.eth.accounts.wallet.decrypt(encryptedWallet, password);
-      return [wallet[0].address,wallet[0].privateKey];
+      return [wallet[0].address, wallet[0].privateKey];
     } catch {
       throw new Error('Unable to read internal storage');
     }

@@ -6,6 +6,7 @@ import axios, { AxiosResponse } from 'axios';
 
 import Web3 from 'web3';
 
+import fs from 'fs';
 import Utils from '../utils';
 
 import { NetworkFacade } from './networkFacade';
@@ -13,10 +14,9 @@ import EtherlessContract from './etherlessContract';
 import EtherlessNetwork from './etherlessNetwork';
 import EtherlessSession from './etherlessSession';
 
-const fs = require('fs');
 
 let envConfig = {};
-if (process.argv.indexOf('--dev') > -1) {
+if (process.argv.includes('--dev')) {
   envConfig = { node_env: 'development' };
 }
 DOTENV.config(envConfig);
@@ -30,32 +30,32 @@ export default class NetworkUtils {
   static facade: NetworkFacade;
 
   /**
-   * @method getEtherlessNetworkFacadeInstance
-   * @brief this method initialize the NetworkFacade and returns an instance
+   * @function getEtherlessNetworkFacadeInstance
+   *  this method initialize the NetworkFacade and returns an instance
    */
   static getEtherlessNetworkFacadeInstance(): NetworkFacade {
     if (this.facade === undefined) {
       this.checkAbiUpdate(process.env.CONTRACT_ADDRESS);
       const provider = new Web3(process.env.PROVIDER_API);
-      const eNetwork:EtherlessNetwork = new EtherlessNetwork(provider, process.env.AWS_ENDPOINT);
-      const eContract:EtherlessContract = new EtherlessContract(
+      const eNetwork: EtherlessNetwork = new EtherlessNetwork(provider, process.env.AWS_ENDPOINT);
+      const eContract: EtherlessContract = new EtherlessContract(
         NetworkUtils.getAbi(process.env.ABI_PATH),
         process.env.CONTRACT_ADDRESS,
         provider,
       );
-      const eSession:EtherlessSession = new EtherlessSession(provider);
+      const eSession: EtherlessSession = new EtherlessSession(provider);
       this.facade = new NetworkFacade(eNetwork, eSession, eContract);
     }
     return this.facade;
   }
 
   /**
-   * @method checkAbiUpdate
+   * @function checkAbiUpdate
    * @param contractAddress
-   * @brief this method checks if it is necessary update the local ABI file
+   *  this method checks if it is necessary update the local ABI file
    * @callback updateAbi
    */
-  private static checkAbiUpdate(contractAddress:string) {
+  private static checkAbiUpdate(contractAddress: string): void {
     if (contractAddress !== Utils.localStorage.getItem('lastAbiAddress')) {
       NetworkUtils.updateAbi(process.env.CONTRACT_ADDRESS, process.env.ABI_PATH);
       Utils.localStorage.setItem('lastAbiAddress', process.env.CONTRACT_ADDRESS);
@@ -63,27 +63,27 @@ export default class NetworkUtils {
   }
 
   /**
-   * @method updateAbi
+   * @function updateAbi
    * @param contractAddress
    * @param destinationPath
-   * @brief this method downloads the new ABI file from etherscan.io
+   *  this method downloads the new ABI file from etherscan.io
    */
   private static async updateAbi(contractAddress: string, destinationPath: string) {
     try {
       console.log('DOWNLOADING contract abi');
       const response: AxiosResponse<EtherscanResponse> = await axios.get(`https://api-ropsten.etherscan.io/api?module=contract&action=getabi&address=${contractAddress}&apikey=${process.env.ETHSCAN}`);
-      await fs.writeFileSync(destinationPath, response.data.result, { flag: 'w' });
+      fs.writeFileSync(destinationPath, response.data.result, { flag: 'w' });
     } catch (error) {
       throw new Error('Unable to update contract ABI');
     }
   }
 
   /**
-   * @method getAbi
+   * @function getAbi
    * @param abiPath
-   * @brief this method loads the ABI file from local storage
+   *  this method loads the ABI file from local storage
    */
-  public static getAbi(abiPath:string) : AbiItem[] {
+  public static getAbi(abiPath: string): AbiItem[] {
     try {
       const parsed = JSON.parse(fs.readFileSync(abiPath));
       return parsed;
