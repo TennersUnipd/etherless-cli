@@ -1,5 +1,6 @@
 import { Command, CommandInputs } from './command';
 import Utils from '../utils';
+import Logger from '../log';
 
 class RunCommand extends Command {
   COMMAND_NAME = 'run <functionName> <password> [parameters...]';
@@ -13,10 +14,16 @@ class RunCommand extends Command {
   exec(inputs: RunCommandInputs): Promise<any> {
     return this.network.runFunction(inputs.name, inputs.parameters, inputs.password)
       .then((response) => {
-        if (response.StatusCode !== 200) {
+        const resparse = JSON.parse(response);
+        if (resparse.elemen.StatusCode !== 200) {
           return 'Something went wrong with the remote function!';
         }
-        return response.Payload;
+        const logger: Logger = new Logger({
+          fname: inputs.name,
+          fdate: Date(),
+          fcost: resparse.cost,
+        });
+        return resparse.elemen.Payload;
       });
   }
 

@@ -11,6 +11,7 @@ import AccountCreateCommand from './CommandEntities/signupCommand';
 import NetworkUtils from './NetworkEntities/networkUtils';
 import SetCommand from './CommandEntities/setCommand';
 import DeleteCommand from './CommandEntities/deleteCommand';
+import LogCommand from './CommandEntities/logCommand';
 import { UpdateCommand } from './CommandEntities/updateCommand';
 
 const network = NetworkUtils.getEtherlessNetworkFacadeInstance();
@@ -27,7 +28,9 @@ const commands = [
   CreateCommand,
   SetCommand,
   DeleteCommand,
-  UpdateCommand,
+  LogCommand,
+  UpdateCommand
+  // TestCommand,
 ];
 
 Commander.config();

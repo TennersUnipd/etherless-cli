@@ -1,15 +1,26 @@
 import { Command } from './command';
 
+const fs = require('fs');
+
 class LogCommand extends Command {
   COMMAND_NAME = 'log';
 
-  COMMAND_ALIAS = 'lg';
+  COMMAND_ALIAS = 'll';
 
-  COMMAND_DESCRIPTION = 'List of all the past function executed by the user on Etherless';
+  COMMAND_DESCRIPTION = 'list of the latest 20 functions run logged';
 
   exec(): Promise<any> {
-    console.log(this.network.getlog().then((data: string[]) => { console.log(typeof data); }));
-    return this.network.getlog().then((data: string[]) => { data.join('\n'); });
+    return new Promise((resolve, rejects) => {
+      try {
+        resolve(JSON.parse(fs.readFileSync('logs.json', 'utf-8')));
+      } catch (error) {
+        if (error.code === 'ENOENT') {
+          rejects('No functions run and no log generated');
+        } else {
+          rejects('generic error');
+        }
+      }
+    });
   }
 }
 
