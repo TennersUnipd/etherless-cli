@@ -12,12 +12,13 @@ class LogCommand extends Command {
   exec(): Promise<any> {
     return new Promise((resolve, rejects) => {
       try {
+        console.log(`${this.COMMAND_NAME} running...`);
         resolve(JSON.parse(fs.readFileSync('logs.json', 'utf-8')));
       } catch (error) {
         if (error.code === 'ENOENT') {
-          rejects('No functions run and no log generated');
+          rejects(new Error('No functions run and no log generated'));
         } else {
-          rejects('generic error');
+          rejects(new Error('generic error'));
         }
       }
     });
