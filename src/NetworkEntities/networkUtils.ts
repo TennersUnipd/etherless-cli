@@ -1,25 +1,11 @@
-import DOTENV from 'dotenv-flow';
-
 import { AbiItem } from 'web3-utils';
-
-import axios, { AxiosResponse } from 'axios';
-
 import Web3 from 'web3';
-
-import fs from 'fs';
+import axios from 'axios';
 import Utils from '../utils';
-
 import { NetworkFacade } from './networkFacade';
 import EtherlessContract from './etherlessContract';
 import EtherlessNetwork from './etherlessNetwork';
 import EtherlessSession from './etherlessSession';
-
-
-let envConfig = {};
-if (process.argv.includes('--dev')) {
-  envConfig = { node_env: 'development' };
-}
-DOTENV.config(envConfig);
 
 export interface EtherscanResponse {
   status: string;
@@ -31,35 +17,27 @@ export default class NetworkUtils {
 
   /**
    * @function getEtherlessNetworkFacadeInstance
+   * @returns {NetworkFacade} instance
    *  this method initialize the NetworkFacade and returns an instance
    */
-  static getEtherlessNetworkFacadeInstance(): NetworkFacade {
+  static getEtherlessNetworkFacadeInstance(): Promise<NetworkFacade> {
     if (this.facade === undefined) {
-      this.checkAbiUpdate(process.env.CONTRACT_ADDRESS);
-      const provider = new Web3(process.env.PROVIDER_API);
-      const eNetwork: EtherlessNetwork = new EtherlessNetwork(provider, process.env.AWS_ENDPOINT);
-      const eContract: EtherlessContract = new EtherlessContract(
-        NetworkUtils.getAbi(process.env.ABI_PATH),
-        process.env.CONTRACT_ADDRESS,
-        provider,
-      );
-      const eSession: EtherlessSession = new EtherlessSession(provider);
-      this.facade = new NetworkFacade(eNetwork, eSession, eContract);
+      return NetworkUtils.getAbi(process.env.CONTRACT_ADDRESS).then((contract) => {
+        const provider = new Web3(process.env.PROVIDER_API);
+        const eNetwork: EtherlessNetwork = new EtherlessNetwork(provider, process.env.AWS_ENDPOINT);
+        const eContract: EtherlessContract = new EtherlessContract(
+          contract as unknown as AbiItem[],
+          process.env.CONTRACT_ADDRESS,
+          provider,
+        );
+        const eSession: EtherlessSession = new EtherlessSession(provider);
+        this.facade = new NetworkFacade(eNetwork, eSession, eContract);
+        return this.facade;
+      }).catch((err) => {
+        throw err;
+      });
     }
-    return this.facade;
-  }
-
-  /**
-   * @function checkAbiUpdate
-   * @param contractAddress
-   *  this method checks if it is necessary update the local ABI file
-   * @callback updateAbi
-   */
-  private static checkAbiUpdate(contractAddress: string): void {
-    if (contractAddress !== Utils.localStorage.getItem('lastAbiAddress')) {
-      NetworkUtils.updateAbi(process.env.CONTRACT_ADDRESS, process.env.ABI_PATH);
-      Utils.localStorage.setItem('lastAbiAddress', process.env.CONTRACT_ADDRESS);
-    }
+    return new Promise((resolve) => { resolve(this.facade); });
   }
 
   /**
@@ -68,55 +46,39 @@ export default class NetworkUtils {
    * @param destinationPath
    *  this method downloads the new ABI file from etherscan.io
    */
-  private static async updateAbi(contractAddress: string, destinationPath: string) {
-    try {
+  private static async updateAbi(contractAddress: string, destinationPath: string): Promise<JSON> {
+    return new Promise((resolve, reject) => {
       console.log('DOWNLOADING contract abi');
-      const response: AxiosResponse<EtherscanResponse> = await axios.get(`https://api-ropsten.etherscan.io/api?module=contract&action=getabi&address=${contractAddress}&apikey=${process.env.ETHSCAN}`);
-      fs.writeFileSync(destinationPath, response.data.result, { flag: 'w' });
-    } catch (error) {
-      throw new Error('Unable to update contract ABI');
-    }
+      const params = {
+        module: 'contract',
+        action: 'getabi',
+        address: contractAddress,
+        apikey: process.env.ETHSCAN,
+      };
+      axios.get('https://api-ropsten.etherscan.io/api', { params }).then((response) => {
+        if (response.data.result === 'Invalid API Key') reject(new Error(response.data.result));
+        Utils.localStorage.setItem(destinationPath, response.data.result);
+        Utils.localStorage.setItem('lastAbiAddress', contractAddress);
+        resolve(JSON.parse(Utils.localStorage.getItem(destinationPath)));
+      }).catch((err) => { reject(err); });
+    });
   }
 
   /**
    * @function getAbi
+   * @param contractAddress
    * @param abiPath
-   *  this method loads the ABI file from local storage
+   * @returns {Promise<JSON>}
+   * this method loads the ABI file from local storage
    */
-  public static getAbi(abiPath: string): AbiItem[] {
-    try {
-      const parsed = JSON.parse(fs.readFileSync(abiPath).toString('utf-8'));
-      return parsed;
-    } catch (error) {
-      // TODO: Mocked AbiFile
-      return [
-        {
-          inputs: [],
-          name: 'retrieve',
-          outputs: [
-            {
-              internalType: 'uint256',
-              name: '',
-              type: 'uint256',
-            },
-          ],
-          stateMutability: 'view',
-          type: 'function',
-        },
-        {
-          inputs: [
-            {
-              internalType: 'uint256',
-              name: 'num',
-              type: 'uint256',
-            },
-          ],
-          name: 'store',
-          outputs: [],
-          stateMutability: 'nonpayable',
-          type: 'function',
-        },
-      ];
+  public static getAbi(contractAddress: string): Promise<JSON> {
+    if (contractAddress !== Utils.localStorage.getItem('lastAbiAddress')) {
+      return this.updateAbi(contractAddress, 'contract');
     }
+    return new Promise((resolve, reject) => {
+      const contract = JSON.parse(Utils.localStorage.getItem('contract'));
+      if (contract === null) reject(new Error('Empty local ABI'));
+      resolve(contract);
+    });
   }
 }

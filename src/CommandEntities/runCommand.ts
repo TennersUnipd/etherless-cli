@@ -1,5 +1,4 @@
 import { Command, CommandInputs } from './command';
-import Utils from '../utils';
 import Logger from '../log';
 
 class RunCommand extends Command {
@@ -18,11 +17,13 @@ class RunCommand extends Command {
         if (resparse.elemen.StatusCode !== 200) {
           return 'Something went wrong with the remote function!';
         }
-        const logger: Logger = new Logger({
-          fname: inputs.name,
-          fdate: Date(),
-          fcost: resparse.cost,
+        const logger: Logger = new Logger();
+        logger.addLog({
+          logName: inputs.name,
+          logDate: Date(),
+          logCost: resparse.cost,
         });
+        logger.save();
         return resparse.elemen.Payload;
       });
   }

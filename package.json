@@ -1,20 +1,22 @@
 {
   "name": "etherless-cli",
-  "version": "0.1.0",
+  "version": "1.0.0",
   "description": "Our Etherless CLI client",
+  "files": [
+    "lib/**/*"
+  ],
   "main": "./src/index.ts",
   "scripts": {
-    "start": "node build/src/index.js run func01 giercafi 11 --dev",
-    "prestart": "npm run build",
+    "preinstall": "npm run build",
     "build": "tsc",
-    "run": "ts-node src/index.ts",
+    "lint": "eslint src/**/*.ts --fix",
     "test": "mocha -r ts-node/register \"tests/**/*.ts\""
   },
-  "author": "Tenners",
-  "license": "MIT",
   "bin": {
-    "etherless": "src/index.ts"
+    "etherless": "lib/src/index.js"
   },
+  "author": "Tenners",
+  "license": "GPL-2.0-only",
   "dependencies": {
     "adm-zip": "^0.4.14",
     "axios": "^0.19.2",
@@ -32,11 +34,13 @@
   },
   "devDependencies": {
     "@types/chai": "^4.2.11",
+    "@types/dotenv-flow": "^3.0.0",
     "@types/expect": "^24.3.0",
     "@types/mocha": "^7.0.2",
     "@typescript-eslint/eslint-plugin": "^2.30.0",
     "@typescript-eslint/parser": "^2.30.0",
     "chai": "^4.2.0",
+    "chai-as-promised": "^7.1.1",
     "eslint": "^6.8.0",
     "eslint-config-airbnb-base": "^14.0.0",
     "eslint-config-airbnb-typescript": "^7.2.1",
@@ -50,8 +54,7 @@
     "ts-node": "^8.9.1",
     "typescript": "^3.6.5",
     "web3-fake-provider": "^0.1.0",
-    "web3-mock": "^1.0.1",
-    "chai-as-promised": "^7.1.1"
+    "web3-mock": "^1.0.1"
   },
   "repository": {
     "type": "git",
