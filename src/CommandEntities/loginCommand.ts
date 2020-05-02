@@ -9,15 +9,22 @@ class AccountLoginCommand extends Command {
   COMMAND_DESCRIPTION = 'Log in with an ethereum account';
 
   exec(inputs: LoginInputs): Promise<string> {
-    return new Promise<string>((resolve) => {
-      const success = this.network.logon(inputs.privateKey, inputs.password);
-      resolve(success ? 'Logged in successfully' : 'Unable to login');
+    return new Promise<string>((resolve, reject) => {
+      try {
+        this.network.logon(inputs.privateKey, inputs.password);
+        resolve('Logged in successfully');
+      } catch (Error) {
+        reject(Error.toString().split('\n')[0]);
+      }
     });
   }
 
   // eslint-disable-next-line class-methods-use-this
   parseArgs(args: string[]): LoginInputs {
-    return { privateKey: args[0], password: args[1] };
+    if (args.length === 2) {
+      return { privateKey: args[0], password: args[1] };
+    }
+    throw new Error('invalid number of parameters');
   }
 }
 

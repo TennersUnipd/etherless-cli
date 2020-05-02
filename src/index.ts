@@ -29,13 +29,17 @@ const commands = [
   SetCommand,
   DeleteCommand,
   LogCommand,
-  UpdateCommand
+  UpdateCommand,
   // TestCommand,
 ];
 
 Commander.config();
 commands.forEach((Item) => {
-  Commander.addCommand(new Item(network));
+  try {
+    Commander.addCommand(new Item(network));
+  } catch (Error) {
+    console.error(Error.toString().split('\n')[0]);
+  }
 });
 Commander.start();
 
