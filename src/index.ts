@@ -35,14 +35,14 @@ const commands = [
 
 Commander.config();
 commands.forEach((Item) => {
-  try {
-    Commander.addCommand(new Item(network));
-  } catch (Error) {
-    console.error(Error.toString().split('\n')[0]);
-  }
+  Commander.addCommand(new Item(network));
 });
-Commander.start();
-
+try {
+  Commander.start();
+} catch (Error) {
+  console.error(Error.message);
+  network.disconnect();
+}
 process.on('exit', () => {
   network.disconnect();
 });

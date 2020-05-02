@@ -14,7 +14,7 @@ class AccountLoginCommand extends Command {
         this.network.logon(inputs.privateKey, inputs.password);
         resolve('Logged in successfully');
       } catch (Error) {
-        reject(Error.toString().split('\n')[0]);
+        reject(Error.message);
       }
     });
   }
@@ -22,7 +22,10 @@ class AccountLoginCommand extends Command {
   // eslint-disable-next-line class-methods-use-this
   parseArgs(args: string[]): LoginInputs {
     if (args.length === 2) {
-      return { privateKey: args[0], password: args[1] };
+      if (args[0].length === 66) {
+        return { privateKey: args[0], password: args[1] };
+      }
+      throw new Error('Private key must have 66 characters long: check the presence of the prefix 0x');
     }
     throw new Error('invalid number of parameters');
   }
