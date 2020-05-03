@@ -59,12 +59,11 @@ export default class NetworkUtils {
         if (response.data.result === 'Invalid API Key') reject(new Error(response.data.result));
         Utils.localStorage.setItem(destinationPath, response.data.result);
         Utils.localStorage.setItem('lastAbiAddress', contractAddress);
-        const cntrc = Utils.localStorage.getItem(destinationPath);
-        console.log(cntrc);
+        const contractJson = Utils.localStorage.getItem(destinationPath);
         try {
-          resolve(JSON.parse(cntrc));
+          resolve(JSON.parse(contractJson));
         } catch (err) {
-          reject(new Error(cntrc));
+          reject(new Error(contractJson));
         }
       }).catch((err) => { reject(err); });
     });
@@ -81,13 +80,13 @@ export default class NetworkUtils {
       return this.updateAbi(contractAddress, 'contract');
     }
     return new Promise((resolve, reject) => {
-      const cntrc = Utils.localStorage.getItem('contract');
+      const contractJson = Utils.localStorage.getItem('contract');
       try {
-        const contract = JSON.parse(cntrc);
+        const contract = JSON.parse(contractJson);
         if (contract === null) reject(new Error('Empty local ABI'));
         resolve(contract);
       } catch (err) {
-        reject(new Error(cntrc));
+        reject(new Error(contractJson));
       }
     });
   }

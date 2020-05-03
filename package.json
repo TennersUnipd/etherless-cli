@@ -7,8 +7,7 @@
   ],
   "main": "./src/index.ts",
   "scripts": {
-    "preinstall": "npm run-script build",
-    "build": "tsc",
+    "prepare": "tsc",
     "lint": "eslint src/**/*.ts --fix",
     "test": "mocha -r ts-node/register \"tests/**/*.ts\""
   },
