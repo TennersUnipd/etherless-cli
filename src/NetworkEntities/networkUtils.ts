@@ -59,15 +59,20 @@ export default class NetworkUtils {
         if (response.data.result === 'Invalid API Key') reject(new Error(response.data.result));
         Utils.localStorage.setItem(destinationPath, response.data.result);
         Utils.localStorage.setItem('lastAbiAddress', contractAddress);
-        resolve(JSON.parse(Utils.localStorage.getItem(destinationPath)));
+        const cntrc = Utils.localStorage.getItem(destinationPath);
+        console.log(cntrc);
+        try {
+          resolve(JSON.parse(cntrc));
+        } catch (err) {
+          reject(new Error(cntrc));
+        }
       }).catch((err) => { reject(err); });
     });
   }
 
   /**
    * @function getAbi
-   * @param contractAddress
-   * @param abiPath
+   * @param {string} contractAddress contract address to download
    * @returns {Promise<JSON>}
    * this method loads the ABI file from local storage
    */
@@ -76,9 +81,14 @@ export default class NetworkUtils {
       return this.updateAbi(contractAddress, 'contract');
     }
     return new Promise((resolve, reject) => {
-      const contract = JSON.parse(Utils.localStorage.getItem('contract'));
-      if (contract === null) reject(new Error('Empty local ABI'));
-      resolve(contract);
+      const cntrc = Utils.localStorage.getItem('contract');
+      try {
+        const contract = JSON.parse(cntrc);
+        if (contract === null) reject(new Error('Empty local ABI'));
+        resolve(contract);
+      } catch (err) {
+        reject(new Error(cntrc));
+      }
     });
   }
 }

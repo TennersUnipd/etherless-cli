@@ -7,12 +7,13 @@
   ],
   "main": "./src/index.ts",
   "scripts": {
+    "preinstall": "npm run-script build",
     "build": "tsc",
     "lint": "eslint src/**/*.ts --fix",
     "test": "mocha -r ts-node/register \"tests/**/*.ts\""
   },
   "bin": {
-    "etherless": "lib/src/index.js"
+    "etherless": "lib/index.js"
   },
   "author": "Tenners",
   "license": "GPL-2.0-only",
