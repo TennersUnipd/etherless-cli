@@ -150,7 +150,7 @@ export class NetworkFacade {
             functionArn,
             functionDefinition.cost,
           ],
-          password);
+          password).catch((error) => { throw new Error('Name already used or parameters not valid'); });
     } catch (err) {
       throw new Error(`Could not upload the required function ${err}`);
     }
@@ -254,7 +254,7 @@ export class NetworkFacade {
       await this.network.postRequest(endpoint, JSON.stringify({ ARN: resource }));
       return this.callFunction(NetworkFacade.deleteFunction, [fnName], password);
     } catch (err) {
-      throw new Error(`Could not delete the required function ${err}`);
+      throw new Error('Could not delete the required function');
     }
   }
 

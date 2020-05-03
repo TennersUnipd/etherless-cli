@@ -34,7 +34,7 @@ class Commander {
           .then((result) => {
             console.log(result);
           }).catch((error) => {
-            console.error(error.message); //da rimettere il .message
+            console.error(`${error.message} \nFor other informations about the command type etherless -h`);
           })
           .finally(() => {
             cmd.disconnect();
