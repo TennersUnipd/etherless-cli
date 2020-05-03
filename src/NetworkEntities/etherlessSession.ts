@@ -64,12 +64,10 @@ export default class EtherlessSession extends SessionInterface {
 
   public getAccount(password: string): [string, string] {
     const encryptedWallet = EtherlessSession.getWallet();
-    try {
-      const wallet = this.web3.eth.accounts.wallet.decrypt(encryptedWallet, password);
-      return [wallet[0].address, wallet[0].privateKey];
-    } catch {
-      throw new Error('Unable to read internal storage');
-    }
+    const wallet = this.web3.eth.accounts.wallet.decrypt(encryptedWallet, password);
+    const calc = this.web3.eth.accounts.privateKeyToAccount(wallet[0].privateKey).address;
+    if (calc !== wallet[0].address) throw new Error('Invalid password');
+    return [wallet[0].address, wallet[0].privateKey];
   }
 
   private static getWallet(): EncryptedKeystoreV3Json[] {

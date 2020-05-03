@@ -109,22 +109,18 @@ export class NetworkFacade {
     password?: string, value = 0): Promise<any> {
     const userAddress = this.session.getUserAddress();
     const payable = this.contract.isTheFunctionPayable(functionName);
-    try {
-      const transaction = await this.contract.getFunctionTransaction({
-        userAddress,
-        functionName,
-        args,
-        value,
-      });
-      if (payable) {
-        const signedTransaction = await this.session.signTransaction(transaction, password);
-        return this.network.sendTransaction(signedTransaction);
-      }
-      return this.network.callMethod(transaction, userAddress)
-        .then((result) => this.contract.decodeResponse(functionName, result));
-    } catch (err) {
-      throw new Error(err);
+    const transaction = await this.contract.getFunctionTransaction({
+      userAddress,
+      functionName,
+      args,
+      value,
+    });
+    if (payable) {
+      const signedTransaction = await this.session.signTransaction(transaction, password);
+      return this.network.sendTransaction(signedTransaction);
     }
+    return this.network.callMethod(transaction, userAddress)
+      .then((result) => this.contract.decodeResponse(functionName, result));
   }
 
   /**

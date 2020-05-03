@@ -1,5 +1,7 @@
 import { FunctionDefinition } from 'src/NetworkEntities/networkFacade';
 
+import fs from 'fs';
+
 import Utils from '../utils';
 
 import { Command, CommandInputs } from './command';
@@ -25,6 +27,11 @@ export class CreateCommand extends Command {
 
   // eslint-disable-next-line class-methods-use-this
   parseArgs(args: string[]): CommandInputs {
+    if (Number.isNaN(+args[3])) {
+      throw new Error('Cost not valid, is not a number');
+    } else if (!fs.existsSync(args[4])) {
+      throw new Error('No exiting path');
+    }
     return {
       name: args[0],
       description: args[1],

@@ -39,8 +39,8 @@ commands.forEach((Item) => {
 });
 try {
   Commander.start();
-} catch (Error) {
-  console.error(Error.message);
+} catch (error) {
+  console.error(error.message);
   network.disconnect();
 }
 process.on('exit', () => {

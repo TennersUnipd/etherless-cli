@@ -34,7 +34,7 @@ class Commander {
           .then((result) => {
             console.log(result);
           }).catch((error) => {
-            console.error(error);
+            console.error(error.message); //da rimettere il .message
           })
           .finally(() => {
             cmd.disconnect();
