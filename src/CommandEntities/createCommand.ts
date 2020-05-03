@@ -27,8 +27,8 @@ export class CreateCommand extends Command {
 
   // eslint-disable-next-line class-methods-use-this
   parseArgs(args: string[]): CommandInputs {
-    if (Number.isNaN(+args[3])) {
-      throw new Error('Cost not valid, is not a number');
+    if (Number.isNaN(+args[3]) || (+args[3]) <= 0) {
+      throw new Error('Cost not valid, is not a number or is negative');
     } else if (!fs.existsSync(args[4])) {
       throw new Error('No exiting path');
     }

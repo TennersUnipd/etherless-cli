@@ -40,7 +40,7 @@ commands.forEach((Item) => {
 try {
   Commander.start();
 } catch (error) {
-  console.error(`${error.message} \n for other informations about the command type etherless -h`);
+  console.error(`${error.message} \nFor other informations about the command type etherless -h`);
   network.disconnect();
 }
 process.on('exit', () => {
