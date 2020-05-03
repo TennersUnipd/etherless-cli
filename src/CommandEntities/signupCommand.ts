@@ -8,7 +8,7 @@ class AccountCreateCommand extends Command {
 
   COMMAND_DESCRIPTION = 'Create a new account';
 
-  exec(inputs: SignupCommandInputs): Promise<any> {
+  exec(inputs: SignupCommandInputs): Promise<string> {
     return new Promise<string>((resolve) => {
       const success = this.network.signup(inputs.password);
       let successResponse = 'Signed up successfully\n';

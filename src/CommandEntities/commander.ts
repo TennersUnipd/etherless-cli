@@ -1,5 +1,7 @@
 import commander from 'commander';
-import { Command } from './command';
+import { Command, ExecutionResponse } from './command';
+import Logger from '../log';
+import RunCommand from './runCommand';
 
 
 class Commander {
@@ -31,8 +33,17 @@ class Commander {
       .action(() => {
         const inputs = cmd.parseArgs(commander.args);
         cmd.exec(inputs)
-          .then((result) => {
-            console.log(result);
+          .then((result: ExecutionResponse | string) => {
+            let response;
+            if (typeof result !== 'string') {
+              response = result.response;
+              if (result.logData) {
+                Commander.logActions(result.logData);
+              }
+            } else {
+              response = result;
+            }
+            console.log(response);
           }).catch((error) => {
             console.error(error);
           })
@@ -40,6 +51,10 @@ class Commander {
             cmd.disconnect();
           });
       });
+  }
+
+  static logActions(logData: object) {
+    const logged = new Logger(logData);
   }
 
   /**

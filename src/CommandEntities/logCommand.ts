@@ -9,7 +9,7 @@ class LogCommand extends Command {
 
   COMMAND_DESCRIPTION = 'list of the latest 20 functions run logged';
 
-  exec(): Promise<any> {
+  exec(): Promise<string> {
     return new Promise((resolve, rejects) => {
       try {
         console.log(`${this.COMMAND_NAME} running...`);

@@ -7,7 +7,7 @@ class FindCommand extends Command {
 
   COMMAND_DESCRIPTION = 'Get function details';
 
-  exec(inputs: FindInputs): Promise<any> {
+  exec(inputs: FindInputs): Promise<string> {
     return this.network.getFunctionDetails(inputs.functionName)
       .then((command) => `Name: ${command.name}
         \nCost: ${command.cost}

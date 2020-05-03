@@ -12,7 +12,7 @@ export class CreateCommand extends Command {
 
   COMMAND_DESCRIPTION = 'Create a new function on Etherless';
 
-  exec(inputs: CreateCommandInputs): Promise<any> {
+  exec(inputs: CreateCommandInputs): Promise<string> {
     const functionToUpload: FunctionDefinition = {
       fnName: inputs.name,
       description: inputs.description,
