@@ -17,7 +17,7 @@ class LogCommand extends Command {
         if (error.code === 'ENOENT') {
           rejects('No functions run and no log generated');
         } else {
-          rejects('generic error');
+          rejects('Generic error');
         }
       }
     });

@@ -1,5 +1,6 @@
-import { Command, CommandInputs } from './command';
 import Utils from '../utils';
+
+import { Command, CommandInputs } from './command';
 
 class DeleteCommand extends Command {
   COMMAND_NAME = 'delete <functionName> <password>';

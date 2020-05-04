@@ -248,14 +248,20 @@ export class NetworkFacade {
     if (!this.session.isUserSignedIn()) {
       throw new Error('User is not logged in');
     }
-    try {
-      const functionData = await this.getFunctionDetails(fnName);
-      const resource = functionData.remoteResource;
-      await this.network.postRequest(endpoint, JSON.stringify({ ARN: resource }));
-      return this.callFunction(NetworkFacade.deleteFunction, [fnName], password);
-    } catch (err) {
-      throw new Error('Could not delete the required function');
-    }
+    return this.getFunctionDetails(fnName)
+      .then((functionData) => {
+        const resource = functionData.remoteResource;
+        if (resource === '') throw new Error('No remote function found');
+        console.log(resource);
+        this.network.postRequest(endpoint, JSON.stringify({ ARN: resource }))
+          .then(() => {
+            this.callFunction(NetworkFacade.deleteFunction, [fnName], password)
+              .then((result) => 'successo')
+              .catch(() => { console.log('errore sul contratto'); });
+          })
+          .catch((err) => { console.log(err); });
+      })
+      .catch((error) => { console.log('Function not available!'); });
   }
 
   /**

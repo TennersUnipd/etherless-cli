@@ -1,4 +1,5 @@
 import commander from 'commander';
+
 import { Command } from './command';
 
 
@@ -34,7 +35,7 @@ class Commander {
           .then((result) => {
             console.log(result);
           }).catch((error) => {
-            console.error(`${error.message} \nFor other informations about the command type etherless -h`);
+            console.error(`${error.message} \nFor other information about the command type etherless -h`);
           })
           .finally(() => {
             cmd.disconnect();

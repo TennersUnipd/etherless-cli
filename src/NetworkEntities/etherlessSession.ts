@@ -9,6 +9,7 @@ import Web3 from 'web3';
 import {
   RLPEncodedTransaction, Account, EncryptedKeystoreV3Json, SignedTransaction,
 } from 'web3-core';
+
 import Utils from '../utils';
 
 import SessionInterface from './sessionInterface';
@@ -75,8 +76,9 @@ export default class EtherlessSession extends SessionInterface {
     const encryptedWallet = Utils.localStorage.getItem(EtherlessSession.STORAGE_WALLET_KEY);
     try {
       return JSON.parse(encryptedWallet) as EncryptedKeystoreV3Json[];
-    } catch {
-      throw new Error('Unable to read internal file');
+    } catch (err) {
+      err.message = 'Unable to read internal file';
+      throw err;
     }
   }
 
@@ -110,6 +112,8 @@ export default class EtherlessSession extends SessionInterface {
       const result = await this.web3.eth.getBalance(this.getUserAddress());
       return parseInt(result, 10);
     } catch (err) {
+      // err.message = 'Could not retrieve the balance of the current account!';
+      // throw err;
       throw new Error(`Could not retrieve the balance of the current account: ${err}`);
     }
   }
