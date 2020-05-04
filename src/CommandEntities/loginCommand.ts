@@ -27,7 +27,7 @@ class AccountLoginCommand extends Command {
       }
       throw new Error('Private key must have 66 characters long: check the presence of the prefix 0x');
     }
-    throw new Error('invalid number of parameters');
+    throw new Error('Invalid number of parameters');
   }
 }
 

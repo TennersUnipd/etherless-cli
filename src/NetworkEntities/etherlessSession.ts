@@ -45,6 +45,7 @@ export default class EtherlessSession extends SessionInterface {
   }
 
   public logon(privateKey: string, password: string): boolean {
+    if (this.isUserSignedIn()) throw new Error('Just logged in');
     const account = this.web3.eth.accounts.privateKeyToAccount(privateKey);
     this.storeAccount(account, password);
     return true;
