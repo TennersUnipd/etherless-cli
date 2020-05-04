@@ -58,17 +58,9 @@ export default class EtherlessNetwork extends NetworkInterface {
 
   public postRequest(endpoint: string, bodyRequest: string): Promise<[number, string]> {
     return new Promise((resolve, reject) => {
-      axios.post(this.awsAddress + endpoint, bodyRequest)
-        // .then((response) => {
-        //   const code = response.status;
-        //   if (code !== 200) {
-        //     reject(new Error(`Error ${code}: ${response.data}`));
-        //   }
-        //   resolve([code, JSON.stringify(response.data)]);
-        // })
-        // .catch((err) => {
-        //   console.log(err);
-        });
+      axios.post(this.awsAddress + endpoint, bodyRequest).then((response) => {
+        resolve([response.status, JSON.stringify(response.data)]);
+      }).catch((err) => { reject(new Error(err.toJSON().message)); });
     });
   }
 }
