@@ -14,7 +14,7 @@ class AccountLoginCommand extends Command {
         this.network.logon(inputs.privateKey, inputs.password);
         resolve('Logged in successfully');
       } catch (Error) {
-        reject(Error.message);
+        reject(Error);
       }
     });
   }

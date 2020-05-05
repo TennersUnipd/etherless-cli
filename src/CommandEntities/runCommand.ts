@@ -9,14 +9,14 @@ class RunCommand extends Command {
 
   COMMAND_DESCRIPTION = 'Request function execution';
 
-  static RESP_AWAIT_TIMEOUT = 30; // seconds
+  static RESP_AWAIT_TIMEOUT = 60; // seconds
 
   exec(inputs: RunCommandInputs): Promise<any> {
-    return this.network.runFunction(inputs.name, inputs.parameters, inputs.password)
+    const runPromise = this.network.runFunction(inputs.name, inputs.parameters, inputs.password)
       .then((response) => {
         const resparse = JSON.parse(response);
         if (resparse.elemen.StatusCode !== 200) {
-          return 'Something went wrong with the remote function!';
+          throw new Error(resparse.elemen.message);
         }
         const logger: Logger = new Logger({
           fname: inputs.name,
@@ -25,6 +25,10 @@ class RunCommand extends Command {
         });
         return resparse.elemen.Payload;
       });
+    return Promise.race([
+      runPromise,
+      new Promise((reject) => setTimeout(() => reject(new Error('Execution timeout')), RunCommand.RESP_AWAIT_TIMEOUT * 1000)),
+    ]);
   }
 
   // eslint-disable-next-line class-methods-use-this

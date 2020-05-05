@@ -115,7 +115,7 @@ export class NetworkFacade {
       functionName,
       args,
       value,
-    }).catch((err) => { throw new Error('Resource not available'); });
+    }).catch(() => { throw new Error('Resource not available'); });
     if (payable) {
       const signedTransaction = await this.session.signTransaction(transaction, password);
       return this.network.sendTransaction(signedTransaction);
@@ -149,7 +149,7 @@ export class NetworkFacade {
             functionArn,
             functionDefinition.cost,
           ],
-          password).catch((error) => { throw new Error('Name already used or parameters not valid'); });
+          password).catch(() => { throw new Error('Name already used or parameters not valid'); });
     } catch (err) {
       throw new Error(`Could not upload the required function ${err}`);
     }

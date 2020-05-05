@@ -59,8 +59,10 @@ export default class EtherlessSession extends SessionInterface {
   }
 
   public logout(): void {
-    this.accountAddress = undefined;
-    Utils.localStorage.removeItem(EtherlessSession.STORAGE_WALLET_KEY);
+    if (this.accountAddress !== undefined) {
+      this.accountAddress = undefined;
+      Utils.localStorage.removeItem(EtherlessSession.STORAGE_WALLET_KEY);
+    } else throw new Error('Already logged out');
   }
 
 

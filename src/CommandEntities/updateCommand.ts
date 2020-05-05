@@ -1,4 +1,6 @@
+import fs from 'fs';
 import { Command, CommandInputs } from './command';
+
 
 export class UpdateCommand extends Command {
   COMMAND_NAME = 'update <function> <file>';
@@ -17,6 +19,9 @@ export class UpdateCommand extends Command {
 
   // eslint-disable-next-line class-methods-use-this
   parseArgs(args: string[]): UpdateInputs {
+    if (!fs.existsSync(args[1])) {
+      throw new Error('No exiting path');
+    }
     return { functionName: args[0], filePath: args[1] };
   }
 }

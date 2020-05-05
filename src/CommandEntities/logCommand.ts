@@ -15,9 +15,9 @@ class LogCommand extends Command {
         resolve(JSON.parse(fs.readFileSync('logs.json', 'utf-8')));
       } catch (error) {
         if (error.code === 'ENOENT') {
-          rejects('No functions run and no log generated');
+          rejects(new Error('No functions run and no log generated'));
         } else {
-          rejects('Generic error');
+          rejects(new Error('Generic error'));
         }
       }
     });
