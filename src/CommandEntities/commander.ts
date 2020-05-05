@@ -13,6 +13,7 @@ class Commander {
    */
   static config() {
     commander
+      .name('etherless')
       .version('0.0.1')
       .description('Etherless CLI');
   }
@@ -27,7 +28,6 @@ class Commander {
       .command(cmd.getCommandDescriptor())
       .alias(cmd.getCommandAlias())
       .description(cmd.getDescription())
-      .option('--dev')
       .action(() => {
         const inputs = cmd.parseArgs(commander.args);
         cmd.exec(inputs)
@@ -48,6 +48,11 @@ class Commander {
    * static method starts the execution of a function parsing the inputs from the command line.
    */
   static start() {
+    commander.on('command:*', function (operands) {
+      const availableCommands = commander.commands.map(cmd => cmd.name());
+      const filt = availableCommands.filter((command: string) => command === operands[0]);
+      if (filt.length === 0) throw new Error(`${operands[0]} command not found`);
+    })
     commander.parse(process.argv);
   }
 }

@@ -22,12 +22,12 @@ export default class NetworkUtils {
    */
   static getEtherlessNetworkFacadeInstance(): Promise<NetworkFacade> {
     if (this.facade === undefined) {
-      return NetworkUtils.getAbi(process.env.CONTRACT_ADDRESS).then((contract) => {
-        const provider = new Web3(process.env.PROVIDER_API);
-        const eNetwork: EtherlessNetwork = new EtherlessNetwork(provider, process.env.AWS_ENDPOINT);
+      return NetworkUtils.getAbi(Utils.config.CONTRACT_ADDRESS).then((contract) => {
+        const provider = new Web3(Utils.config.PROVIDER_API);
+        const eNetwork: EtherlessNetwork = new EtherlessNetwork(provider, Utils.config.AWS_ENDPOINT);
         const eContract: EtherlessContract = new EtherlessContract(
           contract as unknown as AbiItem[],
-          process.env.CONTRACT_ADDRESS,
+          Utils.config.CONTRACT_ADDRESS,
           provider,
         );
         const eSession: EtherlessSession = new EtherlessSession(provider);
@@ -53,7 +53,7 @@ export default class NetworkUtils {
         module: 'contract',
         action: 'getabi',
         address: contractAddress,
-        apikey: process.env.ETHSCAN,
+        apikey: Utils.config.ETHSCAN,
       };
       axios.get('https://api-ropsten.etherscan.io/api', { params }).then((response) => {
         if (response.data.result === 'Invalid API Key') reject(new Error(response.data.result));

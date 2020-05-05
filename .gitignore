@@ -11,4 +11,4 @@ coverage
 contracts
 
 logs.json
-lib
+dist

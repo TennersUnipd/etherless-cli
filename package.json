@@ -2,17 +2,13 @@
   "name": "etherless-cli",
   "version": "1.0.0",
   "description": "Our Etherless CLI client",
-  "files": [
-    "lib/**/*"
-  ],
-  "main": "./src/index.ts",
   "scripts": {
     "prepare": "tsc",
     "lint": "eslint src/**/*.ts --fix",
     "test": "mocha -r ts-node/register \"tests/**/*.ts\""
   },
   "bin": {
-    "etherless": "lib/index.js"
+    "etherless": "./dist/index.js"
   },
   "author": "Tenners",
   "license": "GPL-2.0-only",
@@ -29,7 +25,9 @@
     "web3-eth-contract": "^1.2.7",
     "web3-eth-personal": "^1.2.7",
     "web3-providers-ws": "^1.2.7",
-    "web3-utils": "^1.2.7"
+    "web3-utils": "^1.2.7",
+    "ts-node": "^8.9.1",
+    "typescript": "^3.6.5"
   },
   "devDependencies": {
     "@types/chai": "^4.2.11",

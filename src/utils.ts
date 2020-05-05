@@ -2,12 +2,13 @@ import DOTENV from 'dotenv-flow';
 import os from 'os';
 import fs from 'fs';
 import AdmZip from 'adm-zip';
+import config from './config.json';
 
 const LS = require('node-localstorage').LocalStorage;
 
 DOTENV.config();
 
-class Utils {
+export default class Utils {
   static randomString(): string {
     return Math.random().toString(36).substring(2, 15) + Math.random()
       .toString(36).substring(2, 15);
@@ -24,10 +25,9 @@ class Utils {
     console.log(content);
   }
 
-  static userDir = os.homedir() + process.env.CONFIG_FOLDER;
+  static readonly config = config;
 
-  static localStorage = new LS(Utils.userDir);
+  static readonly userDir = os.homedir() + Utils.config.CONFIG_FOLDER;
 
+  static readonly localStorage = new LS(Utils.userDir);
 }
-
-export default Utils;

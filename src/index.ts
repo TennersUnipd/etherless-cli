@@ -1,3 +1,4 @@
+#!/usr/bin/env ts-node
 import Commander from './CommandEntities/commander';
 import { CreateCommand } from './CommandEntities/createCommand';
 import FindCommand from './CommandEntities/findCommand';
