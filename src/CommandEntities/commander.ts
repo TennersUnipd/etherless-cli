@@ -45,10 +45,16 @@ class Commander {
 
   /**
    * @function addCommand()
+   * @param commands
    * @param cmd
    * static method starts the execution of a function parsing the inputs from the command line.
    */
   static start() {
+    commander.on('command:*', (operands) => {
+      const availableCommands = commander.commands.map((cmd) => cmd.name());
+      const filt = availableCommands.filter((command: string) => command === operands[0]);
+      if (filt.length === 0) throw new Error(`${operands[0]} command not found`);
+    });
     commander.parse(process.argv);
   }
 }
