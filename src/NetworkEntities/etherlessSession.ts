@@ -23,8 +23,6 @@ export default class EtherlessSession extends SessionInterface {
 
   private web3: Web3;
 
-  private accountAddress: string;
-
   /**
    * this constructor shouldn't be called outside the
    * network package

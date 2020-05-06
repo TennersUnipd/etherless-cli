@@ -29,12 +29,14 @@ const DummyTransaction = {
 
 describe('Testing EtherlessSession class', () => {
   const session: SessionInterface = new EtherlessSession(web3);
+
   it('testing signup method', () => {
     const result = session.signup('test');
     assert.isTrue(result, 'The signup method doesn\'t work');
   });
 
   it('testing logout method', () => {
+    
     session.logout();
     const result = session.isUserSignedIn();
     assert.isFalse(result, 'The logout method doesn\'t work');
