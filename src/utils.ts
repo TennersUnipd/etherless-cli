@@ -1,10 +1,14 @@
-const fs = require('fs');
-const AdmZip = require('adm-zip');
+import DOTENV from 'dotenv-flow';
+import os from 'os';
+import fs from 'fs';
+import AdmZip from 'adm-zip';
+import config from './config.json';
+
 const LS = require('node-localstorage').LocalStorage;
 
-const localStorage = new LS('./uweirb3');
+DOTENV.config();
 
-class Utils {
+export default class Utils {
   static randomString(): string {
     return Math.random().toString(36).substring(2, 15) + Math.random()
       .toString(36).substring(2, 15);
@@ -21,7 +25,9 @@ class Utils {
     console.log(content);
   }
 
-  static localStorage = localStorage;
-}
+  static readonly config = config;
 
-export default Utils;
+  static readonly userDir = os.homedir() + Utils.config.CONFIG_FOLDER;
+
+  static readonly localStorage = new LS(Utils.userDir);
+}

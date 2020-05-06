@@ -1,8 +1,8 @@
 import { Command } from './command';
 
-const fs = require('fs');
+import Logger from '../log';
 
-class LogCommand extends Command {
+export default class LogCommand extends Command {
   COMMAND_NAME = 'log';
 
   COMMAND_ALIAS = 'll';
@@ -33,5 +33,3 @@ class LogCommand extends Command {
     });
   }
 }
-
-export default LogCommand;

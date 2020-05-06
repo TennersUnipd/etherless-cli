@@ -1,6 +1,7 @@
 import { Command, CommandInputs, ExecutionResponse } from './command';
 import Utils from '../utils';
 
+
 class RunCommand extends Command {
   COMMAND_NAME = 'run <functionName> <password> [parameters...]';
 
@@ -17,7 +18,6 @@ class RunCommand extends Command {
         if (resparse.elemen.StatusCode !== 200) {
           return 'Something went wrong with the remote function!';
         }
-
         return {
           response: resparse.elemen.Payload as string,
           logData: {
