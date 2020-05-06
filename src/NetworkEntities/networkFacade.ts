@@ -132,13 +132,12 @@ export class NetworkFacade {
    */
   public async createFunction(functionDefinition: FunctionDefinition,
     password?: string): Promise<any> {
-    const endpoint = 'createFunction';
     if (!this.session.isUserSignedIn()) throw new Error('User is not logged in');
     const resourceName = Utils.randomString();
     const bufferFile = Utils.compressFile(functionDefinition.filePath, resourceName);
     const req = { zip: bufferFile, name: resourceName };
     try {
-      const uploadResult = await this.network.postRequest(endpoint, JSON.stringify(req));
+      const uploadResult = await this.network.postRequest(NetworkFacade.createFunctionCommand, JSON.stringify(req));
       const functionArn = JSON.parse(uploadResult[1]).FunctionArn;
       return this
         .callFunction(NetworkFacade.createFunctionCommand,
@@ -151,7 +150,7 @@ export class NetworkFacade {
           ],
           password).catch(() => { throw new Error('Name already used or parameters not valid'); });
     } catch (err) {
-      throw new Error(`Could not upload the required function ${err}`);
+      throw new Error(`Could not upload the required function ${err.message}`);
     }
   }
 
