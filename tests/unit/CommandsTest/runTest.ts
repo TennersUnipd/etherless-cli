@@ -13,7 +13,7 @@ const mockFacade: NetworkFacade = mockito.mock(NetworkFacade);
 
 describe('testing Class RunTest', () => {
   const command: Command = new RunCommand(mockito.instance(mockFacade));
-  it('testing execution of Run', () => {g
+  it('testing execution of Run', () => {
     mockito.when(mockFacade.runFunction('RemoteFunction', mockito.anyString(), 'password')).thenReturn(new Promise((resolve, reject) => {
       resolve({ StatusCode: 200, Payload: 'execution result' });
       reject(new Error('testError'));

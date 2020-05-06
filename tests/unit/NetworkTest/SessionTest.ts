@@ -66,10 +66,4 @@ describe('Testing EtherlessSession class', () => {
       expect(result).to.have.property('rawTransaction');
     }).catch(console.log);
   });
-
-  it('testing logout method', () => {
-    session.logout();
-    const result = session.isUserSignedIn();
-    assert.isFalse(result, 'The logout method doesn\'t work');
-  });
 });
