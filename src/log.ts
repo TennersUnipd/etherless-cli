@@ -1,4 +1,6 @@
 const fs = require('fs');
+type Log = object;
+
 
 export default class Logger {
   private logs: Log[];
@@ -33,10 +35,4 @@ export default class Logger {
       }
     }
   }
-}
-
-interface Log {
-  fname: string;
-  fdate: string;
-  fcost: number;
 }

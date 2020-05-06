@@ -9,7 +9,7 @@ class SetCommand extends Command {
   COMMAND_DESCRIPTION = 'Change function property';
 
 
-  exec(inputs: SetCommandInputs): Promise<any> {
+  exec(inputs: SetCommandInputs): Promise<string> {
     return this.network.setFunctionProperty(inputs.function, inputs.property, inputs.newValue, inputs.password).then((response) => 'Done');
   }
 

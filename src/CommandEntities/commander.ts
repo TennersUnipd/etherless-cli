@@ -1,6 +1,6 @@
 import commander from 'commander';
-
-import { Command } from './command';
+import { Command, ExecutionResponse } from './command';
+import Logger from '../log';
 
 
 class Commander {
@@ -14,6 +14,7 @@ class Commander {
    */
   static config() {
     commander
+      .name('etherless')
       .version('0.0.1')
       .description('Etherless CLI');
   }
@@ -28,12 +29,20 @@ class Commander {
       .command(cmd.getCommandDescriptor())
       .alias(cmd.getCommandAlias())
       .description(cmd.getDescription())
-      .option('--dev')
       .action(() => {
         const inputs = cmd.parseArgs(commander.args);
         cmd.exec(inputs)
-          .then((result) => {
-            console.log(result);
+          .then((result: ExecutionResponse | string) => {
+            let response;
+            if (typeof result !== 'string') {
+              response = result.response;
+              if (result.logData) {
+                Commander.logActions(result.logData);
+              }
+            } else {
+              response = result;
+            }
+            console.log(response);
           }).catch((error) => {
             console.error(`${error.message} \nFor other information about the command type etherless -h`);
           })
@@ -41,6 +50,10 @@ class Commander {
             cmd.disconnect();
           });
       });
+  }
+
+  static logActions(logData: object) {
+    const logged = new Logger(logData);
   }
 
   /**

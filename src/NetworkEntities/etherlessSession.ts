@@ -114,9 +114,7 @@ export default class EtherlessSession extends SessionInterface {
       const result = await this.web3.eth.getBalance(this.getUserAddress());
       return parseInt(result, 10);
     } catch (err) {
-      // err.message = 'Could not retrieve the balance of the current account!';
-      // throw err;
-      throw new Error(`Could not retrieve the balance of the current account: ${err}`);
+      throw new Error(`Could not retrieve the balance of the current account: ${err.message}`);
     }
   }
 }

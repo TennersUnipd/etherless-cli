@@ -9,7 +9,7 @@ export class UpdateCommand extends Command {
 
   COMMAND_DESCRIPTION = 'Update function';
 
-  exec(inputs: UpdateInputs): Promise<any> {
+  exec(inputs: UpdateInputs): Promise<string> {
     return new Promise((resolve, reject) => {
       this.network.updateFunction(inputs.functionName, inputs.filePath)
         .then(() => { resolve('Done'); })

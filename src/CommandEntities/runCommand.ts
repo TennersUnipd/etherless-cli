@@ -26,12 +26,14 @@ class RunCommand extends Command {
         if (resparse.elemen.StatusCode !== 200) {
           throw new Error(resparse.elemen.message);
         }
-        const logger: Logger = new Logger({
-          fname: inputs.name,
-          fdate: Date(),
-          fcost: resparse.cost,
-        });
-        return resparse.elemen.Payload;
+        return {
+          response: resparse.elemen.Payload as string,
+          logData: {
+          	fname: inputs.name,
+          	fdate: new Date(),
+          	fcost: resparse.cost,
+          },
+        };
       });
 
     return Promise.race([
