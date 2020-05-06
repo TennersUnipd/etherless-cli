@@ -14,11 +14,13 @@ const mockFacade: NetworkFacade = mockito.mock(NetworkFacade);
 describe('testing Class RunTest', () => {
   const command: Command = new RunCommand(mockito.instance(mockFacade));
   it('testing execution of Run', () => {
-    mockito.when(mockFacade.runFunction('RemoteFunction', mockito.anyString(), 'password')).thenReturn(new Promise((resolve, reject) => {
-      resolve({ StatusCode: 200, Payload: 'execution result' });
-      reject(new Error('testError'));
+    const param = mockito.anyString();
+    mockito.when(mockFacade.runFunction('RemoteFunction', param, 'password')).thenReturn(new Promise((resolve) => {
+      resolve(JSON.stringify({ elemen: { StatusCode: 200, Payload: 'execution result' } }));
+    }).catch((err) => {
+      assert.fail();
     }));
-    command.exec(command.parseArgs(['RemoteFunction', 'password', 'arg1', 'arg2'])).then((result) => {
+    command.exec(command.parseArgs(['RemoteFunction', 'password', param])).then((result) => {
       assert.equal(result, 'execution result', 'not ok');
     });
   });

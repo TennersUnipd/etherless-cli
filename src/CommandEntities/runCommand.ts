@@ -1,6 +1,7 @@
-import { Command, CommandInputs } from './command';
-import Utils from '../utils';
 import Logger from '../log';
+import Utils from '../utils';
+
+import { Command, CommandInputs } from './command';
 
 class RunCommand extends Command {
   COMMAND_NAME = 'run <functionName> <password> [parameters...]';
@@ -12,9 +13,16 @@ class RunCommand extends Command {
   static RESP_AWAIT_TIMEOUT = 60; // seconds
 
   exec(inputs: RunCommandInputs): Promise<any> {
+    let timerId;
     const runPromise = this.network.runFunction(inputs.name, inputs.parameters, inputs.password)
       .then((response) => {
-        const resparse = JSON.parse(response);
+        clearTimeout(timerId);
+        let resparse;
+        try {
+          resparse = JSON.parse(response);
+        } catch {
+          throw new Error('Response not valide');
+        }
         if (resparse.elemen.StatusCode !== 200) {
           throw new Error(resparse.elemen.message);
         }
@@ -25,9 +33,12 @@ class RunCommand extends Command {
         });
         return resparse.elemen.Payload;
       });
+
     return Promise.race([
       runPromise,
-      new Promise((reject) => setTimeout(() => reject(new Error('Execution timeout')), RunCommand.RESP_AWAIT_TIMEOUT * 1000)),
+      new Promise((reject) => {
+        timerId = setTimeout(() => reject(new Error('Execution timeout')), RunCommand.RESP_AWAIT_TIMEOUT * 1000);
+      }),
     ]);
   }
 
