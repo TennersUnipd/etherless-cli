@@ -1,5 +1,6 @@
-import { Command, CommandInputs } from './command';
-import Logger from '../log';
+import { Command, CommandInputs, ExecutionResponse } from './command';
+import Utils from '../utils';
+
 
 class RunCommand extends Command {
   COMMAND_NAME = 'run <functionName> <password> [parameters...]';
@@ -10,21 +11,21 @@ class RunCommand extends Command {
 
   static RESP_AWAIT_TIMEOUT = 30; // seconds
 
-  exec(inputs: RunCommandInputs): Promise<any> {
+  exec(inputs: RunCommandInputs): Promise<ExecutionResponse | string> {
     return this.network.runFunction(inputs.name, inputs.parameters, inputs.password)
       .then((response) => {
         const resparse = JSON.parse(response);
         if (resparse.elemen.StatusCode !== 200) {
           return 'Something went wrong with the remote function!';
         }
-        const logger: Logger = new Logger();
-        logger.addLog({
-          logName: inputs.name,
-          logDate: Date(),
-          logCost: resparse.cost,
-        });
-        logger.save();
-        return resparse.elemen.Payload;
+        return {
+          response: resparse.elemen.Payload as string,
+          logData: {
+          	fname: inputs.name,
+          	fdate: new Date(),
+          	fcost: resparse.cost,
+          },
+        };
       });
   }
 

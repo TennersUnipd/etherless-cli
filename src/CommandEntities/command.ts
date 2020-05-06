@@ -23,7 +23,7 @@ export abstract class Command {
    *  This abstract method is called for every execution.
    */
 
-  abstract exec(inputs: CommandInputs): Promise<any>;
+  abstract exec(inputs: CommandInputs): Promise<ExecutionResponse | string>;
 
 
   /**
@@ -84,6 +84,12 @@ export abstract class Command {
   constructor(network: NetworkFacade) {
     this.network = network;
   }
+}
+
+
+export interface ExecutionResponse {
+  response: string;
+  logData?: object;
 }
 
 /**

@@ -8,7 +8,7 @@ class AccountLogoutCommand extends Command {
   COMMAND_DESCRIPTION = 'Logout from your account';
 
   // eslint-disable-next-line class-methods-use-this
-  exec(): Promise<any> {
+  exec(): Promise<string> {
     this.network.logout();
     return new Promise<any>((resolve) => {
       resolve('Logged out');

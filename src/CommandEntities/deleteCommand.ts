@@ -9,7 +9,7 @@ class DeleteCommand extends Command {
   COMMAND_DESCRIPTION = 'Delete function';
 
 
-  exec(inputs: DeleteCommandInputs): Promise<any> {
+  exec(inputs: DeleteCommandInputs): Promise<string> {
     return this.network.deleteFunction(inputs.function, inputs.password).then((response) => 'Done');
   }
 
