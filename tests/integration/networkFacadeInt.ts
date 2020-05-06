@@ -30,10 +30,12 @@ describe('NetworkFacade integration test', () => {
   const networkF: NetworkFacade = new NetworkFacade(network, session, contract);
   it('testing signup', () => {
     const result = networkF.signup('test1');
+    networkF.logout();
     assert.isTrue(result, 'signup does not working');
   });
-  it('testing login', async () => {
+  it('testing login', () => {
     const result = networkF.logon('0x8da4ef21b864d2cc526dbdb2a120bd2874c36c9d0a1fb7f8c63d7f7a8b41de8f', 'password');
+    networkF.logout();
     assert.isTrue(result, 'login is not working');
   });
   it('testing getListOfFunctions', () => {
