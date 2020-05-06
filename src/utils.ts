@@ -21,10 +21,6 @@ export default class Utils {
     return zip.toBuffer();
   }
 
-  static print(content?: any) {
-    console.log(content);
-  }
-
   static readonly config = config;
 
   static readonly userDir = os.homedir() + Utils.config.CONFIG_FOLDER;

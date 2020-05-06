@@ -12,7 +12,7 @@ class Commander {
    * @function config()
    *  This static method is needed for initialization of the external library Commander
    */
-  static config() {
+  static config(): void {
     commander
       .name('etherless')
       .version('0.0.1')
@@ -24,7 +24,7 @@ class Commander {
    * @param cmd
    * @function This static method adds to the external library Commander a new command.
    */
-  static addCommand(cmd: Command) {
+  static addCommand(cmd: Command): void {
     commander
       .command(cmd.getCommandDescriptor())
       .alias(cmd.getCommandAlias())
@@ -52,8 +52,8 @@ class Commander {
       });
   }
 
-  static logActions(logData: object) {
-    const logged = new Logger(logData);
+  static logActions(logData: object): void {
+    Logger.addLog(logData);
   }
 
   /**
