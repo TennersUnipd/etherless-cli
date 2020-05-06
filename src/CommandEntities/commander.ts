@@ -12,7 +12,7 @@ class Commander {
    * @function config()
    *  This static method is needed for initialization of the external library Commander
    */
-  static config() {
+  static config(): void {
     commander
       .name('etherless')
       .version('0.0.1')
