@@ -5,7 +5,7 @@ import { assert } from 'chai';
 import mockito from 'ts-mockito';
 
 import { Command } from '../../../src/CommandEntities/command';
-import { SetCommand } from '../../../src/CommandEntities/setCommand';
+import SetCommand from '../../../src/CommandEntities/setCommand';
 import { NetworkFacade, FunctionDefinition } from '../../../src/NetworkEntities/networkFacade';
 
 const mockFacade: NetworkFacade = mockito.mock(NetworkFacade);
