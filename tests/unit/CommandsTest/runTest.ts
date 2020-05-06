@@ -4,7 +4,7 @@ import { assert } from 'chai';
 
 import mockito from 'ts-mockito';
 
-import { Command } from '../../../src/CommandEntities/command';
+import { Command, ExecutionResponse } from '../../../src/CommandEntities/command';
 import RunCommand from '../../../src/CommandEntities/runCommand';
 import { NetworkFacade } from '../../../src/NetworkEntities/networkFacade';
 
@@ -16,12 +16,22 @@ describe('testing Class RunTest', () => {
   it('testing execution of Run', () => {
     const param = mockito.anyString();
     mockito.when(mockFacade.runFunction('RemoteFunction', param, 'password')).thenReturn(new Promise((resolve) => {
-      resolve(JSON.stringify({ elemen: { StatusCode: 200, Payload: 'execution result' } }));
+      resolve(JSON.stringify({ 
+        fName: 'RemoteFunction',
+        serializedParams: param,
+        cost: 10,
+        elemen: { 
+          StatusCode: 200,
+          Payload: 'execution result',
+        },
+      }));
     }).catch((err) => {
       assert.fail();
     }));
-    command.exec(command.parseArgs(['RemoteFunction', 'password', param])).then((result) => {
-      assert.equal(result, 'execution result', 'not ok');
+    command.exec(command.parseArgs(['RemoteFunction', 'password', param])).then((result: ExecutionResponse) => {
+      assert.equal(result.response, 'execution result', 'not ok');
+    }).catch((error) => {
+      assert.fail();
     });
   });
   it('testing getCommandDescriptor()', () => {

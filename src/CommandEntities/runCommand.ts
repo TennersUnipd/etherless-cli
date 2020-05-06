@@ -29,9 +29,9 @@ class RunCommand extends Command {
         return {
           response: resparse.elemen.Payload as string,
           logData: {
-          	fname: inputs.name,
-          	fdate: new Date(),
-          	fcost: resparse.cost,
+            fname: inputs.name,
+            fdate: new Date(),
+            fcost: resparse.cost,
           },
         };
       });
