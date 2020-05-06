@@ -5,7 +5,8 @@ uweirb3/*
 *.map
 build
 .nyc_output
-.vscode/settings.json
+.vscode
+.vs
 docs
 coverage
 contracts
