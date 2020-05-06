@@ -1,45 +1,27 @@
-const fs = require('fs');
+import Utils from './utils';
+
 type Log = object;
 
 
 export default class Logger {
-  private logs: Log[];
+  private static logs: Log[];
 
-  constructor(log: Log) {
-    this.loadJSON();
-    this.addLog(log);
-    this.saveOnJSON();
-  }
+  private static location = 'logs.json';
 
-  private addLog(log: Log) {
+  public static addLog(log: Log): void {
     if (this.logs.unshift(log) > 20) {
       this.logs = this.logs.slice(0, 20);
     }
+    Utils.localStorage.setItem(Logger.location, JSON.stringify(this.logs));
   }
 
-  private saveOnJSON() {
-    const jsonlogs = JSON.stringify(this.logs);
-    fs.writeFile('logs.json', jsonlogs, (error) => {
-      if (error) console.log(error);
-    });
+  public static getLogs(): Log {
+    return this.load();
   }
 
-  private loadJSON() {
-    try {
-      this.logs = JSON.parse(fs.readFileSync('logs.json', 'utf-8'));
-    } catch (err) {
-      if (err.code === 'ENOENT') {
-        this.logs = [];
-      } else {
-        throw err;
-      }
-    }
+  public static load(): Log[] {
+    this.logs = JSON.parse(Utils.localStorage.getItem(Logger.location));
+    if (this.logs === null) this.logs = [];
+    return Logger.logs;
   }
 }
-
-// interface Log {
-// 	fname: string;
-// 	fdate: string;
-// 	fcost: Number;
-// }
-

@@ -13,22 +13,9 @@ export default class LogCommand extends Command {
   exec(): Promise<string> {
     return new Promise((resolve, rejects) => {
       try {
-        let logResult = '';
-        const logsContent = JSON.parse(fs.readFileSync('logs.json', 'utf-8'));
-        logsContent.forEach((item) => {
-          const objectKeys = Object.keys(item);
-          objectKeys.forEach((k) => {
-            logResult = `${logResult}\n${k}: ${item[k]}`;
-          });
-          logResult += '\n';
-        })
-        resolve(logResult);
+        resolve(JSON.stringify(Logger.getLogs()));
       } catch (error) {
-        if (error.code === 'ENOENT') {
-          rejects(new Error('No functions run and no log generated'));
-        } else {
-          rejects(new Error('generic error'));
-        }
+        rejects(error);
       }
     });
   }
