@@ -1,6 +1,3 @@
-import Logger from '../log';
-import Utils from '../utils';
-
 import { Command, CommandInputs } from './command';
 
 class RunCommand extends Command {

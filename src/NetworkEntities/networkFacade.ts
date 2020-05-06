@@ -241,7 +241,7 @@ export class NetworkFacade {
     const endpoint = 'deleteFunction';
     const arn = await this.callFunction(NetworkFacade.getArn, [fnName])
       .catch((error) => { throw error; });
-    const response = await this.network.postRequest(endpoint, JSON.stringify({ ARN: arn }))
+    await this.network.postRequest(endpoint, JSON.stringify({ ARN: arn }))
       .catch((err) => { throw err; });
     return this.callFunction(NetworkFacade.deleteFunction, [fnName], password)
       .catch(() => { throw new Error('Error on contract delete'); });
