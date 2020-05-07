@@ -33,11 +33,9 @@ jobs:
     - name: Upload CodeCoverage output as a build artifact
       uses: actions/upload-artifact@v1
       with:
-        name: CodeCoverage
         path: coverage
       
     - name: Upload package
       uses: actions/upload-artifact@v1
       with:
-        name: build
-        path: etherless-*.tgz
+        path: etherless-0.15.20.tgz
