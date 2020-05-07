@@ -63,7 +63,6 @@ export class NetworkFacade {
    * provides the functionality or registration to the service
    */
   public signup(password: string): boolean {
-    this.session.logout();// because this.logout() use also this.disconnect()
     return this.session.signup(password);
   }
 

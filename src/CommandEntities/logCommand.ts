@@ -13,7 +13,16 @@ export default class LogCommand extends Command {
   exec(): Promise<string> {
     return new Promise((resolve, rejects) => {
       try {
-        resolve(JSON.stringify(Logger.getLogs()));
+        let logResult = '';
+        const logsContent = JSON.parse(JSON.stringify(Logger.getLogs()));
+        logsContent.forEach((item) => {
+          const objectKeys = Object.keys(item);
+          objectKeys.forEach((k) => {
+            logResult = `${logResult}\n${k}: ${item[k]}`;
+          });
+          logResult += '\n';
+        });
+        resolve(logResult);
       } catch (error) {
         rejects(error);
       }

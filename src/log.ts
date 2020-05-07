@@ -9,19 +9,20 @@ export default class Logger {
   private static location = 'logs.json';
 
   public static addLog(log: Log): void {
-    if (this.logs.unshift(log) > 20) {
-      this.logs = this.logs.slice(0, 20);
+    Logger.logs = Logger.load();
+    if (Logger.logs.unshift(log) > 20) {
+      Logger.logs = Logger.logs.slice(0, 20);
     }
-    Utils.localStorage.setItem(Logger.location, JSON.stringify(this.logs));
+    Utils.localStorage.setItem(Logger.location, JSON.stringify(Logger.logs));
   }
 
   public static getLogs(): Log {
-    return this.load();
+    return Logger.load();
   }
 
   public static load(): Log[] {
-    this.logs = JSON.parse(Utils.localStorage.getItem(Logger.location));
-    if (this.logs === null) this.logs = [];
+    Logger.logs = JSON.parse(Utils.localStorage.getItem(Logger.location));
+    if (Logger.logs === null) Logger.logs = [];
     return Logger.logs;
   }
 }
