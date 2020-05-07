@@ -19,7 +19,7 @@ jobs:
     - uses: actions/setup-node@v1
       with:
           node-version: '12.x'
-    - run: apt-get install pandoc      
+    - run: sudo apt-get install pandoc      
     - run: npm install -g typescript@3.6
     - run: npm install -g ts-node
     - run: npm install -g mocha
@@ -39,5 +39,5 @@ jobs:
     - name: Upload package
       uses: actions/upload-artifact@v1
       with:
-        name: CodeCoverage
+        name: build
         path: etherless-*.tgz
