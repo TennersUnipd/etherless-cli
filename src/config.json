@@ -1,7 +1,7 @@
 {
     "PROVIDER_API": "wss://ropsten.infura.io/ws/v3/f4347c3f96d448499a8e7940793d93a6",
     "CONFIG_FOLDER": "/.config/etherless",
-    "CONTRACT_ADDRESS": "0x6F9954E183b86B289aFe9f04E7cF60Af0c410a6B",
+    "CONTRACT_ADDRESS": "0x3A9C7bD822F717545DaB078e1963793fB08bE90e",
     "ETHSCAN": "RKVYFCZNF8HW6MSGXFDNIV7E6Q9BZQSSTI",
     "AWS_ENDPOINT": "https://sbx2aeqyl9.execute-api.us-east-1.amazonaws.com/dev/"
 }
