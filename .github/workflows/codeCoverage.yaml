@@ -19,12 +19,15 @@ jobs:
     - uses: actions/setup-node@v1
       with:
           node-version: '12.x'
+    - run: sudo apt-get install pandoc      
     - run: npm install -g typescript@3.6
     - run: npm install -g ts-node
     - run: npm install -g mocha
     - run: npm install -g chai
     - run: npm install -g nyc
     - run: npm install
+    - run: pandoc -s -t man man/etherless.md -o man/etherless.1
+    - run: npm pack
     - run: nyc --reporter=lcov --reporter=text-summary npm test
     
     - name: Upload CodeCoverage output as a build artifact
@@ -32,3 +35,9 @@ jobs:
       with:
         name: CodeCoverage
         path: coverage
+      
+    - name: Upload package
+      uses: actions/upload-artifact@v1
+      with:
+        name: build
+        path: etherless-0.15.20.tgz

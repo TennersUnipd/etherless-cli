@@ -5,7 +5,6 @@ uweirb3/*
 *.map
 build
 .nyc_output
-.vscode
 .vs
 docs
 coverage

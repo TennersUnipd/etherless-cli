@@ -1,5 +1,4 @@
 import { Command, CommandInputs } from './command';
-import Utils from '../utils';
 
 class SetCommand extends Command {
   COMMAND_NAME = 'set <functionName> <property> <value> <password>';

@@ -1,15 +1,17 @@
 {
-  "name": "etherless-cli",
-  "version": "1.0.0",
+  "name": "etherless",
+  "version": "0.15.20",
   "description": "Our Etherless CLI client",
   "scripts": {
     "prepare": "tsc",
     "lint": "eslint src/**/*.ts --fix",
     "test": "mocha -r ts-node/register \"tests/**/*.ts\""
   },
+  "main": ".dist/index.js",
   "bin": {
     "etherless": "./dist/index.js"
   },
+  "man": "./man/etherless.1",
   "author": "Tenners",
   "license": "GPL-2.0-only",
   "dependencies": {

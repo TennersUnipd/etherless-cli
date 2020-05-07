@@ -3,7 +3,9 @@ import Web3 from 'web3';
 import { WebsocketProvider } from 'web3-providers-ws';
 
 import { SignedTransaction } from 'web3-core';
+
 import axios from 'axios';
+
 import NetworkInterface from './networkInterface';
 
 export default class EtherlessNetwork extends NetworkInterface {
@@ -56,13 +58,9 @@ export default class EtherlessNetwork extends NetworkInterface {
 
   public postRequest(endpoint: string, bodyRequest: string): Promise<[number, string]> {
     return new Promise((resolve, reject) => {
-      axios.post(this.awsAddress + endpoint, bodyRequest)
-        .then((response) => {
-          const code = response.status;
-          if (code !== 200) reject(new Error(`Error ${code}: ${response.data}`));
-          resolve([code, JSON.stringify(response.data)]);
-        })
-        .catch((err) => { reject(err); });
+      axios.post(this.awsAddress + endpoint, bodyRequest).then((response) => {
+        resolve([response.status, JSON.stringify(response.data)]);
+      }).catch((err) => { reject(new Error(err.toJSON().message)); });
     });
   }
 }

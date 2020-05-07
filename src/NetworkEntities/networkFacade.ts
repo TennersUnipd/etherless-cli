@@ -63,7 +63,6 @@ export class NetworkFacade {
    * provides the functionality or registration to the service
    */
   public signup(password: string): boolean {
-    this.session.logout();// because this.logout() use also this.disconnect()
     return this.session.signup(password);
   }
 
@@ -107,24 +106,21 @@ export class NetworkFacade {
    */
   private async callFunction(functionName: string, args: string[],
     password?: string, value = 0): Promise<any> {
+    if (!this.session.isUserSignedIn()) throw new Error('User not logged');
     const userAddress = this.session.getUserAddress();
     const payable = this.contract.isTheFunctionPayable(functionName);
-    try {
-      const transaction = await this.contract.getFunctionTransaction({
-        userAddress,
-        functionName,
-        args,
-        value,
-      });
-      if (payable) {
-        const signedTransaction = await this.session.signTransaction(transaction, password);
-        return this.network.sendTransaction(signedTransaction);
-      }
-      return this.network.callMethod(transaction, userAddress)
-        .then((result) => this.contract.decodeResponse(functionName, result));
-    } catch (err) {
-      throw new Error(err);
+    const transaction = await this.contract.getFunctionTransaction({
+      userAddress,
+      functionName,
+      args,
+      value,
+    }).catch(() => { throw new Error('Resource not available'); });
+    if (payable) {
+      const signedTransaction = await this.session.signTransaction(transaction, password);
+      return this.network.sendTransaction(signedTransaction);
     }
+    return this.network.callMethod(transaction, userAddress)
+      .then((result) => this.contract.decodeResponse(functionName, result));
   }
 
   /**
@@ -135,15 +131,12 @@ export class NetworkFacade {
    */
   public async createFunction(functionDefinition: FunctionDefinition,
     password?: string): Promise<any> {
-    const endpoint = 'createFunction';
-    if (!this.session.isUserSignedIn()) {
-      throw new Error('User is not logged in');
-    }
+    if (!this.session.isUserSignedIn()) throw new Error('User is not logged in');
     const resourceName = Utils.randomString();
     const bufferFile = Utils.compressFile(functionDefinition.filePath, resourceName);
     const req = { zip: bufferFile, name: resourceName };
     try {
-      const uploadResult = await this.network.postRequest(endpoint, JSON.stringify(req));
+      const uploadResult = await this.network.postRequest(NetworkFacade.createFunctionCommand, JSON.stringify(req));
       const functionArn = JSON.parse(uploadResult[1]).FunctionArn;
       return this
         .callFunction(NetworkFacade.createFunctionCommand,
@@ -154,9 +147,9 @@ export class NetworkFacade {
             functionArn,
             functionDefinition.cost,
           ],
-          password);
+          password).catch(() => { throw new Error('Name already used or parameters not valid'); });
     } catch (err) {
-      throw new Error(`Could not upload the required function ${err}`);
+      throw new Error(`Could not upload the required function ${err.message}`);
     }
   }
 
@@ -234,10 +227,6 @@ export class NetworkFacade {
     if (!['prototype', 'cost', 'description'].includes(property)) {
       throw new Error('Invalid property. Only cost, description and prototype can be updated');
     }
-
-    if (!this.session.isUserSignedIn()) {
-      throw new Error('User is not logged in');
-    }
     return this.callFunction(NetworkFacade.setExecCommand, [fnName, property, newValue], password);
   }
 
@@ -249,18 +238,14 @@ export class NetworkFacade {
    */
   public async deleteFunction(fnName: string, password?: string): Promise<any> {
     const endpoint = 'deleteFunction';
-    if (!this.session.isUserSignedIn()) {
-      throw new Error('User is not logged in');
-    }
-    try {
-      const functionData = await this.getFunctionDetails(fnName);
-      const resource = functionData.remoteResource;
-      await this.network.postRequest(endpoint, JSON.stringify({ ARN: resource }));
-      return this.callFunction(NetworkFacade.deleteFunction, [fnName], password);
-    } catch (err) {
-      throw new Error(`Could not delete the required function ${err}`);
-    }
+    const arn = await this.callFunction(NetworkFacade.getArn, [fnName])
+      .catch((error) => { throw error; });
+    await this.network.postRequest(endpoint, JSON.stringify({ ARN: arn }))
+      .catch((err) => { throw err; });
+    return this.callFunction(NetworkFacade.deleteFunction, [fnName], password)
+      .catch(() => { throw new Error('Error on contract delete'); });
   }
+
 
   /**
    * @function updateFunction
@@ -282,7 +267,7 @@ export class NetworkFacade {
    * @function disconnect
    *  disconnects the application from the network.
    */
-  disconnect() {
+  disconnect(): void {
     this.network.disconnect();
   }
 }

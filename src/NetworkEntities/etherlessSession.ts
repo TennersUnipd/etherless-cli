@@ -9,6 +9,7 @@ import Web3 from 'web3';
 import {
   RLPEncodedTransaction, Account, EncryptedKeystoreV3Json, SignedTransaction,
 } from 'web3-core';
+
 import Utils from '../utils';
 
 import SessionInterface from './sessionInterface';
@@ -22,8 +23,6 @@ export default class EtherlessSession extends SessionInterface {
 
   private web3: Web3;
 
-  private accountAddress: string;
-
   /**
    * this constructor shouldn't be called outside the
    * network package
@@ -33,18 +32,17 @@ export default class EtherlessSession extends SessionInterface {
   constructor(provider: any) {
     super();
     this.web3 = provider;
-    if (this.isUserSignedIn()) {
-      this.accountAddress = this.getUserAddress();
-    }
   }
 
   public signup(password: string): boolean {
+    if (this.isUserSignedIn()) throw new Error('Already logged in');
     const newAccount = this.web3.eth.accounts.create();
     this.storeAccount(newAccount, password);
     return true;
   }
 
   public logon(privateKey: string, password: string): boolean {
+    if (this.isUserSignedIn()) throw new Error('Already logged in');
     const account = this.web3.eth.accounts.privateKeyToAccount(privateKey);
     this.storeAccount(account, password);
     return true;
@@ -57,10 +55,9 @@ export default class EtherlessSession extends SessionInterface {
   }
 
   public logout(): void {
-    this.accountAddress = undefined;
+    if (!this.isUserSignedIn()) throw new Error('Already logged out');
     Utils.localStorage.removeItem(EtherlessSession.STORAGE_WALLET_KEY);
   }
-
 
   public getAccount(password: string): [string, string] {
     const encryptedWallet = EtherlessSession.getWallet();
@@ -74,8 +71,9 @@ export default class EtherlessSession extends SessionInterface {
     const encryptedWallet = Utils.localStorage.getItem(EtherlessSession.STORAGE_WALLET_KEY);
     try {
       return JSON.parse(encryptedWallet) as EncryptedKeystoreV3Json[];
-    } catch {
-      throw new Error('Unable to read internal file');
+    } catch (err) {
+      err.message = 'Unable to read internal file';
+      throw err;
     }
   }
 

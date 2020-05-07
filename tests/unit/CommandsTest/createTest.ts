@@ -16,9 +16,13 @@ describe('testing Class CreateTest', () => {
       resolve(['new function created']);
       reject(new Error('testError'));
     }));
-    command.exec(command.parseArgs(['name', 'description', 'prototype', '10', './tests/unit/dummy.js', 'password'])).then((result) => {
-      console.log(result);
-    }).catch(console.error);
+    try {
+      command.exec(command.parseArgs(['name', 'description', 'prototype', '10', './tests/dummy.js', 'password'])).then((result) => {
+        console.log(result);
+      }).catch(console.error);
+    } catch {
+      assert.fail('CreateTest doesn\'t work');
+    }
   });
   it('testing getCommandDescriptor()', () => {
     const result: string = command.getCommandDescriptor();

@@ -1,5 +1,4 @@
 import { Command, CommandInputs } from './command';
-import Utils from '../utils';
 
 class DeleteCommand extends Command {
   COMMAND_NAME = 'delete <functionName> <password>';
@@ -10,7 +9,7 @@ class DeleteCommand extends Command {
 
 
   exec(inputs: DeleteCommandInputs): Promise<string> {
-    return this.network.deleteFunction(inputs.function, inputs.password).then((response) => 'Done');
+    return this.network.deleteFunction(inputs.function, inputs.password).then(() => 'Done');
   }
 
   // eslint-disable-next-line class-methods-use-this

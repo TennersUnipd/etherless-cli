@@ -1,4 +1,3 @@
-// eslint-disable-next-line no-unused-vars
 import { Command, CommandInputs } from './command';
 
 class AccountCreateCommand extends Command {

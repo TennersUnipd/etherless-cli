@@ -14,21 +14,17 @@ export default class LogCommand extends Command {
     return new Promise((resolve, rejects) => {
       try {
         let logResult = '';
-        const logsContent = JSON.parse(fs.readFileSync('logs.json', 'utf-8'));
+        const logsContent = JSON.parse(JSON.stringify(Logger.getLogs()));
         logsContent.forEach((item) => {
           const objectKeys = Object.keys(item);
           objectKeys.forEach((k) => {
             logResult = `${logResult}\n${k}: ${item[k]}`;
           });
           logResult += '\n';
-        })
+        });
         resolve(logResult);
       } catch (error) {
-        if (error.code === 'ENOENT') {
-          rejects(new Error('No functions run and no log generated'));
-        } else {
-          rejects(new Error('generic error'));
-        }
+        rejects(error);
       }
     });
   }
