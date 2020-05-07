@@ -1,6 +1,6 @@
 {
-  "name": "etherless-cli",
-  "version": "1.0.0",
+  "name": "etherless",
+  "version": "0.15.20",
   "description": "Our Etherless CLI client",
   "scripts": {
     "prepare": "tsc",
