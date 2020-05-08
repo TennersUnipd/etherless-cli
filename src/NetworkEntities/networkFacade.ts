@@ -209,7 +209,10 @@ export class NetworkFacade {
             })
             .catch(reject);
         })
-        .catch((err) => { reject(err); });
+        .catch((err) => {
+          this.disconnect();
+          reject(err);
+        });
     });
   }
 
