@@ -10,10 +10,10 @@ class RunCommand extends Command {
   static RESP_AWAIT_TIMEOUT = 60; // seconds
 
   exec(inputs: RunCommandInputs): Promise<any> {
-    let timerId;
-    const runPromise = this.network.runFunction(inputs.name, inputs.parameters, inputs.password)
+    // let timerId;
+    return this.network.runFunction(inputs.name, inputs.parameters, inputs.password)
       .then((response) => {
-        clearTimeout(timerId);
+        // clearTimeout(timerId);
         let resparse;
         try {
           resparse = JSON.parse(response);
@@ -33,12 +33,12 @@ class RunCommand extends Command {
         };
       });
 
-    return Promise.race([
-      runPromise,
-      new Promise((reject) => {
-        timerId = setTimeout(() => reject(new Error('Execution timeout')), RunCommand.RESP_AWAIT_TIMEOUT * 1000);
-      }),
-    ]);
+    // return Promise.race([
+    //   runPromise,
+    //   new Promise((reject) => {
+    //     timerId = setTimeout(() => reject(new Error('Execution timeout')), RunCommand.RESP_AWAIT_TIMEOUT * 1000);
+    //   }),
+    // ]);
   }
 
   // eslint-disable-next-line class-methods-use-this
