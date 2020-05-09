@@ -1,7 +1,8 @@
 /**
- * @abstract
- * @class
- * @package NetworkInterface
+ * @interface
+ * @class NetorkInterface
+ * @package NetworkEntities
+ * @file networkInterface.ts
  */
 export default abstract class NetworkInterface {
   /**

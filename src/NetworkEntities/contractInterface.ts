@@ -2,6 +2,7 @@
  * ContractInterface
  *
  * @interface
+ * @file contractInterface.ts
  * @class ContractInterface
  * @package NetworkEntities
  * This Interface defines all the method that a ContractInterface should implements

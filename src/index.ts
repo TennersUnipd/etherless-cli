@@ -38,6 +38,7 @@ NetworkUtils.getEtherlessNetworkFacadeInstance()
     try {
       Commander.start();
     } catch (error) {
+      // eslint-disable-next-line no-console
       console.error(`${error.message} \nFor other informations about the command type etherless -h`);
       network.disconnect();
     }

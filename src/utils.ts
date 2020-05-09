@@ -1,6 +1,6 @@
 /**
  * @file utils.ts
- * @class Utils static class that
+ * @class Utils
  */
 import DOTENV from 'dotenv-flow';
 import os from 'os';

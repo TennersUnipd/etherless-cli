@@ -1,3 +1,8 @@
+/**
+ * @file networkFacade.ts
+ * @class NetworkFacade
+ * @package NetworkEntities
+ */
 import Utils from '../utils';
 
 import { ContractInterface } from './contractInterface';
@@ -6,8 +11,8 @@ import SessionInterface from './sessionInterface';
 
 
 /**
- * @class NetworkComponentsFacade
- * @class the constructor of this class shouldn't be called.
+ * @class NetworkFacade
+ * This class is a facade of the network
  */
 export class NetworkFacade {
   // group commands under common structure (like an enum mapping to strings)
@@ -37,9 +42,9 @@ export class NetworkFacade {
 
   /**
    * @function constructor this method should not be called outside the network scope
-   * @param {NetworkInterface} network instance of NetworkInterface
-   * @param {SessionInterface} session instance of SessionInterface
-   * @param {ContractInterface} contract instance of ContractInterface
+   * @param network instance of NetworkInterface
+   * @param session instance of SessionInterface
+   * @param contract instance of ContractInterface
    */
   constructor(network: NetworkInterface, session: SessionInterface, contract: ContractInterface) {
     this.network = network;

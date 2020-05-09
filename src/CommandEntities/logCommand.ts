@@ -6,6 +6,11 @@
 import { Command } from './command';
 import Logger from '../log';
 
+/**
+ * @class
+ * @extends Command
+ * Implements the log command
+ */
 export default class LogCommand extends Command {
   COMMAND_NAME = 'log';
 

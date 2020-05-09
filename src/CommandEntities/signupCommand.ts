@@ -1,5 +1,15 @@
+/**
+ * @file signupCommands.ts
+ * @class AccountCreateCommand
+ * @package CommandEntities
+ */
 import { Command, CommandInputs } from './command';
 
+/**
+ * @class
+ * @extends Command
+ * Implements the signup command
+ */
 class AccountCreateCommand extends Command {
   COMMAND_NAME = 'signup <password>';
 

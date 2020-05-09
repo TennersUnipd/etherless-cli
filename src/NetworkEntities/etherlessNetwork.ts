@@ -1,3 +1,8 @@
+/**
+ * @file etherlessNetwork.ts
+ * @class EtherlessNetwork
+ * @package NetworkEntities
+ */
 import Web3 from 'web3';
 
 import { WebsocketProvider } from 'web3-providers-ws';
@@ -8,6 +13,11 @@ import axios from 'axios';
 
 import NetworkInterface from './networkInterface';
 
+/**
+ * @class
+ * @implements NetworkInterface
+ * This class implements NetworkInterface using web3
+ */
 export default class EtherlessNetwork extends NetworkInterface {
   private web3: Web3;
 

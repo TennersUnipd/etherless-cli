@@ -5,6 +5,11 @@
  */
 import { Command, CommandInputs } from './command';
 
+/**
+ * @class
+ * @extends Command
+ * Implements the login command
+ */
 class AccountLoginCommand extends Command {
   COMMAND_NAME = 'login <privateKey> <password>';
 

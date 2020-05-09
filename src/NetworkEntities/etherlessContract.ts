@@ -1,7 +1,7 @@
 /**
  * @file etherlessContract.ts
  * @class EtherlessContract
- * @package NetworkFacade
+ * @package NetworkEntities
  */
 import { Contract } from 'web3-eth-contract';
 import { AbiItem } from 'web3-utils';

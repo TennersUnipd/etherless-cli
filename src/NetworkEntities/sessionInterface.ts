@@ -1,7 +1,9 @@
 /**
- * @author Tenners
  * SessionInterface is the contract that defines which function every session object should have
  * @class SessionInterface
+ * @file sessionInterface.ts
+ * @package NetworkEntities
+ * @interface
  *
  */
 export default abstract class SessionInterface {

@@ -1,5 +1,15 @@
+/**
+ * @file logoutCommand.ts
+ * @class AccountLogoutCommand
+ * @package CommandEntities
+ */
 import { Command } from './command';
 
+/**
+ * @class
+ * @extends Command
+ * Implements the logout command
+ */
 export default class AccountLogoutCommand extends Command {
   COMMAND_NAME = 'logout';
 

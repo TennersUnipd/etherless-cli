@@ -5,6 +5,11 @@
  */
 import { Command, CommandInputs } from './command';
 
+/**
+ * @class
+ * @extends Command
+ * Implements the find command
+ */
 class FindCommand extends Command {
   COMMAND_NAME = 'find <function>';
 

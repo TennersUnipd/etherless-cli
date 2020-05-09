@@ -1,6 +1,8 @@
 /**
  * @class NetworkUtils
- * This staic class is a utility class that inizialize the NetworkFacade
+ * @file networkUtils.ts
+ * @package NetworkEntities
+ * This static class is a utility class that inizialize the NetworkFacade
  */
 import { AbiItem } from 'web3-utils';
 import Web3 from 'web3';
@@ -11,10 +13,6 @@ import EtherlessContract from './etherlessContract';
 import EtherlessNetwork from './etherlessNetwork';
 import EtherlessSession from './etherlessSession';
 
-/**
- * @class NetworkUtils
- * This staic class is a utility class that inizialize the NetworkFacade
- */
 export default class NetworkUtils {
   static facade: NetworkFacade;
 
