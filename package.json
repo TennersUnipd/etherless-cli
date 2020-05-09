@@ -3,7 +3,7 @@
   "version": "0.15.20",
   "description": "Our Etherless CLI client",
   "scripts": {
-    "buikd": "tsc",
+    "build": "tsc",
     "lint": "eslint src/**/*.ts --fix",
     "test": "mocha -r ts-node/register \"tests/**/*.ts\""
   },
