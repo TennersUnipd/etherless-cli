@@ -41,7 +41,6 @@ export default abstract class NetworkInterface {
   /**
    * @function uploadFunction
    * @param fileBuffer
-   * @param ename
    * @param endpoint
    *  this method is used for postRequest with json body.
    */

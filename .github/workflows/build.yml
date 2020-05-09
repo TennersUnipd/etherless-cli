@@ -8,7 +8,7 @@ on: [push, pull_request]
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
   # This workflow contains a single job called "build"
-  CC:
+  Build:
     # The type of runner that the job will run on
     runs-on: ubuntu-latest
 
@@ -19,16 +19,12 @@ jobs:
     - uses: actions/setup-node@v1
       with:
           node-version: '12.x'
-    - run: sudo apt-get install pandoc      
     - run: npm install -g typescript@3.6
     - run: npm install -g ts-node
-    - run: npm install -g mocha
-    - run: npm install -g chai
-    - run: npm install -g nyc
     - run: npm install
-    - run: pandoc -s -t man man/etherless.md -o man/etherless.1
     - run: npm run build
+    - run: npm pack
 
     - uses: actions/upload-artifact@v2
       with:
-        path: ./*.tgz
+        path: '*.tgz'
