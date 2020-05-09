@@ -3,7 +3,7 @@
  *
  * @interface
  * @class ContractInterface
- * @memberof Network
+ * @package NetworkEntities
  * This Interface defines all the method that a ContractInterface should implements
  */
 export abstract class ContractInterface {
@@ -45,17 +45,11 @@ export abstract class ContractInterface {
   public abstract getFunctionTransaction(request: FunctionRequest): Promise<Transaction>;
 
   /**
-   * @abstract
-   * @function getLog
-   * @param address address to use as filter for research of past transaction
-   * this method retrieve from the network all the history of a specific address
-   */
-  public abstract getLog(address: string): Promise<string[]>;
-
-  /**
-   *
+   * @function decodeResponse
    * @param requested
    * @param encodedResult
+   * @return the decoded response
+   * get in input the function with the relative output and decode the ABI response
    */
   public abstract decodeResponse(requested: string, encodedResult: any): any;
 
@@ -69,12 +63,17 @@ export abstract class ContractInterface {
   public abstract getSignal(signalName: string, id: string): Promise<unknown>;
 
   /**
-   *
+   * @function getTopic
    * @param functionName
+   * @return the topic about the function requested
    */
   public abstract getTopic(functionName: string): string;
 }
 
+/**
+ * @struct
+ * defines the data structure of a transaction
+ */
 export interface Transaction {
   from: string;
   to: string;
@@ -83,6 +82,10 @@ export interface Transaction {
   value?: any;
 }
 
+/**
+ * @struct
+ * defines the data structure for a request of execution of a contract function.
+ */
 export interface FunctionRequest {
   userAddress: string;
   functionName: string;

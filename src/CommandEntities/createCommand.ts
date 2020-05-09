@@ -1,12 +1,17 @@
+/**
+ * @file createCommand.ts
+ * @class CreateCommand
+ * @package CommandEntities
+ */
 import { FunctionDefinition } from 'src/NetworkEntities/networkFacade';
-
 import fs from 'fs';
-
-import Utils from '../utils';
-
 import { Command, CommandInputs } from './command';
 
-
+/**
+ * @class
+ * @extends Command
+ * Implements the create command
+ */
 export class CreateCommand extends Command {
   COMMAND_NAME = 'create <name> <description> <prototype> <cost> <file> <password>';
 
@@ -27,7 +32,9 @@ export class CreateCommand extends Command {
 
   // eslint-disable-next-line class-methods-use-this
   parseArgs(args: string[]): CommandInputs {
-    if (Number.isNaN(+args[3]) || (+args[3]) <= 0) {
+    if (args[1].length >= 50) {
+      throw new Error('Description too long');
+    } else if (Number.isNaN(+args[3]) || (+args[3]) <= 0) {
       throw new Error('Cost not valid, is not a number or is negative');
     } else if (!fs.existsSync(args[4])) {
       throw new Error('No exiting path');

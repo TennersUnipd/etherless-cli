@@ -1,3 +1,8 @@
+/**
+ * @file deleteCommand.ts
+ * @class DeleteCommand
+ * @package CommandEntities
+ */
 import { Command, CommandInputs } from './command';
 
 class DeleteCommand extends Command {

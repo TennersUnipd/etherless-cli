@@ -1,6 +1,16 @@
+/**
+ * @file runCommand.ts
+ * @class RunCommand
+ * @package CommandEntities
+ */
 import { Command, CommandInputs } from './command';
 
-class RunCommand extends Command {
+/**
+ * @class
+ * @extends Command
+ * extends the class command and implement the run command
+ */
+export default class RunCommand extends Command {
   COMMAND_NAME = 'run <functionName> <password> [parameters...]';
 
   COMMAND_ALIAS = 'r';
@@ -10,10 +20,8 @@ class RunCommand extends Command {
   static RESP_AWAIT_TIMEOUT = 60; // seconds
 
   exec(inputs: RunCommandInputs): Promise<any> {
-    // let timerId;
     return this.network.runFunction(inputs.name, inputs.parameters, inputs.password)
       .then((response) => {
-        // clearTimeout(timerId);
         let resparse;
         try {
           resparse = JSON.parse(response);
@@ -32,13 +40,6 @@ class RunCommand extends Command {
           },
         };
       });
-
-    // return Promise.race([
-    //   runPromise,
-    //   new Promise((reject) => {
-    //     timerId = setTimeout(() => reject(new Error('Execution timeout')), RunCommand.RESP_AWAIT_TIMEOUT * 1000);
-    //   }),
-    // ]);
   }
 
   // eslint-disable-next-line class-methods-use-this
@@ -54,5 +55,3 @@ interface RunCommandInputs extends CommandInputs {
   parameters: string;
   password: string;
 }
-
-export default RunCommand;

@@ -14,10 +14,9 @@ export default class EtherlessNetwork extends NetworkInterface {
   private awsAddress: string;
 
   /**
-   * constructor
-   *
-   * @param {any} provider web3 instance
-   * @param {string} awsAddress lambda endpoint
+   * @constructor
+   * @param provider web3 instance
+   * @param awsAddress lambda endpoint
    */
   public constructor(provider: any, awsAddress: string) {
     super();

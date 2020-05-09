@@ -1,7 +1,7 @@
 /**
  * @author Tenners
  * SessionInterface is the contract that defines which function every session object should have
- * @Class SessionInterface
+ * @class SessionInterface
  *
  */
 export default abstract class SessionInterface {

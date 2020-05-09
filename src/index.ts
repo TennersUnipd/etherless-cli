@@ -16,13 +16,11 @@ import NetworkUtils from './NetworkEntities/networkUtils';
 
 NetworkUtils.getEtherlessNetworkFacadeInstance()
   .catch(console.error)
-  .then((network: NetworkFacade) => {
-    // TODO: add decorator?
+  .then((network: NetworkFacade) => { // initialize the commands
     const commands = [
       ListCommand,
       AccountCreateCommand,
       FindCommand,
-      // TestCommand,
       AccountLogoutCommand,
       AccountLoginCommand,
       RunCommand,
@@ -31,7 +29,6 @@ NetworkUtils.getEtherlessNetworkFacadeInstance()
       DeleteCommand,
       LogCommand,
       UpdateCommand,
-      // TestCommand,
     ];
 
     Commander.config();

@@ -1,6 +1,6 @@
 import { Command } from './command';
 
-class AccountLogoutCommand extends Command {
+export default class AccountLogoutCommand extends Command {
   COMMAND_NAME = 'logout';
 
   COMMAND_ALIAS = 'lo';
@@ -10,10 +10,8 @@ class AccountLogoutCommand extends Command {
   // eslint-disable-next-line class-methods-use-this
   exec(): Promise<string> {
     this.network.logout();
-    return new Promise<any>((resolve) => {
+    return new Promise((resolve) => {
       resolve('Logged out');
     });
   }
 }
-
-export default AccountLogoutCommand;

@@ -1,13 +1,19 @@
+/**
+ * @file etherlessContract.ts
+ * @class EtherlessContract
+ * @package NetworkFacade
+ */
 import { Contract } from 'web3-eth-contract';
-
-import { AbiItem, AbiInput } from 'web3-utils';
-import { Log } from 'web3-core';
-
-
+import { AbiItem } from 'web3-utils';
 import Web3 from 'web3';
 import { ContractInterface, Transaction, FunctionRequest } from './contractInterface';
 
-class EtherlessContract extends ContractInterface {
+/**
+ * @class
+ * @implements ContractInterface
+ * This class implements ContractInterface using web3
+ */
+export default class EtherlessContract extends ContractInterface {
   private readonly GASBASE = 1000000;
 
   private contract: Contract;
@@ -19,7 +25,7 @@ class EtherlessContract extends ContractInterface {
   private commandList: AbiItem[];
 
   /**
-   *
+   * @constructor
    * @param ABI
    * @param contractAddress
    * @param provider
@@ -32,12 +38,6 @@ class EtherlessContract extends ContractInterface {
     this.address = contractAddress;
   }
 
-  /**
-   * @param userAddress
-   * @param requested
-   * @param request
-   * @param args
-   */
   public async estimateGasCost(request: FunctionRequest): Promise<number> {
     return new Promise((resolve, reject) => {
       this.web3.eth.estimateGas({
@@ -61,17 +61,18 @@ class EtherlessContract extends ContractInterface {
     return this.web3.eth.abi.decodeParameters(out, encodedResult)[0];
   }
 
+  /**
+   * @function getAbiEncode
+   * @param requested
+   * @param args
+   * return the encoded string that represent the function abi
+   */
   private getAbiEncode(requested: string, args: string[]): string {
     const functionAbi = this.contract
       .options.jsonInterface.filter((element) => element.name === requested)[0];
     return this.web3.eth.abi.encodeFunctionCall(functionAbi, args);
   }
 
-  /**
-   *
-   * @param signal
-   * @param id
-   */
   public getSignal(signal: string, id: string): Promise<any> {
     return new Promise<string>((resolve, reject) => {
       this.contract.once(signal, { filter: { _identifier: id } }, (err: any, event: any) => {
@@ -84,9 +85,6 @@ class EtherlessContract extends ContractInterface {
     });
   }
 
-  /**
-   *
-   */
   public getListOfFunctions(): string[] {
     const toReturn: string[] = [];
     this.commandList.filter((elem) => {
@@ -99,28 +97,12 @@ class EtherlessContract extends ContractInterface {
     return toReturn;
   }
 
-  /**
-   *
-   * @param requested
-   */
   public isTheFunctionPayable(requested: string): boolean {
     const item: AbiItem[] = this.commandList.filter((ele) => ele.name === requested);
     if (item[0] === undefined) throw new Error('the called function is missing');
     return item[0].stateMutability !== 'view';
   }
 
-  /**
-   * @param userAddress
-   */
-  public async getLog(userAddress: string): Promise<string[]> {
-    return new Promise((resolve, reject) => {
-      this.web3.eth.getTransactionCount(userAddress)
-        .then((value) => {
-          resolve([value.toString()]);
-        })
-        .catch((err) => { reject(err); });
-    });
-  }
 
   /**
    * @param userAddress
@@ -136,7 +118,10 @@ class EtherlessContract extends ContractInterface {
   }
 
   /**
+   * @function
    * @param request
+   * @return Promise<Transaction>
+   * retrieve the transaction about the function requested
    */
   private async prepareTransaction(request: FunctionRequest): Promise<Transaction> {
     return new Promise((resolve, reject) => {
@@ -160,5 +145,3 @@ class EtherlessContract extends ContractInterface {
     return element;
   }
 }
-
-export default EtherlessContract;

@@ -1,6 +1,17 @@
+/**
+ * @file setCommands.ts
+ * @class SetCommand
+ * @package CommandEntities
+ */
 import { Command, CommandInputs } from './command';
 
-class SetCommand extends Command {
+/**
+ * @class
+ * @extends Command
+ * extends the class command and implement the set command
+ */
+
+export default class SetCommand extends Command {
   COMMAND_NAME = 'set <functionName> <property> <value> <password>';
 
   COMMAND_ALIAS = 's';
@@ -9,7 +20,7 @@ class SetCommand extends Command {
 
 
   exec(inputs: SetCommandInputs): Promise<string> {
-    return this.network.setFunctionProperty(inputs.function, inputs.property, inputs.newValue, inputs.password).then((response) => 'Done');
+    return this.network.setFunctionProperty(inputs.function, inputs.property, inputs.newValue, inputs.password).then(() => 'Done');
   }
 
   // eslint-disable-next-line class-methods-use-this
@@ -26,5 +37,3 @@ interface SetCommandInputs extends CommandInputs {
   newValue: string;
   password: string;
 }
-
-export default SetCommand;

@@ -1,3 +1,7 @@
+/**
+ * @class NetworkUtils
+ * This staic class is a utility class that inizialize the NetworkFacade
+ */
 import { AbiItem } from 'web3-utils';
 import Web3 from 'web3';
 import axios from 'axios';
@@ -7,24 +11,24 @@ import EtherlessContract from './etherlessContract';
 import EtherlessNetwork from './etherlessNetwork';
 import EtherlessSession from './etherlessSession';
 
-export interface EtherscanResponse {
-  status: string;
-  message: string;
-  result: string;
-}
+/**
+ * @class NetworkUtils
+ * This staic class is a utility class that inizialize the NetworkFacade
+ */
 export default class NetworkUtils {
   static facade: NetworkFacade;
 
   /**
    * @function getEtherlessNetworkFacadeInstance
-   * @returns {NetworkFacade} instance
-   *  this method initialize the NetworkFacade and returns an instance
+   * @returns instance of @NetworkFace
+   * this method initialize the NetworkFacade and returns an instance
    */
   static getEtherlessNetworkFacadeInstance(): Promise<NetworkFacade> {
     if (this.facade === undefined) {
       return NetworkUtils.getAbi(Utils.config.CONTRACT_ADDRESS).then((contract) => {
         const provider = new Web3(Utils.config.PROVIDER_API);
-        const eNetwork: EtherlessNetwork = new EtherlessNetwork(provider, Utils.config.AWS_ENDPOINT);
+        const eNetwork: EtherlessNetwork = new EtherlessNetwork(provider,
+          Utils.config.AWS_ENDPOINT);
         const eContract: EtherlessContract = new EtherlessContract(
           contract as unknown as AbiItem[],
           Utils.config.CONTRACT_ADDRESS,
@@ -42,8 +46,9 @@ export default class NetworkUtils {
 
   /**
    * @function updateAbi
-   * @param contractAddress
-   * @param destinationPath
+   * @param contractAddress contract address to download
+   * @param destinationPath where the ABI will be saved
+   * @return
    *  this method downloads the new ABI file from etherscan.io
    */
   private static async updateAbi(contractAddress: string, destinationPath: string): Promise<JSON> {
@@ -71,9 +76,9 @@ export default class NetworkUtils {
 
   /**
    * @function getAbi
-   * @param {string} contractAddress contract address to download
-   * @returns {Promise<JSON>}
-   * this method loads the ABI file from local storage
+   * @param contractAddress contract address to download
+   * @returns a Promise<JSON> that represents the ABI file
+   * This function checks if the ABI is due for an update or returs the local one
    */
   public static getAbi(contractAddress: string): Promise<JSON> {
     if (contractAddress !== Utils.localStorage.getItem('lastAbiAddress')) {

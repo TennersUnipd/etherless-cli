@@ -1,3 +1,8 @@
+/**
+ * @file findCommand.ts
+ * @class FindCommand
+ * @package CommandEntities
+ */
 import { Command, CommandInputs } from './command';
 
 class FindCommand extends Command {

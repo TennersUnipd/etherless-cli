@@ -1,3 +1,8 @@
+/**
+ * @file loginCommand.ts
+ * @class AccountLoginCommand
+ * @package CommandEntities
+ */
 import { Command, CommandInputs } from './command';
 
 class AccountLoginCommand extends Command {
