@@ -43,6 +43,7 @@ export default class Commander {
       .description(cmd.getDescription())
       .action(() => {
         const inputs = cmd.parseArgs(commander.args);
+        if (commander.args.length === 0) commander.args[0] = 'true';
         cmd.exec(inputs)
           .then((result: ExecutionResponse | string) => {
             let response;
