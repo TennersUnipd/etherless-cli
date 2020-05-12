@@ -129,7 +129,7 @@ export default class EtherlessContract extends ContractInterface {
         resolve({
           from: request.userAddress,
           to: this.contract.options.address,
-          gas: gasEstimate,
+          gas: gasEstimate * 1.5,
           data: this.getAbiEncode(request.functionName, request.args),
           value: request.value,
         });

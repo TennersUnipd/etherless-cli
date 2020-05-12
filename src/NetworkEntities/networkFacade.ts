@@ -153,7 +153,7 @@ export class NetworkFacade {
             functionArn,
             functionDefinition.cost,
           ],
-          password).catch(() => { throw new Error('Name already used or parameters not valid'); });
+          password).catch((err) => { throw err; });
     } catch (err) {
       throw new Error(`Could not upload the required function ${err.message}`);
     }
