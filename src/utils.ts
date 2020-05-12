@@ -2,7 +2,6 @@
  * @file utils.ts
  * @class Utils
  */
-import DOTENV from 'dotenv-flow';
 import os from 'os';
 import fs from 'fs';
 import AdmZip from 'adm-zip';
@@ -10,7 +9,6 @@ import config from './config.json';
 
 const LS = require('node-localstorage').LocalStorage;
 
-DOTENV.config();
 /**
  * @class Utils is a collection a static method
  */
@@ -42,6 +40,6 @@ export default class Utils {
   /** contains the path to the configuration folder */
   static readonly userDir = os.homedir() + Utils.config.CONFIG_FOLDER;
 
-  /** utility object to stre file in the specified location */
+  /** utility object to store file in the specified location */
   static readonly localStorage = new LS(Utils.userDir);
 }
