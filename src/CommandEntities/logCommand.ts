@@ -22,6 +22,7 @@ export default class LogCommand extends Command {
   exec(): Promise<string> {
     return new Promise((resolve, rejects) => {
       try {
+        if (!this.network.isUserSignedIn()) throw new Error('User not logged');
         let logResult = '';
         const logsContent = JSON.parse(JSON.stringify(Logger.getLogs()));
         logsContent.forEach((item) => {

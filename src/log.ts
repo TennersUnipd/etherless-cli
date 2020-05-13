@@ -11,6 +11,7 @@ export default class Logger {
 
   private static location = 'logs.json';
 
+
   /**
    * adds log to the list
    * @param log a log object

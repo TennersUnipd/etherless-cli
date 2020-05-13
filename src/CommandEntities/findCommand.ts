@@ -24,7 +24,7 @@ class FindCommand extends Command {
         \nPrototype: ${command.prototype}
         \nDescription: ${command.description}
         \nOwner: ${command.owner}\n`)
-      .catch(() => 'Function not found');
+      .catch((error) => { throw error; });
   }
 
   // eslint-disable-next-line class-methods-use-this

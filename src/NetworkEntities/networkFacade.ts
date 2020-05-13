@@ -273,6 +273,14 @@ export class NetworkFacade {
   }
 
   /**
+   * @function isUserSignedIn
+   *  verify if user is logged in
+   */
+  public isUserSignedIn(): boolean {
+    return this.session.isUserSignedIn();
+  }
+
+  /**
    * @function disconnect
    *  disconnects the application from the network.
    */
