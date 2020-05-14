@@ -128,7 +128,6 @@ export default class EtherlessContract extends ContractInterface {
     return new Promise((resolve, reject) => {
       this.estimateGasCost(request).then((gasEstimate: number) => {
         resolve({
-          nonce: lastNonce + 1,
           from: request.userAddress,
           to: this.contract.options.address,
           gas: gasEstimate * 2,

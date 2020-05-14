@@ -76,7 +76,6 @@ export abstract class ContractInterface {
  * defines the data structure of a transaction
  */
 export interface Transaction {
-  nonce: number;
   from: string;
   to: string;
   gas: number;
