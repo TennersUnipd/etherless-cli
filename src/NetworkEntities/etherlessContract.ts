@@ -96,18 +96,6 @@ export default class EtherlessContract extends ContractInterface {
     });
   }
 
-  public getListOfFunctions(): string[] {
-    const toReturn: string[] = [];
-    (this.commandList.filter((elem) => {
-      if (elem.name !== undefined && !elem.name.includes('(')) {
-        toReturn.push(elem.name);
-        return true;
-      }
-      return false;
-    }));
-    return toReturn;
-  }
-
   public isTheFunctionPayable(requested: string): boolean {
     const item: AbiItem[] = this.commandList.filter((ele) => ele.name === requested);
     if (item[0] === undefined) throw new Error('the called function is missing');

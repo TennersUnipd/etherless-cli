@@ -83,15 +83,6 @@ export class NetworkFacade {
   }
 
   /**
-   * @function getListOfFunctions
-   * @returns an array of strings that represents al the function contained in the contract
-   * retrieves the list of the available Contract's methods.
-   */
-  public getListOfFunctions(): string[] {
-    return this.contract.getListOfFunctions();
-  }
-
-  /**
    * @function getUserAccount
    * @param password needed for encryption
    * @returns the user's credential
