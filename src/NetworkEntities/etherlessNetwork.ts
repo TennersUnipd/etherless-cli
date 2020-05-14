@@ -36,7 +36,7 @@ export default class EtherlessNetwork extends NetworkInterface {
 
   public disconnect(): void {
     if (this.web3.currentProvider instanceof Web3.providers.WebsocketProvider) {
-      (this.web3.currentProvider as WebsocketProvider).disconnect(1000, 'execution ended');
+      this.web3.currentProvider.disconnect(1000, 'execution ended');
     }
   }
 
