@@ -124,7 +124,7 @@ export class NetworkFacade {
       const signedTransaction = await this.session.signTransaction(transaction, password);
       return this.network.sendTransaction(signedTransaction);
     }
-    return this.network.callMethod(transaction, userAddress)
+    return this.network.callMethod(transaction)
       .then((result) => this.contract.decodeResponse(functionName, result));
   }
 

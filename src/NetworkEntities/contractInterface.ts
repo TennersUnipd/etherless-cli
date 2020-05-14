@@ -29,7 +29,6 @@ export abstract class ContractInterface {
   /**
    * @abstract
    * @function estimateGasCost
-   * @param userAddress
    * @param requested the name of the function requested
    * return the estimated gas cost of running a function
    */

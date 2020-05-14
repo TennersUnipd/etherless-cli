@@ -38,6 +38,11 @@ export default class EtherlessContract extends ContractInterface {
     this.address = contractAddress;
   }
 
+  /**
+   * @function estimateGasCost
+   * @param request
+   * return the estimated gas of the function
+   */
   public async estimateGasCost(request: FunctionRequest): Promise<number> {
     return new Promise((resolve, reject) => {
       this.web3.eth.estimateGas({
@@ -56,6 +61,12 @@ export default class EtherlessContract extends ContractInterface {
     });
   }
 
+  /**
+   * @function decodeResponse
+   * @param requested
+   * @param encodedResult
+   * return the object of the JSON
+   */
   public decodeResponse(requested: string, encodedResult: any): any {
     const out = this.commandList.filter((ele) => ele.name === requested)[0].outputs;
     return this.web3.eth.abi.decodeParameters(out, encodedResult)[0];
@@ -105,10 +116,7 @@ export default class EtherlessContract extends ContractInterface {
 
 
   /**
-   * @param userAddress
-   * @param requested
    * @param request
-   * @param args
    */
   public async getFunctionTransaction(request: FunctionRequest): Promise<Transaction> {
     if (this.commandList.find((fn) => fn.name === request.functionName) === undefined) {
