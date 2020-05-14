@@ -35,7 +35,7 @@ export default class Utils {
   }
 
   /** contains the configuration config.json */
-  static readonly config = config;
+  static readonly config = config.personalStaging;
 
   /** contains the path to the configuration folder */
   static readonly userDir = os.homedir() + Utils.config.CONFIG_FOLDER;

@@ -3,5 +3,12 @@
     "CONFIG_FOLDER": "/.config/etherless",
     "CONTRACT_ADDRESS": "0x7786d4CcA496C5F7C4FB379665A87F8444998fC9",
     "ETHSCAN": "RKVYFCZNF8HW6MSGXFDNIV7E6Q9BZQSSTI",
-    "AWS_ENDPOINT": "https://gxr5f9tkyg.execute-api.us-east-1.amazonaws.com/dev/"
+    "AWS_ENDPOINT": "https://gxr5f9tkyg.execute-api.us-east-1.amazonaws.com/dev/",
+    "personalStaging" : {
+      "PROVIDER_API": "ws://taverna.pettinato.eu:8545",
+      "CONFIG_FOLDER": "/.config/etherless",
+      "CONTRACT_ADDRESS": "0x14f5aBCa0df488F9CF693B85F3ECae3FE4658F7c",
+      "ETHSCAN": "RKVYFCZNF8HW6MSGXFDNIV7E6Q9BZQSSTI",
+      "AWS_ENDPOINT": "https://gxr5f9tkyg.execute-api.us-east-1.amazonaws.com/dev/"    
+    }
 }
