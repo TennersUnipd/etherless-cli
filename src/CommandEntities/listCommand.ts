@@ -1,5 +1,15 @@
+/**
+ * @file listCommand.ts
+ * @class ListCommand
+ * @package CommandEntities
+ */
 import { Command } from './command';
 
+/**
+ * @class
+ * @extends Command
+ * Implements the list command
+ */
 class ListCommand extends Command {
   COMMAND_NAME = 'list';
 

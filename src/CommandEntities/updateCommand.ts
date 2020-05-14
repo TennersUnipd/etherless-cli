@@ -1,7 +1,16 @@
+/**
+ * @file updateCommands.ts
+ * @class UpdateCommand
+ * @package CommandEntities
+ */
 import fs from 'fs';
 import { Command, CommandInputs } from './command';
 
-
+/**
+ * @class
+ * @extends Command
+ * Implements the update command
+ */
 export class UpdateCommand extends Command {
   COMMAND_NAME = 'update <function> <file>';
 

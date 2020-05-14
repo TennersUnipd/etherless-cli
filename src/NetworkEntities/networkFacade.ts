@@ -1,3 +1,8 @@
+/**
+ * @file networkFacade.ts
+ * @class NetworkFacade
+ * @package NetworkEntities
+ */
 import Utils from '../utils';
 
 import { ContractInterface } from './contractInterface';
@@ -6,8 +11,8 @@ import SessionInterface from './sessionInterface';
 
 
 /**
- * @class NetworkComponentsFacade
- * @class the constructor of this class shouldn't be called.
+ * @class NetworkFacade
+ * This class is a facade of the network
  */
 export class NetworkFacade {
   // group commands under common structure (like an enum mapping to strings)
@@ -37,9 +42,9 @@ export class NetworkFacade {
 
   /**
    * @function constructor this method should not be called outside the network scope
-   * @param {NetworkInterface} network instance of NetworkInterface
-   * @param {SessionInterface} session instance of SessionInterface
-   * @param {ContractInterface} contract instance of ContractInterface
+   * @param network instance of NetworkInterface
+   * @param session instance of SessionInterface
+   * @param contract instance of ContractInterface
    */
   constructor(network: NetworkInterface, session: SessionInterface, contract: ContractInterface) {
     this.network = network;
@@ -58,8 +63,8 @@ export class NetworkFacade {
 
   /**
    * @function signup
-   * @param {string} password required for registration
-   * @returns {boolean}
+   * @param password required for registration
+   * @returns true when the user is logged successfully
    * provides the functionality or registration to the service
    */
   public signup(password: string): boolean {
@@ -68,9 +73,9 @@ export class NetworkFacade {
 
   /**
    * @function logon
-   * @param {string} privateKey private key for ethereum
-   * @param {string} password password required for logon
-   * @returns {boolean}
+   * @param privateKey private key for ethereum
+   * @param password password required for logon
+   * @returns true when the user is logged successfully
    * provides the logon service.
    */
   public logon(privateKey: string, password: string): boolean {
@@ -78,18 +83,9 @@ export class NetworkFacade {
   }
 
   /**
-   * @function getListOfFunctions
-   * @returns {string[]} an array of strings that represents the history of the user;
-   * retrieves the list of the available Contract's methods.
-   */
-  public getListOfFunctions(): string[] {
-    return this.contract.getListOfFunctions();
-  }
-
-  /**
    * @function getUserAccount
-   * @param {string} password needed for encryption
-   * @returns {[string, string]} the user's credential
+   * @param password needed for encryption
+   * @returns the user's credential
    */
   public getUserAccount(password: string): [string, string] {
     return this.session.getAccount(password);
@@ -97,10 +93,10 @@ export class NetworkFacade {
 
   /**
    * @function callFunction
-   * @param {string} functionName the name of the contract's method to call
-   * @param {string[]} args parameters needed for execution
-   * @param {string} password password needed for signing the transaction
-   * @param {number} value defines how much eth transfer
+   * @param functionName the name of the contract's method to call
+   * @param args parameters needed for execution
+   * @param password password needed for signing the transaction
+   * @param value defines how much eth transfer
    * executes the function on the ethereum network.
    * DOES NOT EXECUTE USER LOADED FUNCTION
    */
@@ -119,7 +115,7 @@ export class NetworkFacade {
       const signedTransaction = await this.session.signTransaction(transaction, password);
       return this.network.sendTransaction(signedTransaction);
     }
-    return this.network.callMethod(transaction, userAddress)
+    return this.network.callMethod(transaction)
       .then((result) => this.contract.decodeResponse(functionName, result));
   }
 
@@ -127,7 +123,7 @@ export class NetworkFacade {
    * @function uploadFunction
    * @param functionDefinition
    * @param password
-   *  uploads on the AWS endpoint the required function and register it on the eth network.
+   * uploads on the AWS endpoint the required function and registers it on the eth network.
    */
   public async createFunction(functionDefinition: FunctionDefinition,
     password?: string): Promise<any> {
@@ -136,7 +132,8 @@ export class NetworkFacade {
     const bufferFile = Utils.compressFile(functionDefinition.filePath, resourceName);
     const req = { zip: bufferFile, name: resourceName };
     try {
-      const uploadResult = await this.network.postRequest(NetworkFacade.createFunctionCommand, JSON.stringify(req));
+      const uploadResult = await this.network
+        .postRequest(NetworkFacade.createFunctionCommand, JSON.stringify(req));
       const functionArn = JSON.parse(uploadResult[1]).FunctionArn;
       return this
         .callFunction(NetworkFacade.createFunctionCommand,
@@ -147,7 +144,7 @@ export class NetworkFacade {
             functionArn,
             functionDefinition.cost,
           ],
-          password).catch(() => { throw new Error('Name already used or parameters not valid'); });
+          password).catch((err) => { throw err; });
     } catch (err) {
       throw new Error(`Could not upload the required function ${err.message}`);
     }
@@ -209,7 +206,10 @@ export class NetworkFacade {
             })
             .catch(reject);
         })
-        .catch((err) => { reject(err); });
+        .catch((err) => {
+          this.disconnect();
+          reject(err);
+        });
     });
   }
 
@@ -272,6 +272,10 @@ export class NetworkFacade {
   }
 }
 
+/**
+ * @interface
+ * defines the data structure for a request of a new function to upload
+ */
 export interface FunctionDefinition {
   fnName: string;
   description: string;

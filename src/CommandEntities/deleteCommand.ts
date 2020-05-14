@@ -1,5 +1,15 @@
+/**
+ * @file deleteCommand.ts
+ * @class DeleteCommand
+ * @package CommandEntities
+ */
 import { Command, CommandInputs } from './command';
 
+/**
+ * @class
+ * @extends Command
+ * Implements the delete command
+ */
 class DeleteCommand extends Command {
   COMMAND_NAME = 'delete <functionName> <password>';
 
@@ -13,7 +23,7 @@ class DeleteCommand extends Command {
   }
 
   // eslint-disable-next-line class-methods-use-this
-  parseArgs(args: string[]): CommandInputs {
+  parseArgs(args: string[]): DeleteCommandInputs {
     return { function: args[0], password: args[1] };
   }
 }

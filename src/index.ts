@@ -16,13 +16,11 @@ import NetworkUtils from './NetworkEntities/networkUtils';
 
 NetworkUtils.getEtherlessNetworkFacadeInstance()
   .catch(console.error)
-  .then((network: NetworkFacade) => {
-    // TODO: add decorator?
+  .then((network: NetworkFacade) => { // initialize the commands
     const commands = [
       ListCommand,
       AccountCreateCommand,
       FindCommand,
-      // TestCommand,
       AccountLogoutCommand,
       AccountLoginCommand,
       RunCommand,
@@ -31,7 +29,6 @@ NetworkUtils.getEtherlessNetworkFacadeInstance()
       DeleteCommand,
       LogCommand,
       UpdateCommand,
-      // TestCommand,
     ];
 
     Commander.config();
@@ -41,6 +38,7 @@ NetworkUtils.getEtherlessNetworkFacadeInstance()
     try {
       Commander.start();
     } catch (error) {
+      // eslint-disable-next-line no-console
       console.error(`${error.message} \nFor other informations about the command type etherless -h`);
       network.disconnect();
     }

@@ -30,7 +30,7 @@ describe('testing the network implementation', () => {
     });
   });
   it('testing callable()', () => {
-    network.callMethod(sv.transactionEmpty, sv.dummyAddress).then((result) => {
+    network.callMethod(sv.transactionEmpty).then((result) => {
       assert.isNull(result, 'the return is wrong');
     }).catch((err) => {
       assert.fail(err);

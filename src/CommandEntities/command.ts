@@ -7,6 +7,11 @@
  */
 import { NetworkFacade } from '../NetworkEntities/networkFacade';
 
+/**
+ * @class
+ * @abstract
+ * This class defines how a command should behave
+ */
 export abstract class Command {
   protected COMMAND_NAME = 'COMMAND';
 
@@ -22,7 +27,6 @@ export abstract class Command {
    * @param inputs required for the correct execution
    *  This abstract method is called for every execution.
    */
-
   abstract exec(inputs: CommandInputs): Promise<ExecutionResponse | string>;
 
 
@@ -86,14 +90,17 @@ export abstract class Command {
   }
 }
 
-
+/**
+ * @struc ExecutionResponse
+ * return the result of execution
+ */
 export interface ExecutionResponse {
   response: string;
   logData?: object;
 }
 
 /**
- * @interface CommandInputs
+ * @struc CommandInputs
  *  This interface is used as a structure to define the input for every command.
  */
 // eslint-disable-next-line @typescript-eslint/no-empty-interface

@@ -1,20 +1,24 @@
 /**
- * @class SessionEtherlessSmart
- * @implements SessionInterface
- * @class the constructor of this class should be not called outside the network package
+ * @file etherlessSession.ts
+ * @class EtherlessSession
+ * @package NetworkEntities
  */
 
 import Web3 from 'web3';
 
 import {
-  RLPEncodedTransaction, Account, EncryptedKeystoreV3Json, SignedTransaction,
+  Account, EncryptedKeystoreV3Json, SignedTransaction,
 } from 'web3-core';
 
 import Utils from '../utils';
 
 import SessionInterface from './sessionInterface';
 
-
+/**
+ * @class
+ * @implements SessionInterface
+ * This class implements SessionInterface
+ */
 export default class EtherlessSession extends SessionInterface {
   static readonly STORAGE_WALLET_KEY = 'etherless_wallet';
 

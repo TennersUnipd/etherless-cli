@@ -20,11 +20,6 @@ const web3 = new Web3(provider);
 describe('testing the contracts implementation', () => {
   const contract: ContractInterface = new EtherlessContract(variables.dummyAbi,
     variables.contractAddress, web3);
-  it('testing getListOfFunctions', () => {
-    const result = contract.getListOfFunctions();
-    assert.isArray(result, 'The function returns the wrong type');
-    assert.include(result, 'listFunctions');
-  });
   it('testing isTheFunctionPayable with a payable function', () => {
     const result = contract.isTheFunctionPayable('runFunction');
     assert.isTrue(result, 'isTheFunctionPayable is not working');
