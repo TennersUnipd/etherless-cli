@@ -6,7 +6,7 @@
  */
 import commander from 'commander';
 import { Command, ExecutionResponse } from './command';
-import Logger from '../log';
+import Logger from '../logger';
 
 /**
  * @class

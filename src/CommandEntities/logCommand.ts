@@ -4,7 +4,7 @@
  * @package CommandEntities
  */
 import { Command } from './command';
-import Logger from '../log';
+import Logger from '../logger';
 
 /**
  * @class
