@@ -120,7 +120,6 @@ export default class EtherlessContract extends ContractInterface {
    * retrieve the transaction about the function requested
    */
   private async prepareTransaction(request: FunctionRequest): Promise<Transaction> {
-    const lastNonce = await this.web3.eth.getTransactionCount(request.userAddress);
     return new Promise((resolve, reject) => {
       this.estimateGasCost(request).then((gasEstimate: number) => {
         resolve({
