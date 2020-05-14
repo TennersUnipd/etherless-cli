@@ -138,7 +138,7 @@ describe('testing networkFacade', () => {
         resolve(trs);
       }));
     mockito.when(mockedNetwork.callMethod)
-      .thenReturn((tr, adr) => new Promise((resolve) => { resolve('to be decoded'); }));
+      .thenReturn((tr) => new Promise((resolve) => { resolve('to be decoded'); }));
     mockito.when(mockedContract.decodeResponse)
       .thenReturn((req, result) => 'decoded');
     networkFacade.getAllLoadedFunction().then((result) => {
@@ -151,7 +151,7 @@ describe('testing networkFacade', () => {
         resolve(trs);
       }));
     mockito.when(mockedNetwork.callMethod)
-      .thenReturn((tr, adr) => new Promise((resolve) => { resolve('to be decoded'); }));
+      .thenReturn((tr) => new Promise((resolve) => { resolve('to be decoded'); }));
     mockito.when(mockedContract.decodeResponse)
       .thenReturn((req, result) => 'decoded');
     networkFacade.getAllLoadedFunction().then((result) => {
@@ -164,7 +164,7 @@ describe('testing networkFacade', () => {
         resolve(trs);
       }));
     mockito.when(mockedNetwork.callMethod)
-      .thenReturn((tr, adr) => new Promise((resolve) => { resolve('to be decoded'); }));
+      .thenReturn((tr) => new Promise((resolve) => { resolve('to be decoded'); }));
     mockito.when(mockedContract.decodeResponse)
       .thenReturn((req, result) => 'decoded');
     networkFacade.getAllLoadedFunction().then((result) => {
@@ -177,7 +177,7 @@ describe('testing networkFacade', () => {
         resolve(trs);
       }));
     mockito.when(mockedNetwork.callMethod)
-      .thenReturn((tr, adr) => new Promise((resolve) => { resolve('to be decoded'); }));
+      .thenReturn((tr) => new Promise((resolve) => { resolve('to be decoded'); }));
     mockito.when(mockedContract.decodeResponse)
       .thenReturn((req, result) => 10);
 
