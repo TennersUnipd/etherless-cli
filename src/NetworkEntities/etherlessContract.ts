@@ -87,13 +87,13 @@ export default class EtherlessContract extends ContractInterface {
 
   public getListOfFunctions(): string[] {
     const toReturn: string[] = [];
-    this.commandList.filter((elem) => {
+    (this.commandList.filter((elem) => {
       if (elem.name !== undefined && !elem.name.includes('(')) {
         toReturn.push(elem.name);
         return true;
       }
       return false;
-    });
+    }));
     return toReturn;
   }
 
