@@ -83,15 +83,6 @@ export class NetworkFacade {
   }
 
   /**
-   * @function getListOfFunctions
-   * @returns an array of strings that represents al the function contained in the contract
-   * retrieves the list of the available Contract's methods.
-   */
-  public getListOfFunctions(): string[] {
-    return this.contract.getListOfFunctions();
-  }
-
-  /**
    * @function getUserAccount
    * @param password needed for encryption
    * @returns the user's credential
@@ -124,7 +115,7 @@ export class NetworkFacade {
       const signedTransaction = await this.session.signTransaction(transaction, password);
       return this.network.sendTransaction(signedTransaction);
     }
-    return this.network.callMethod(transaction, userAddress)
+    return this.network.callMethod(transaction)
       .then((result) => this.contract.decodeResponse(functionName, result));
   }
 

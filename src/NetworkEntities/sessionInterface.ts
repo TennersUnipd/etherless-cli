@@ -18,7 +18,6 @@ export default abstract class SessionInterface {
   /**
    *  provides the logon functionality for external credential
    *
-   * @param address is required for the user identification
    * @param privateKey is required for verify the user identity
    * @param password needed for saving the credential and unlocking the account
    *

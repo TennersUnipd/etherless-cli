@@ -38,6 +38,11 @@ export default class EtherlessContract extends ContractInterface {
     this.address = contractAddress;
   }
 
+  /**
+   * @function estimateGasCost
+   * @param request
+   * return the estimated gas of the function
+   */
   public async estimateGasCost(request: FunctionRequest): Promise<number> {
     return new Promise((resolve, reject) => {
       this.web3.eth.estimateGas({
@@ -56,6 +61,12 @@ export default class EtherlessContract extends ContractInterface {
     });
   }
 
+  /**
+   * @function decodeResponse
+   * @param requested
+   * @param encodedResult
+   * return the object of the JSON
+   */
   public decodeResponse(requested: string, encodedResult: any): any {
     const out = this.commandList.filter((ele) => ele.name === requested)[0].outputs;
     return this.web3.eth.abi.decodeParameters(out, encodedResult)[0];
@@ -85,18 +96,6 @@ export default class EtherlessContract extends ContractInterface {
     });
   }
 
-  public getListOfFunctions(): string[] {
-    const toReturn: string[] = [];
-    this.commandList.filter((elem) => {
-      if (elem.name !== undefined && !elem.name.includes('(')) {
-        toReturn.push(elem.name);
-        return true;
-      }
-      return false;
-    });
-    return toReturn;
-  }
-
   public isTheFunctionPayable(requested: string): boolean {
     const item: AbiItem[] = this.commandList.filter((ele) => ele.name === requested);
     if (item[0] === undefined) throw new Error('the called function is missing');
@@ -105,10 +104,7 @@ export default class EtherlessContract extends ContractInterface {
 
 
   /**
-   * @param userAddress
-   * @param requested
    * @param request
-   * @param args
    */
   public async getFunctionTransaction(request: FunctionRequest): Promise<Transaction> {
     if (this.commandList.find((fn) => fn.name === request.functionName) === undefined) {

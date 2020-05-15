@@ -10,14 +10,6 @@
 export abstract class ContractInterface {
   /**
    * @abstract
-   * @function getListOfFunctions
-   * @returns string[]
-   * retrieves all the available contract's methods
-   */
-  public abstract getListOfFunctions(): string[];
-
-  /**
-   * @abstract
    * @function isTheFunctionPayable
    * @param requested the name of the function requested
    * @returns boolean true if the function is payable
@@ -29,7 +21,6 @@ export abstract class ContractInterface {
   /**
    * @abstract
    * @function estimateGasCost
-   * @param userAddress
    * @param requested the name of the function requested
    * return the estimated gas cost of running a function
    */

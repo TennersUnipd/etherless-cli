@@ -11,15 +11,6 @@ export default abstract class NetworkInterface {
    */
   public abstract disconnect(): void;
 
-  /**
-   *
-   * @function subscribeEvent
-   * @param contractAddress
-   * @param topic
-   * @param identifier
-   * @returns Promise<any>
-   */
-  public abstract subscribeEvent(contractAddress: string, topic: string): Promise<any>;
 
   /**
    * @function sendTransaction
@@ -32,11 +23,10 @@ export default abstract class NetworkInterface {
    * @abstract
    * @function callMethod
    * @param callable
-   * @param address
    * @returns a Promise that contain the result of the request
    *  this method is used to ask at the contract the execution of non payable methods
    */
-  public abstract callMethod(callable: any, address: string): Promise<any>;
+  public abstract callMethod(callable: any): Promise<any>;
 
   /**
    * @function uploadFunction

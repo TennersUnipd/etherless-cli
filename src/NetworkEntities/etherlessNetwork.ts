@@ -40,15 +40,6 @@ export default class EtherlessNetwork extends NetworkInterface {
     }
   }
 
-  public subscribeEvent(contractAddress: string, topic: string): Promise<any> {
-    return new Promise((resolve, reject) => {
-      this.web3.eth.subscribe('logs', { address: contractAddress, topics: [topic] }, (error, result) => {
-        if (!error) reject(error);
-        resolve(result);
-      });
-    });
-  }
-
   public async sendTransaction(signedTransaction: SignedTransaction): Promise<any> {
     return new Promise<any>((resolve, reject) => {
       const sentTx = this.web3.eth.sendSignedTransaction(signedTransaction.rawTransaction);
