@@ -22,12 +22,9 @@ import RunCommand from '../src/CommandEntities/runCommand';
 import SetCommand from '../src/CommandEntities/setCommand';
 import AccountCreateCommand from '../src/CommandEntities/signupCommand';
 import { UpdateCommand } from '../src/CommandEntities/updateCommand';
-import NetworkUtils from '../src/NetworkEntities/networkUtils';
 
 import FakeProvider = require('web3-fake-provider');
-
 const userAddress = '0xe4036e69A708Bd2C4460eEc280fa6b03Ad3D44D8';
-const contactAdresses = '0xA3865FBE59d6d20647688040f604eEa680D0df32';
 
 describe('Integration Test', () => {
   const contractObject = contract;
