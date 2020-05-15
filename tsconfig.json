@@ -63,7 +63,7 @@
     "src"
   ],
   "exclude": [
-    "node_module",
-    "tests"
+    "test",
+    "node_modules"
   ]
 }

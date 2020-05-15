@@ -14,7 +14,7 @@ import Logger from '../logger';
  * It's a collection of static functions that initialize the library commander
  */
 export default class Commander {
-  private static VERSION = '4.0';
+  private static VERSION = '4.0.0';
 
   private static DESCRIPTION = 'Etherless CLI';
 
