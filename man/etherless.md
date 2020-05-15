@@ -68,11 +68,11 @@ EXAMPLES
 **etherless** *list*
 : This command will show you a list of all functions that have been uploaded to Etherless
 
-**etherless** *create* \<functionName> \<functionDescription> \<functionProperty> \<functionCost> \<yourFileName> \<yourSecretPassword>
+**etherless** *create* \<functionName> \<functionDescription> \<functionProperty> \<functionCost> \<path/to/your/function.js> \<yourSecretPassword>
 : This command is used to create a remote function 
 
 **etherless** *delete* \<functionName>
-: This command is used to delete only his own functions
+: This command is used to delete only your own functions
 
 **etherless** *find* \<functionName>
 : This command returns informations of the selected function
@@ -86,5 +86,5 @@ EXAMPLES
 **etherless** *set* \<functionName> \<functionProperty> \<functionValue> \<yourSecretPassword>
 : This command is used to update a function property.
 
-**etherless** *update* \<functionName> \<yourFileName>
+**etherless** *update* \<functionName> \<path/to/your/function.js>
 : This command updates the code of your already existing function
