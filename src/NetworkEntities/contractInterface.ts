@@ -1,91 +1,86 @@
 /**
  * ContractInterface
- * @brief This Interface defines all the method that a ContractInterface should implements
+ *
  * @interface
+ * @file contractInterface.ts
  * @class ContractInterface
- * @memberof Network
+ * @package NetworkEntities
+ * This Interface defines all the method that a ContractInterface should implements
  */
 export abstract class ContractInterface {
-
   /**
    * @abstract
-   * @method getListOfFunctions
-   * @returns string[]
-   * @brief retrieves all the available contract's methods
-   */
-  public abstract getListOfFunctions(): string[];
-
-  /**
-   * @abstract
-   * @method getParametersOfFunction
-   * @param requested the string that identify the function required
-   * @returns Inputs[]
-   * @brief returns all the parameter required to run the requested function
-   */
-  public abstract getArgumentsOfFunction(requested:string):Inputs[];
-
-  /**
-   * @abstract
-   * @method isTheFunctionPayable
-   * @brief returns if the requested function is payable
+   * @function isTheFunctionPayable
    * @param requested the name of the function requested
    * @returns boolean true if the function is payable
+   * returns if the requested function is payable
    */
-  public abstract isTheFunctionPayable(requested:string):boolean;
+  public abstract isTheFunctionPayable(requested: string): boolean;
+
 
   /**
    * @abstract
-   * @method estimateGasCost
-   * @brief return the estimated gas cost of running a function
-   * @param userAddress
+   * @function estimateGasCost
    * @param requested the name of the function requested
+   * return the estimated gas cost of running a function
    */
-  public abstract estimateGasCost(userAddress:string, requested:string, args:any[], value: number):Promise<number>;
+  public abstract estimateGasCost(request: FunctionRequest): Promise<number>;
 
   /**
    * @abstract
-   * @method callFunction
+   * @function callFunction
    * @param requested the string that identify the function required
    * @param arg an array of required parameters for the execution of the requested function
    * @returns Promise<object> that is a transaction for the requested function.
-   * @brief This method returns the transaction about the requested object
+   * This method returns the transaction about the requested object
    */
-  public abstract getFunctionTransaction(userAddress:string, requested: string, arg: any[], gasEstimate: number, value: number)
-    :Promise<object>;
-
+  public abstract getFunctionTransaction(request: FunctionRequest): Promise<Transaction>;
 
   /**
-   * @abstract
-   * @method getCallable
+   * @function decodeResponse
    * @param requested
-   * @param any
+   * @param encodedResult
+   * @return the decoded response
+   * get in input the function with the relative output and decode the ABI response
    */
-  public abstract getCallable(requested:string, arg:any[]):any
+  public abstract decodeResponse(requested: string, encodedResult: any): any;
 
   /**
    * @abstract
-   * @method getLog
-   * @param address address to use as filter for research of past transaction
-   * @brief this method retrieve from the network all the history of a specific address
-   */
-  public abstract getLog(address:string):Promise<string[]>;
-
-  /**
-   * @abstract
-   * @method getSignal
+   * @function getSignal
    * @param signal the name of the signal thats needs to be captured
    * @param id the identifier of the signal to avoid collision with another request
-   * @brief This method capture the signals from the smart contract.
+   * This method capture the signals from the smart contract.
    */
-  public abstract getSignal(signalName:string, id:string):Promise<any>;
+  public abstract getSignal(signalName: string, id: string): Promise<unknown>;
+
+  /**
+   * @function getTopic
+   * @param functionName
+   * @return the topic about the function requested
+   */
+  public abstract getTopic(functionName: string): string;
 }
 
 /**
- * @structure Inputs
- * @brief this structure defines the arguments request for execution
+ * @struct
+ * defines the data structure of a transaction
  */
-export interface Inputs {
-  internalType: string,
-  name: string,
-  type: string
+export interface Transaction {
+  from: string;
+  to: string;
+  gas: number;
+  data: any;
+  value?: any;
+}
+
+/**
+ * @struct
+ * defines the data structure for a request of execution of a contract function.
+ */
+export interface FunctionRequest {
+  userAddress: string;
+  functionName: string;
+  args?: string[];
+  value?: number;
 }

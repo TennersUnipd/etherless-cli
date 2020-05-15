@@ -1,122 +1,96 @@
-import DOTENV from 'dotenv-flow';
-
+/**
+ * @class NetworkUtils
+ * @file networkUtils.ts
+ * @package NetworkEntities
+ * This static class is a utility class that inizialize the NetworkFacade
+ */
 import { AbiItem } from 'web3-utils';
-
-import axios, { AxiosResponse } from 'axios';
-
 import Web3 from 'web3';
-
+import axios from 'axios';
 import Utils from '../utils';
-
 import { NetworkFacade } from './networkFacade';
 import EtherlessContract from './etherlessContract';
 import EtherlessNetwork from './etherlessNetwork';
 import EtherlessSession from './etherlessSession';
 
-const fs = require('fs');
-
-let envConfig = {};
-if (process.argv.indexOf('--dev') > -1) {
-  envConfig = { node_env: 'development' };
-}
-DOTENV.config(envConfig);
-
-export interface EtherscanResponse {
-  status: string;
-  message: string;
-  result: string;
-}
 export default class NetworkUtils {
   static facade: NetworkFacade;
 
   /**
-   * @method getEtherlessNetworkFacadeInstance
-   * @brief this method initialize the NetworkFacade and returns an instance
+   * @function getEtherlessNetworkFacadeInstance
+   * @returns instance of @NetworkFace
+   * this method initialize the NetworkFacade and returns an instance
    */
-  static getEtherlessNetworkFacadeInstance(): NetworkFacade {
+  static getEtherlessNetworkFacadeInstance(): Promise<NetworkFacade> {
     if (this.facade === undefined) {
-      this.checkAbiUpdate(process.env.CONTRACT_ADDRESS);
-      const provider = new Web3(process.env.PROVIDER_API);
-      const eNetwork:EtherlessNetwork = new EtherlessNetwork(provider);
-      const eContract:EtherlessContract = new EtherlessContract(
-        NetworkUtils.getAbi(process.env.ABI_PATH),
-        process.env.CONTRACT_ADDRESS,
-        provider,
-      );
-      const eSession:EtherlessSession = new EtherlessSession(provider);
-      this.facade = new NetworkFacade(eNetwork, eSession, eContract);
+      return NetworkUtils.getAbi(Utils.config.CONTRACT_ADDRESS).then((contract) => {
+        const provider = new Web3(Utils.config.PROVIDER_API);
+        const eNetwork: EtherlessNetwork = new EtherlessNetwork(provider,
+          Utils.config.AWS_ENDPOINT);
+        const eContract: EtherlessContract = new EtherlessContract(
+          contract as unknown as AbiItem[],
+          Utils.config.CONTRACT_ADDRESS,
+          provider,
+        );
+        const eSession: EtherlessSession = new EtherlessSession(provider);
+        this.facade = new NetworkFacade(eNetwork, eSession, eContract);
+        return this.facade;
+      }).catch((err) => {
+        throw err;
+      });
     }
-    return this.facade;
+    return new Promise((resolve) => { resolve(this.facade); });
   }
 
   /**
-   * @method checkAbiUpdate
-   * @param contractAddress
-   * @brief this method checks if it is necessary update the local ABI file
-   * @callback updateAbi
+   * @function updateAbi
+   * @param contractAddress contract address to download
+   * @param destinationPath where the ABI will be saved
+   * @return
+   *  this method downloads the new ABI file from etherscan.io
    */
-  private static checkAbiUpdate(contractAddress:string) {
-    if (contractAddress !== Utils.localStorage.getItem('lastAbiAddress')) {
-      NetworkUtils.updateAbi(process.env.CONTRACT_ADDRESS, process.env.ABI_PATH);
-      Utils.localStorage.setItem('lastAbiAddress', process.env.CONTRACT_ADDRESS);
-    }
-  }
-
-  /**
-   * @method updateAbi
-   * @param contractAddress
-   * @param destinationPath
-   * @brief this method downloads the new ABI file from etherscan.io
-   */
-  private static async updateAbi(contractAddress: string, destinationPath: string) {
-    try {
+  private static async updateAbi(contractAddress: string, destinationPath: string): Promise<JSON> {
+    return new Promise((resolve, reject) => {
       console.log('DOWNLOADING contract abi');
-      const response: AxiosResponse<EtherscanResponse> = await axios.get(`https://api-ropsten.etherscan.io/api?module=contract&action=getabi&address=${contractAddress}&apikey=${process.env.ETHSCAN}`);
-      await fs.writeFileSync(destinationPath, response.data.result, { flag: 'w' });
-    } catch (error) {
-      throw new Error('Unable to update contract ABI');
-    }
+      const params = {
+        module: 'contract',
+        action: 'getabi',
+        address: contractAddress,
+        apikey: Utils.config.ETHSCAN,
+      };
+      axios.get('https://api-ropsten.etherscan.io/api', { params }).then((response) => {
+        if (response.data.result === 'Invalid API Key') reject(new Error(response.data.result));
+        Utils.localStorage.setItem(destinationPath, response.data.result);
+        Utils.localStorage.setItem('lastAbiAddress', contractAddress);
+        const contractJson = Utils.localStorage.getItem(destinationPath);
+        try {
+          resolve(JSON.parse(contractJson));
+        } catch (err) {
+          reject(new Error(contractJson));
+        }
+      }).catch((err) => { reject(err); });
+    });
   }
 
   /**
-   * @method getAbi
-   * @param abiPath
-   * @brief this method loads the ABI file from local storage
+   * @function getAbi
+   * @param contractAddress contract address to download
+   * @returns a Promise<JSON> that represents the ABI file
+   * This function checks if the ABI is due for an update or returs the local one
    */
-  public static getAbi(abiPath:string) : AbiItem[] {
-    try {
-      const parsed = JSON.parse(fs.readFileSync(abiPath));
-      return parsed;
-    } catch (error) {
-      // TODO: Mocked AbiFile
-      return [
-        {
-          inputs: [],
-          name: 'retrieve',
-          outputs: [
-            {
-              internalType: 'uint256',
-              name: '',
-              type: 'uint256',
-            },
-          ],
-          stateMutability: 'view',
-          type: 'function',
-        },
-        {
-          inputs: [
-            {
-              internalType: 'uint256',
-              name: 'num',
-              type: 'uint256',
-            },
-          ],
-          name: 'store',
-          outputs: [],
-          stateMutability: 'nonpayable',
-          type: 'function',
-        },
-      ];
+  public static getAbi(contractAddress: string): Promise<JSON> {
+    if (contractAddress !== Utils.localStorage.getItem('lastAbiAddress')) {
+      return this.updateAbi(contractAddress, 'contract');
     }
+    return new Promise((resolve, reject) => {
+      const contractJson = Utils.localStorage.getItem('contract');
+      try {
+        const contract = JSON.parse(contractJson);
+        if (contract === null) reject(new Error('Empty local ABI'));
+        resolve(contract);
+      } catch (err) {
+        reject(new Error(contractJson));
+      }
+    });
   }
 }

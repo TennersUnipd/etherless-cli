@@ -1,4 +1,4 @@
-name: Code Coverage
+name: Build
 
 # Controls when the action will run. Triggers the workflow on push or pull request 
 # events but only for the master branch
@@ -8,7 +8,7 @@ on: [push, pull_request]
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
   # This workflow contains a single job called "build"
-  CC:
+  Build:
     # The type of runner that the job will run on
     runs-on: ubuntu-latest
 
@@ -19,17 +19,12 @@ jobs:
     - uses: actions/setup-node@v1
       with:
           node-version: '12.x'
-    - run: npm install -g pm2
     - run: npm install -g typescript@3.6
     - run: npm install -g ts-node
-    - run: npm install -g mocha
-    - run: npm install -g chai
-    - run: npm install -g nyc
     - run: npm install
-    - run: nyc --reporter=lcov --reporter=text-summary npm test
-    
-    - name: Upload CodeCoverage output as a build artifact
-      uses: actions/upload-artifact@v1
+    - run: npm run build
+    - run: npm pack
+
+    - uses: actions/upload-artifact@v2
       with:
-        name: CodeCoverage
-        path: coverage
+        path: '*.tgz'
