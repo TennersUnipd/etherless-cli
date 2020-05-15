@@ -68,7 +68,6 @@ export default class EtherlessContract extends ContractInterface {
    * return the object of the JSON
    */
   public decodeResponse(requested: string, encodedResult: any): any {
-    // console.log(encodedResult);
     const out = this.commandList.filter((ele) => ele.name === requested)[0].outputs;
     return this.web3.eth.abi.decodeParameters(out, encodedResult)[0];
   }
