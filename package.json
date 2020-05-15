@@ -5,7 +5,9 @@
   "scripts": {
     "build": "tsc",
     "lint": "eslint src/**/*.ts --fix",
-    "test": "mocha -r ts-node/register \"tests/**/*.ts\""
+    "test": "npm run pre-test && mocha -r ts-node/register \"tests/**/*.ts\" &&  npm run post-test",
+    "pre-test": "pm2 start tests/fakeServer.js -- --port 8080",
+    "post-test": "pm2 delete tests/fakeServer.js"
   },
   "main": ".dist/index.js",
   "bin": {
@@ -48,6 +50,7 @@
     "eslint-plugin-react-hooks": "^3.0.0",
     "eslint-plugin-tsdoc": "^0.2.4",
     "mocha": "^7.1.2",
+    "mockttp": "^0.20.1",
     "ts-mockito": "^2.5.0",
     "ts-node": "^8.9.1",
     "typescript": "^3.6.5",
