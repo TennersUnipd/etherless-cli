@@ -1,4 +1,4 @@
-% Etherless(1) Version 0.15.20 | **etherless** client documentation
+% Etherless(1) Version 4.0.0 | **etherless** client documentation
 
 NAME
 ====
@@ -9,6 +9,13 @@ DESCRIPTION
 ====
 
 *etherless* is a cloud application platform which allows developers to deploy Javascript functions in the cloud and let pay the final user for the execution by leveraging the Ethereum's smart contract technology.
+
+INSTALLATION
+====
+
+1. Download the installation package from: https://github.com/TennersUnipd/etherless-cli/releases
+2. Open a terminal and move the working directory to the enclosing folder of the downloaded.tgz file
+3. Install the package through the npm package manager: npm install etherless-cli.tgz -g
 
 SYNOPSIS
 ====
