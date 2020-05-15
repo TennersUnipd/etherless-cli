@@ -265,6 +265,7 @@ export class NetworkFacade {
 
   /**
    * @function isUserSignedIn
+   * @returns true if the user is logged
    *  verify if user is logged in
    */
   public isUserSignedIn(): boolean {
