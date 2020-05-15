@@ -15,7 +15,7 @@
   },
   "man": "./man/etherless.1",
   "author": "Tenners",
-  "license": "GPL-2.0-only",
+  "license": "MIT",
   "dependencies": {
     "adm-zip": "^0.4.14",
     "axios": "^0.19.2",
